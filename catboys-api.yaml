@@ -1,0 +1,136 @@
+openapi: 3.0.0
+info:
+  title: Catboys API
+  description: An API for random baka gifs, 8ball responses, dice rolls, and catboy sayings. 
+    In popular culture, a "catboy" typically refers to a male character that has feline characteristics or traits, such as cat ears and a tail. Catboys are often featured in anime, manga, and other forms of media that have a focus on fantasy or the supernatural
+  version: 1.0.0
+servers:
+  - url: https://api.catboys.com
+paths:
+  /img:
+    get:
+      summary: Get a random image
+      description: Retrieves a random image from the Catboys API
+      operationId: getRandomImage
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Image"
+  /baka:
+    get:
+      summary: Baka is a Japanese word that means "fool" or "idiot". It's often used in anime and manga to convey the idea of someone being foolish or silly. Retrieves a random baka gif from the Catboys API
+      description: Baka is a Japanese word that means "fool" or "idiot". It's often used in anime and manga to convey the idea of someone being foolish or silly. Retrieves a random baka gif from the Catboys API
+      operationId: getRandomBakaGif
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BakaGif"
+  /8ball:
+    get:
+      summary: Get a random saying from a virtual 8ball
+      description: Retrieves a random saying from a virtual 8ball in the Catboys API
+      operationId: getRandom8ballResponse
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/8ballResponse"
+  /dice:
+    get:
+      summary: Get a random number and image from a virtual 6-sided dice
+      description: Retrieves a random number and image from a virtual 6-sided dice in the Catboys API
+      operationId: getRandomDiceRoll
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DiceRoll"
+  /catboy:
+    get:
+      summary: Get a random saying from a virtual catboy
+      description: Retrieves a random saying from a virtual catboy in the Catboys API
+      operationId: getRandomCatboyResponse
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CatboyResponse"
+components:
+  schemas:
+    Image:
+      type: object
+      properties:
+        url:
+          type: string
+          description: The URL of the image
+        artist:
+          type: string
+          description: The artist of the image
+        artist_url:
+          type: string
+          description: The URL of the artist's page
+        source_url:
+          type: string
+          description: The URL of the source image
+        error:
+          type: string
+          enum: [none]
+          description: Indicates whether there was an error retrieving the image
+    BakaGif:
+      type: object
+      properties:
+        url:
+          type: string
+          description: The URL of the baka gif
+        error:
+          type: string
+          enum: [none]
+          description: Indicates whether there was an error retrieving the gif
+    8ballResponse:
+      type: object
+      properties:
+        response:
+          type: string
+          description: The response from the 8ball
+        url:
+          type: string
+          description: The URL of an image corresponding to the response
+        error:
+          type: string
+          enum: [none]
+          description: Indicates whether there was an error retrieving the response
+    DiceRoll:
+      type: object
+      properties:
+        response:
+          type: string
+          description: The number rolled by the dice
+        url:
+          type: string
+          description: The URL of an image corresponding to the number
+        error:
+          type: string
+          enum: [none]
+          description: Indicates whether there was an error retrieving the dice roll
+    CatboyResponse:
+      type: object
+      properties:
+        response:
+          type: string
+          description: The saying from the catboy
+        error:
+          type: string
+          enum: [none]
+          description: Indicates whether there was an error retrieving the saying
