@@ -1,0 +1,167 @@
+openapi: 3.0.0
+info:
+  title: Anime Quotes API
+  description: An API to retrieve anime quotes
+  version: 1.0.0
+servers:
+  - url: https://animechan.vercel.app
+paths:
+  /api/random:
+    get:
+      operationId: getRandomQuote
+      summary: Get a random quote
+      description: Get a random quote
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quote"
+  /api/random/anime:
+    get:
+      operationId: getRandomQuoteByAnime
+      description: Get a random quote by anime title
+      summary: Get a random quote by anime title
+      parameters:
+        - in: query
+          name: title
+          schema:
+            type: string
+          required: true
+          description: The title of the anime to search for
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quote"
+  /api/random/character:
+    get:
+      operationId: getRandomQuoteByCharacter
+      description: Get a random quote by anime character
+      summary: Get a random quote by anime character
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          required: true
+          description: The name of the character to search for
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quote"
+  /api/quotes:
+    get:
+      operationId: getRandomQuotes
+      description: Get 10 random quotes
+      summary: Get 10 random quotes
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quotes"
+  /api/available/{type}:
+    get:
+      operationId: getAllAvailableNames
+      summary: Get all available anime or character names
+      description: Get all available anime or character names. This is a fairly large list and does not support pagination.
+      parameters:
+        - in: path
+          name: type
+          schema:
+            type: string
+            enum:
+              - anime
+              - character
+          required: true
+          description: The type of names to retrieve
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: The page number to retrieve
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Names"
+  /api/quotes/anime:
+    get:
+      summary: Get 10 quotes by anime title
+      description: Get 10 quotes by anime title
+      operationId: getQuotesByAnime
+      parameters:
+        - in: query
+          name: title
+          schema:
+            type: string
+          required: true
+          description: The title of the anime to search for
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: The page number to retrieve
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quotes"
+  /api/quotes/character:
+    get:
+      operationId: getQuotesByCharacter
+      summary: Get 10 quotes by anime character
+      description: Get 10 quotes by anime character
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          required: true
+          description: The name of the character to search for
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: The page number to retrieve
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quotes"
+components:
+  schemas:
+    Quote:
+      type: object
+      properties:
+        anime:
+          type: string
+        character:
+          type: string
+        quote:
+          type: string
+    Quotes:
+      type: array
+      items:
+        $ref: "#/components/schemas/Quote"
+    Names:
+      type: array
+      items:
+        type: string
