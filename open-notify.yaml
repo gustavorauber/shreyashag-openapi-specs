@@ -1,0 +1,64 @@
+openapi: 3.0.0
+info:
+  title: Open Notify API
+  version: 1.0.0
+  description: APIs for getting information about the current number of people in space and the current location of the ISS.
+servers:
+  - url: http://api.open-notify.org
+paths:
+  /astros.json:
+    get:
+      summary: Get information about the current number of people in space
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A description of the status of the API request.
+                  number:
+                    type: integer
+                    description: The current number of people in space.
+                  people:
+                    type: array
+                    description: An array of objects representing the people in space.
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The name of the person in space.
+                        craft:
+                          type: string
+                          description: The name of the spacecraft the person is on.
+  /iss-now.json:
+    get:
+      summary: Get the current location of the ISS
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A description of the status of the API request.
+                  timestamp:
+                    type: integer
+                    description: The Unix timestamp for when the location was valid.
+                  iss_position:
+                    type: object
+                    description: An object representing the latitude and longitude of the ISS.
+                    properties:
+                      latitude:
+                        type: string
+                        description: The current latitude of the ISS.
+                      longitude:
+                        type: string
+                        description: The current longitude of the ISS.
