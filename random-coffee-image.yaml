@@ -1,0 +1,37 @@
+openapi: 3.0.3
+info:
+  title: Random Coffee Image API
+  version: 1.0.0
+  description: This API provides random coffee images for coffee enthusiasts and developers alike.
+
+servers:
+  - url: https://coffee.alexflipnote.dev
+
+paths:
+  /random.json:
+    get:
+      summary: Get a random coffee image
+      description: Fetches a random coffee image URL in JSON format
+      operationId: getRandomCoffeeImage
+      responses:
+        200:
+          description: Successfully fetched a random coffee image
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  file:
+                    type: string
+                    format: uri
+                    example: "https://coffee.alexflipnote.dev/aHs0XbdgaWU_coffee.jpg"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "An unexpected error occurred"

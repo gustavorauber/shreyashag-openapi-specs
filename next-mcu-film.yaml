@@ -1,0 +1,68 @@
+openapi: 3.0.3
+info:
+  title: Next MCU Film API
+  version: 1.0.0
+  description: This API provides information about the next Marvel Cinematic Universe (MCU) film or TV show.
+
+servers:
+  - url: https://whenisthenextmcufilm.com
+
+paths:
+  /api:
+    get:
+      summary: Get the next MCU production
+      description: Returns a JSON object with details about the next MCU production, with an optional date parameter for custom date input.
+      operationId: getNextMCUProduction
+      parameters:
+        - name: date
+          in: query
+          description: ISO formatted date (e.g., 2020-11-01). If not provided, the current date is used.
+          required: false
+          schema:
+            type: string
+            format: date
+            example: "2020-11-01"
+      responses:
+        200:
+          description: Successfully fetched the next MCU production
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  days_until:
+                    type: integer
+                    example: 100
+                  overview:
+                    type: string
+                    example: "Text Description"
+                  poster_url:
+                    type: string
+                    format: uri
+                    example: "https://image.tmdb.org/t/p/w500/path/to/poster.jpg"
+                  release_date:
+                    type: string
+                    format: date
+                    example: "2020-05-01"
+                  title:
+                    type: string
+                    example: "MCU Film Title"
+                  type:
+                    type: string
+                    enum:
+                      - TV Show
+                      - Movie
+                    example: "TV Show"
+                  following_production:
+                    type: object
+                    description: Details about the following MCU production
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "An unexpected error occurred"
