@@ -1,0 +1,179 @@
+openapi: 3.0.0
+info:
+  title: Gutendex API
+  version: 1.0.0
+  description: API for accessing book data from Project Gutenberg
+servers:
+  - url: https://gutendex.com
+paths:
+  /books:
+    get:
+      summary: Get a list of books from Project Gutenberg
+      description: Returns a list of book information in the database. By default, books are ordered by popularity, determined by their numbers of downloads from Project Gutenberg.
+        The endpoint returns 0-32 books.
+      parameters:
+        - name: author_year_start
+          in: query
+          description: Find books with at least one author alive in a given range of years (positive or negative integer values). Example - `/books?author_year_end=-499` gives books with authors alive before 500 BCE.
+          schema:
+            type: integer
+        - name: author_year_end
+          in: query
+          description: Find books with at least one author alive in a given range of years (positive or negative integer values). Example- `/books?author_year_start=1800&author_year_end=1899` gives books with authors alive in the 19th Century.
+          schema:
+            type: integer
+        - name: copyright
+          in: query
+          description: Find books with a certain copyright status true for books with existing copyrights, false for books in the public domain in the USA, or null for books with no available copyright information. These can be combined with commas. Example- `/books?copyright=true,false`.
+          schema:
+            type: string
+        - name: ids
+          in: query
+          description: List books with Project Gutenberg ID numbers in a given list of numbers (comma-separated positive integers). Example - `/books?ids=11,12,13` gives books with ID numbers 11, 12, and 13.
+          schema:
+            type: string
+        - name: languages
+          in: query
+          description: Find books in any of a list of languages (comma-separated, two-character language codes). Example- `/books?languages=en` gives books in English, and `/books?languages=fr,fi` gives books in either French or Finnish or both.
+          schema:
+            type: string
+        - name: mime_type
+          in: query
+          description: Find books with a given MIME type. Gutendex gives every book with a MIME type starting with the value. Example- `/books?mime_type=text%2F` gives books with types text/html, text/plain; charset=us-ascii, etc.; and `/books?mime_type=text%2Fhtml` gives books with types text/html, text/html; charset=utf-8, etc.
+          schema:
+            type: string
+        - name: search
+          in: query
+          description: Search author names and book titles with given words (space-separated and case-insensitive). Example- `/books?search=dickens%20great` includes Great Expectations by Charles Dickens.
+          schema:
+            type: string
+        - name: sort
+          in: query
+          description: Sort books by ascending for Project Gutenberg ID numbers from lowest to highest, descending for IDs highest to lowest, or popular (the default) for most popular to least popular by number of downloads.
+          schema:
+            type: string
+        - name: topic
+          in: query
+          description: Search for a case-insensitive key-phrase in books' bookshelves or subjects. Example- `/books?topic=children` gives books on the "Children's Literature"
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Pagination parameter for page
+          schema:
+            type: integer
+
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    description: The total number of books for the query on all pages combined
+                  next:
+                    type: string
+                    nullable: true
+                    description: URL to the next page of results
+                  previous:
+                    type: string
+                    nullable: true
+                    description: URL to the previous page of results
+                  results:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Book"
+  /books/{id}:
+    get:
+      summary: Get information about an individual book
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: The Project Gutenberg ID number of the book
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Book"
+        404:
+          description: Book not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    description: The error message
+components:
+  schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The Project Gutenberg ID number for the book
+        title:
+          type: string
+          description: The title of the book
+        subjects:
+          type: array
+          items:
+            type: string
+          description: The subjects associated with the book
+        authors:
+          type: array
+          items:
+            $ref: "#/components/schemas/Person"
+          description: The authors of the book
+        translators:
+          type: array
+          items:
+            $ref: "#/components/schemas/Person"
+          description: The translators of the book
+        bookshelves:
+          type: array
+          items:
+            type: string
+          description: The bookshelves associated with the book
+        languages:
+          type: array
+          items:
+            type: string
+          description: The languages associated with the book
+        copyright:
+          type: boolean
+          nullable: true
+          description: The copyright status of the book
+        media_type:
+          type: string
+          description: The media type of the book
+        formats:
+          type: object
+          additionalProperties:
+            type: string
+          description: The formats available for the book
+        download_count:
+          type: integer
+          description: The number of downloads for the book
+    Person:
+      type: object
+      properties:
+        birth_year:
+          type: integer
+          nullable: true
+        death_year:
+          type: integer
+          nullable: true
+        name:
+          type: string
+      required:
+        - name
