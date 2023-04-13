@@ -1,0 +1,145 @@
+openapi: 3.0.0
+info:
+  title: CityBikes API
+  version: 1.0.0
+  description: The CityBikes API allows developers to access and integrate bike sharing data with other applications.
+servers:
+  - url: http://api.citybik.es/v2/
+paths:
+  /networks:
+    get:
+      summary: Retrieve a list of bike sharing networks
+      operationId: getNetworks
+      parameters:
+        - in: query
+          name: fields
+          description: Comma-separated list of fields to include in the response
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A list of bike sharing networks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  networks:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        href:
+                          type: string
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        company:
+                          type: string
+                        location:
+                          type: object
+                          properties:
+                            latitude:
+                              type: number
+                            longitude:
+                              type: number
+                            city:
+                              type: string
+                            country:
+                              type: string
+      deprecated: true
+    post:
+      summary: Submit bike sharing data (not implemented)
+      operationId: submitData
+      responses:
+        "501":
+          description: Not implemented
+  /networks/{network_id}:
+    get:
+      summary: Retrieve bike sharing data for a specific network
+      operationId: getNetworkData
+      parameters:
+        - in: path
+          name: network_id
+          description: The ID of the bike sharing network to retrieve data for
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: fields
+          description: Comma-separated list of fields to include in the response
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Bike sharing data for the specified network
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  network:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      company:
+                        type: string
+                      location:
+                        type: object
+                        properties:
+                          latitude:
+                            type: number
+                          longitude:
+                            type: number
+                          city:
+                            type: string
+                          country:
+                            type: string
+                      stations:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            timestamp:
+                              type: string
+                            longitude:
+                              type: number
+                            latitude:
+                              type: number
+                            free_bikes:
+                              type: integer
+                            empty_slots:
+                              type: integer
+                            id:
+                              type: string
+        "400":
+          description: Invalid input parameter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+      deprecated: true
+    post:
+      summary: Submit bike sharing data for a specific network (not implemented)
+      operationId: submitNetworkData
+      parameters:
+        - in: path
+          name: network_id
+          description: The ID of the bike sharing network to submit data for
+          required: true
+          schema:
+            type: string
+      responses:
+        "501":
+          description: Not implemented
