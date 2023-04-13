@@ -1,0 +1,222 @@
+openapi: 3.0.0
+info:
+  title: iTunes Store Search API
+  description: API for searching content within the iTunes Store, App Store, iBooks Store and Mac App Store.
+  version: 1.0.0
+externalDocs:
+  url: https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI/Searching.html#//apple_ref/doc/uid/TP40017632-CH5-SW1
+servers:
+  - url: https://itunes.apple.com
+paths:
+  /search:
+    get:
+      summary: Search the iTunes Store, App Store, iBooks Store, and Mac App Store
+      parameters:
+        - name: term
+          in: query
+          description: The URL-encoded text string you want to search for
+          required: true
+          schema:
+            type: string
+        - name: country
+          in: query
+          description: The two-letter country ISO_3166-1_alpha-2 code for the store you want to search
+          required: true
+          schema:
+            type: string
+        - name: media
+          in: query
+          description: The media type you want to search for
+          schema:
+            type: string
+            enum:
+              - movie
+              - podcast
+              - music
+              - musicVideo
+              - audiobook
+              - shortFilm
+              - tvShow
+              - software
+              - ebook
+              - all
+        - name: entity
+          in: query
+          description: The type of results you want returned, relative to the specified media type.
+          required: false
+          schema:
+            type: string
+            enum:
+              - movieArtist
+              - movie
+              - podcastAuthor
+              - podcast
+              - musicArtist
+              - musicTrack
+              - album
+              - musicVideo
+              - mix
+              - song
+              - audiobookAuthor
+              - audiobook
+              - shortFilmArtist
+              - shortFilm
+              - tvEpisode
+              - tvSeason
+              - software
+              - iPadSoftware
+              - macSoftware
+              - ebook
+              - allArtist
+              - allTrack
+        - name: attribute
+          in: query
+          description: The attribute you want to search for in the stores, relative to the specified media type.
+          required: false
+          schema:
+            type: string
+            enum:
+              - actorTerm
+              - genreIndex
+              - artistTerm
+              - shortFilmTerm
+              - producerTerm
+              - ratingTerm
+              - directorTerm
+              - releaseYearTerm
+              - featureFilmTerm
+              - movieArtistTerm
+              - movieTerm
+              - ratingIndex
+              - descriptionTerm
+              - titleTerm
+              - languageTerm
+              - keywordsTerm
+              - mixTerm
+              - composerTerm
+              - songTerm
+              - tvEpisodeTerm
+              - showTerm
+              - allArtistTerm
+              - allTrackTerm
+              - softwareDeveloper
+        - name: callback
+          in: query
+          description: The name of the Javascript callback function you want to use when returning search results to your website
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: The number of search results you want the iTunes Store to return
+          schema:
+            type: integer
+            default: 50
+            minimum: 1
+            maximum: 200
+        - name: lang
+          in: query
+          description: The language you want to use when returning search results
+          schema:
+            type: string
+            enum:
+              - en_us
+        - name: explicit
+          in: query
+          description: A flag indicating whether or not you want to include explicit content in your search results
+          schema:
+            type: string
+            enum:
+              - Yes
+              - No
+      responses:
+        "200":
+          description: Successful response
+  /lookup:
+    get:
+      description: |
+        Create a lookup request to search for content in the stores based on iTunes IDs, UPCs/ EANs, and All Music Guide (AMG) IDs.
+        ID-based lookups are faster and contain fewer false-positive results.
+
+        Look up Artist by iTunes artist ID: {"id": "<artist_id>"}
+
+        Look up Software application by iTunes ID- {"id": "<software_id>"}
+
+        Look up Jack Johnson by AMG artist ID- {"amgArtistId": "<amg_artist_id>"}
+
+        Look up multiple artists by their AMG artist IDs- 
+        {"amgArtistId": "<amg_artist_id1>,<amg_artist_id2>"}
+
+        Look up all albums for Artist- {"id": "<artist_id>, "entity":"album"}
+
+        Look up multiple artists by their AMG artist IDs and get each artist’s top 5 albums- {"amgArtistId": "<amg_artist_id1>,<amg_artist_id2>", "entity":"album", "limit":5}
+
+        Look up multiple artists by their AMG artist IDs and get each artist’s 5 most recent songs- {"amgArtistId": "<amg_artist_id1>,<amg_artist_id2>", "entity":"song", "limit":5, "sort":"recent"}
+
+        Look up an album or video by its UPC- {"upc": "<upc_id>"}
+
+        Look up an album by its UPC, including the tracks on that album- {"upc": "<upc_id>", "entity":"song"}
+
+        Look up an album by its AMG Album ID- {"amgAlbumId" : "<album_id_1>,<album_id_2>"}
+
+        Look up a Movie by AMG Video ID- {"amgVideoId": "<amg_video_id>"}
+
+        Look up a book by its 13 digit ISBN- {"isbn": "<isbn_id>"}
+      parameters:
+        - name: id
+          in: query
+          description: The iTunes ID of the artist or software application.
+          schema:
+            type: string
+        - name: amgArtistId
+          in: query
+          description: The AMG artist ID of the artist.
+          schema:
+            type: string
+        - name: amgAlbumId
+          in: query
+          description: The AMG album ID of the album.
+          schema:
+            type: string
+        - name: amgVideoId
+          in: query
+          description: The AMG video ID of the movie.
+          schema:
+            type: string
+        - name: upc
+          in: query
+          description: The Universal Product Code of the album or video.
+          schema:
+            type: string
+        - name: isbn
+          in: query
+          description: The 13-digit ISBN of the book.
+          schema:
+            type: string
+        - name: entity
+          in: query
+          description: The type of results to return, such as album, song, movie, and more.
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: The maximum number of items to return.
+          schema:
+            type: integer
+        - name: sort
+          in: query
+          description: The attribute to sort the results by, such as recent.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The requested item(s) were found and returned.
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          description: The request was invalid.
+        "404":
+          description: The requested item(s) were not found.
+        "500":
+          description: An error occurred while processing the request.
