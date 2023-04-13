@@ -1,0 +1,95 @@
+openapi: 3.0.0
+info:
+  title: icanhazdadjoke API
+  version: 1.0.0
+  description: The icanhazdadjoke API allows users to retrieve random dad jokes or search for jokes by keyword.
+servers:
+  - url: https://icanhazdadjoke.com/
+paths:
+  /:
+    get:
+      summary: Retrieve a random dad joke
+      operationId: getRandomJoke
+      responses:
+        '200':
+          description: A random dad joke
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  joke:
+                    type: string
+                  status:
+                    type: integer
+  /search:
+    get:
+      summary: Search for dad jokes
+      operationId: searchJokes
+      parameters:
+        - in: query
+          name: term
+          description: The keyword to search for
+          schema:
+            type: string
+        - in: query
+          name: limit
+          description: The number of results to return per page (max 30)
+          schema:
+            type: integer
+            maximum: 30
+            default: 20
+        - in: query
+          name: page
+          description: The page number of results to retrieve
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+      responses:
+        '200':
+          description: A list of dad jokes matching the search term
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  current_page:
+                    type: integer
+                  limit:
+                    type: integer
+                  next_page:
+                    type: integer
+                  previous_page:
+                    type: integer
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        joke:
+                          type: string
+                  search_term:
+                    type: string
+                  status:
+                    type: integer
+                  total_jokes:
+                    type: integer
+                  total_pages:
+                    type: integer
+        '400':
+          description: Invalid input parameter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
