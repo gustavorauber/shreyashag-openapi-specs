@@ -1,0 +1,72 @@
+openapi: 3.0.0
+info:
+  title: aztro API
+  version: 1.0.0
+  description: The aztro API allows developers to retrieve daily horoscopes for different zodiac signs.
+servers:
+  - url: https://aztro.sameerkumar.website
+paths:
+  /:
+    post:
+      summary: Retrieve daily horoscope for a zodiac sign
+      operationId: getHoroscope
+      parameters:
+        - in: query
+          name: sign
+          description: The zodiac sign to retrieve the horoscope for
+          required: true
+          schema:
+            type: string
+            enum:
+              [
+                aries,
+                taurus,
+                gemini,
+                cancer,
+                leo,
+                virgo,
+                libra,
+                scorpio,
+                sagittarius,
+                capricorn,
+                aquarius,
+                pisces,
+              ]
+        - in: query
+          name: day
+          description: The day to retrieve the horoscope for
+          required: true
+          schema:
+            type: string
+            enum: [today, tomorrow, yesterday]
+      responses:
+        "200":
+          description: The daily horoscope for the specified zodiac sign
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  date_range:
+                    type: string
+                  current_date:
+                    type: string
+                  compatibility:
+                    type: string
+                  lucky_number:
+                    type: integer
+                  lucky_color:
+                    type: string
+                  mood:
+                    type: string
+                  description:
+                    type: string
+        "400":
+          description: Invalid input parameter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
