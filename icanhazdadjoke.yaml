@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: The icanhazdadjoke API allows users to retrieve random dad jokes or search for jokes by keyword.
 servers:
-  - url: https://icanhazdadjoke.com/
+  - url: https://icanhazdadjoke.com
 paths:
   /:
     get:
