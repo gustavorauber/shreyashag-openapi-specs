@@ -135,7 +135,6 @@ paths:
     get:
       description: |
         Create a lookup request to search for content in the stores based on iTunes IDs, UPCs/ EANs, and All Music Guide (AMG) IDs.
-        ID-based lookups are faster and contain fewer false-positive results.
 
         Look up Artist by iTunes artist ID: {"id": "<artist_id>"}
 
