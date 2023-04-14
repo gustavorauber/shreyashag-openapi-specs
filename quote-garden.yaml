@@ -1,0 +1,72 @@
+openapi: 3.0.0
+info:
+  title: Quote Garden API
+  version: 2.0.0
+  description: The Quote Garden API is a RESTful API that provides access to a vast collection of quotes from various authors and genres. Users can retrieve random quotes, filter quotes based on author or genre, and search for quotes using keywords. The API supports pagination, allowing users to navigate through the collection of quotes efficiently by specifying the number of quotes per page and the desired page number. This API is an excellent resource for developers looking to integrate quote-related functionalities into their applications or websites.
+servers:
+  - url: https://quote-garden.onrender.com/api/v3
+paths:
+  /quotes/random:
+    get:
+      summary: Get a random quote
+      operationId: randomQuote
+      responses:
+        "200":
+          description: A random quote
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuoteResponse"
+
+  /quotes:
+    get:
+      summary: Get all quotes
+      operationId: getQuotes
+      parameters:
+        - name: author
+          in: query
+          schema:
+            type: string
+        - name: genre
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: A list of all quotes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuoteListResponse"
+components:
+  schemas:
+    QuoteResponse:
+      type: object
+      properties:
+        quoteText:
+          type: string
+        quoteAuthor:
+          type: string
+        quoteGenre:
+          type: string
+    QuoteListResponse:
+      type: object
+      properties:
+        totalPages:
+          type: integer
+        currentPage:
+          type: integer
+        quotes:
+          type: array
+          items:
+            $ref: "#/components/schemas/QuoteResponse"
