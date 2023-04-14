@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: The CityBikes API allows developers to access and integrate bike sharing data with other applications.
 servers:
-  - url: http://api.citybik.es/v2/
+  - url: http://api.citybik.es/v2
 paths:
   /networks:
     get:
@@ -48,13 +48,6 @@ paths:
                               type: string
                             country:
                               type: string
-      deprecated: true
-    post:
-      summary: Submit bike sharing data (not implemented)
-      operationId: submitData
-      responses:
-        "501":
-          description: Not implemented
   /networks/{network_id}:
     get:
       summary: Retrieve bike sharing data for a specific network
@@ -129,17 +122,3 @@ paths:
                 properties:
                   error:
                     type: string
-      deprecated: true
-    post:
-      summary: Submit bike sharing data for a specific network (not implemented)
-      operationId: submitNetworkData
-      parameters:
-        - in: path
-          name: network_id
-          description: The ID of the bike sharing network to submit data for
-          required: true
-          schema:
-            type: string
-      responses:
-        "501":
-          description: Not implemented

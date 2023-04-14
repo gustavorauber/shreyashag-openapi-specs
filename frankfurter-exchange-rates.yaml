@@ -1,0 +1,121 @@
+openapi: 3.0.0
+info:
+  title: Frankfurter API
+  version: 1.0.0
+  description: The Frankfurter API tracks foreign exchange references rates published by the European Central Bank. The data refreshes around 16:00 CET every working day.
+servers:
+  - url: https://api.frankfurter.app
+
+paths:
+  /latest:
+    get:
+      summary: Get the latest foreign exchange reference rates
+      operationId: getLatestRates
+      parameters:
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Base currency to quote against (default is EUR)
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: string
+            format: comma-separated list
+          description: Limit returned rates to specified currencies, comma-separated list example USD,GBP
+        - name: amount
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: You can convert any value between currencies using the above endpoints in combination with the amount parameter.
+      responses:
+        "200":
+          description: Latest foreign exchange reference rates
+
+  /{date}:
+    get:
+      summary: Get historical foreign exchange reference rates for a specific date
+      operationId: getHistoricalRates
+      parameters:
+        - name: date
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Date for historical rates (format- YYYY-MM-DD)
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Base currency to quote against (default is EUR)
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: string
+            format: comma-separated list
+          description: Limit returned rates to specified currencies
+        - name: amount
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: You can convert any value between currencies using the above endpoints in combination with the amount parameter.
+      responses:
+        "200":
+          description: Historical foreign exchange reference rates for the specified date
+
+  /{start_date}..{end_date}:
+    get:
+      summary: Get a set of historical rates for a given time period
+      operationId: getTimeSeriesRates
+      parameters:
+        - name: start_date
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Start date for the time period (format- YYYY-MM-DD)
+        - name: end_date
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+          description: End date for the time period (format- YYYY-MM-DD)
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Base currency to quote against (default is EUR)
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: string
+            format: comma-separated list
+          description: Limit returned rates to specified currencies
+        - name: amount
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: You can convert any value between currencies using the above endpoints in combination with the amount parameter.
+      responses:
+        "200":
+          description: Historical foreign exchange reference rates for the specified time period
+
+  /currencies:
+    get:
+      summary: Get a list of available currency symbols along with their full names
+      operationId: getCurrencies
+      responses:
+        "200":
+          description: List of available currency symbols and their full names
