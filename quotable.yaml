@@ -1,0 +1,319 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Quotable API
+  description: This is the Quotable API specification
+servers:
+  - url: https://api.quotable.io
+paths:
+  /quotes:
+    get:
+      description: Retrieve quotes matching a given query
+      summary: Retrieve quotes matching a given query
+      operationId: getQuote
+      parameters:
+        - in: query
+          name: maxLength
+          description: The maximum length in characters
+          schema:
+            type: integer
+        - in: query
+          name: minLength
+          description: The minimum length in characters
+          schema:
+            type: integer
+        - in: query
+          name: tags
+          description: Filter quotes by tag(s)
+          schema:
+            type: string
+        - in: query
+          name: author
+          description: Get quotes by a specific author
+          schema:
+            type: string
+        - in: query
+          name: authorId
+          description: Get quotes by author ID (deprecated)
+          schema:
+            type: string
+        - in: query
+          name: sortBy
+          description: The field used to sort quotes
+          schema:
+            type: string
+            enum: [dateAdded, dateModified, author, content]
+            default: dateAdded
+        - in: query
+          name: order
+          description: The order in which results are sorted
+          schema:
+            type: string
+            enum: [asc, desc]
+        - in: query
+          name: limit
+          description: The number of results per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 150
+            default: 20
+        - in: query
+          name: page
+          description: The page of results to return
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+      responses:
+        "200":
+          description: A paginated list of quotes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  totalCount:
+                    type: integer
+                  page:
+                    type: integer
+                  totalPages:
+                    type: integer
+                  lastItemIndex:
+                    type: integer
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                        content:
+                          type: string
+                        author:
+                          type: string
+                        authorSlug:
+                          type: string
+                        length:
+                          type: integer
+                        tags:
+                          type: array
+                          items:
+                            type: string
+  /quotes/random:
+    get:
+      operationId: getRandomQuotes
+      summary: Retrieve one or more random quotes
+      description: Retrieve one or more random quotes
+      parameters:
+        - in: query
+          name: limit
+          description: The number of random quotes to retrieve
+          schema:
+            type: integer
+        - in: query
+          name: maxLength
+          description: The maximum length in characters
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 150
+            default: 1
+        - in: query
+          name: minLength
+          description: The minimum length in characters
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 150
+            default: 1
+        - in: query
+          name: tags
+          description: Get a random quote with specific tag(s)
+          schema:
+            type: string
+        - in: query
+          name: author
+          description: Get a random quote by one or more authors
+          schema:
+            type: string
+        - in: query
+          name: authorId
+          description: Get a random quote by author ID (deprecated)
+          schema:
+            type: string
+      responses:
+        "200":
+          description: An array containing one or more quotes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                    content:
+                      type: string
+                    author:
+                      type: string
+                    authorSlug:
+                      type: string
+                    length:
+                      type: integer
+                    tags:
+                      type: array
+                      items:
+                        type: string
+  /authors:
+    get:
+      operationId: getAuthors
+      summary: Get all authors matching the given query
+      description: Get all authors matching the given query
+      parameters:
+        - in: query
+          name: slug
+          description: Filter authors by slug
+          schema:
+            type: string
+        - in: query
+          name: sortBy
+          description: The field used to sort authors
+          schema:
+            type: string
+            enum: [dateAdded, dateModified, name, quoteCount]
+            default: name
+        - in: query
+          name: order
+          description: The order in which results are sorted
+          schema:
+            type: string
+            enum: [asc, desc]
+        - in: query
+          name: limit
+          description: Sets the number of results per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 150
+            default: 20
+        - in: query
+          name: page
+          description: The page of results to return
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+      responses:
+        "200":
+          description: A list of authors matching the given query
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  totalCount:
+                    type: integer
+                  page:
+                    type: integer
+                  totalPages:
+                    type: integer
+                  lastItemIndex:
+                    type: integer
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                        bio:
+                          type: string
+                        description:
+                          type: string
+                        link:
+                          type: string
+                        name:
+                          type: string
+                        slug:
+                          type: string
+                        quoteCount:
+                          type: integer
+  /authors/{id}:
+    get:
+      operationId: getAuthorById
+      summary: Retrieve an author by slug.
+      description: This method can be used to get author details such as bio, website link, and profile image.
+      parameters:
+        - in: path
+          name: id
+          description: The slug of the author to retrieve
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The author with the specified slug
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  bio:
+                    type: string
+                  description:
+                    type: string
+                  link:
+                    type: string
+                  name:
+                    type: string
+                  slug:
+                    type: string
+                  quoteCount:
+                    type: integer
+  /tags:
+    get:
+      operationId: getTags
+      summary: Get a list of all tags
+      description: Get a list of all tags
+      parameters:
+        - in: query
+          name: sortBy
+          description: The field used to sort tags
+          schema:
+            type: string
+            enum: [dateAdded, dateModified, name, quoteCount]
+            default: name
+        - in: query
+          name: order
+          description: The order in which results are sorted
+          schema:
+            type: string
+            enum: [asc, desc]
+      responses:
+        "200":
+          description: A list of all tags
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                        name:
+                          type: string
