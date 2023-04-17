@@ -100,7 +100,7 @@ paths:
           example: Australia/North
           required: false
           schema:
-            type: string``
+            type: string
             example: Australia/North
         - in: header
           name: Content-Type
