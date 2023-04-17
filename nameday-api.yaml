@@ -9,7 +9,8 @@ paths:
   /api/V1/today:
     get:
       summary: "Get nameday for today\nEndpoint lets you get nameday for today. Beware that the default timezone is 'Europe/Prague'"
-      description: ""
+      description: "Get nameday for today\nEndpoint lets you get nameday for today. Beware that the default timezone is 'Europe/Prague'"
+      operationId: getTodayNameday
       parameters:
         - in: query
           name: country
@@ -86,7 +87,8 @@ paths:
   /api/V1/tomorrow:
     get:
       summary: "Get nameday for tomorrow\nEndpoint lets you get nameday for tomorrow. Beware that the default timezone is 'Europe/Prague'"
-      description: ""
+      description: "Get nameday for tomorrow\nEndpoint lets you get nameday for tomorrow. Beware that the default timezone is 'Europe/Prague'"
+      operationId: getTomorrowNameday
       parameters:
         - in: query
           name: country
@@ -163,7 +165,8 @@ paths:
   /api/V1/yesterday:
     get:
       summary: "Get nameday for yesterday\nEndpoint lets you get nameday for yesterday. Beware that the default timezone is 'Europe/Prague'"
-      description: ""
+      description: "Get nameday for yesterday\nEndpoint lets you get nameday for yesterday. Beware that the default timezone is 'Europe/Prague'"
+      operationId: getYesterdayNameday
       parameters:
         - in: query
           name: country
@@ -240,7 +243,8 @@ paths:
   /api/V1/getdate:
     get:
       summary: "Get nameday for specific date\nThis endpoint lets you get nameday for this day. Beware that the default timezone is 'Europe/Prague'"
-      description: ""
+      description: "Get nameday for specific date\nThis endpoint lets you get nameday for this day. Beware that the default timezone is 'Europe/Prague'"
+      operationId: getDateNameday
       parameters:
         - in: query
           name: day
@@ -329,8 +333,9 @@ paths:
       security: []
   /api/V1/getname:
     get:
+      operationId: getName
       summary: "search name day by name\nThis endpoint lets you search specific name and returns his/her name day date"
-      description: ""
+      description: "search name day by name\nThis endpoint lets you search specific name and returns his/her name day date"
       parameters:
         - in: query
           name: name
