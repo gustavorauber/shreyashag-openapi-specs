@@ -383,8 +383,6 @@ components:
           type: number
         full_address:
           type: string
-    components:
-  schemas:
     User:
       type: object
       properties:
