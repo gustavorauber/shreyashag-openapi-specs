@@ -1,0 +1,409 @@
+openapi: 3.0.3
+info:
+  title: "Nameday API"
+  description: "Provides name days for various countries. Supported Country codes are in ISO-3166 Alpha-2, example es for spain. For timezones, PHP timezone. If nothing provided default TZ is 'Europe/Prague'. Nameday is a tradition in many countries, where each day of the year is associated with one or more given names. On a person's nameday, they are celebrated, much like a birthday, with wishes, gifts, and sometimes even parties. The tradition is particularly popular in European countries such as Slovakia, the Czech Republic, and Poland, but it is also observed in other parts of the world."
+  version: 1.0.0
+servers:
+  - url: "https://nameday.abalin.net"
+paths:
+  /api/V1/today:
+    get:
+      summary: "Get nameday for today\nEndpoint lets you get nameday for today. Beware that the default timezone is 'Europe/Prague'"
+      description: ""
+      parameters:
+        - in: query
+          name: country
+          example: es
+          required: false
+          schema:
+            type: string
+            example: es
+        - in: query
+          name: timezone
+          example: Arctic/Longyearbyen
+          required: false
+          schema:
+            type: string
+            example: Arctic/Longyearbyen
+        - in: header
+          name: Content-Type
+          description: ""
+          example: application/json
+          schema:
+            type: string
+        - in: header
+          name: Accept
+          description: ""
+          example: application/json
+          schema:
+            type: string
+      responses:
+        200:
+          description: "Get all name days for today for specific country"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  day: 24
+                  month: 2
+                  nameday:
+                    sk: Matej
+                  country: sk
+                properties:
+                  day:
+                    type: integer
+                    example: 24
+                  month:
+                    type: integer
+                    example: 2
+                  nameday:
+                    type: object
+                    example:
+                      sk: Matej
+                  country:
+                    type: string
+                    example: sk
+        422:
+          description: "Get all name days for today - wrong timezone"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error:
+                    timezone:
+                      - "The selected timezone is invalid."
+                properties:
+                  error:
+                    type: object
+                    example:
+                      timezone:
+                        - "The selected timezone is invalid."
+      tags:
+        - Endpoints
+      security: []
+  /api/V1/tomorrow:
+    get:
+      summary: "Get nameday for tomorrow\nEndpoint lets you get nameday for tomorrow. Beware that the default timezone is 'Europe/Prague'"
+      description: ""
+      parameters:
+        - in: query
+          name: country
+          example: sk
+          required: false
+          schema:
+            type: string
+            example: sk
+        - in: query
+          name: timezone
+          example: Australia/North
+          required: false
+          schema:
+            type: string``
+            example: Australia/North
+        - in: header
+          name: Content-Type
+          description: ""
+          example: application/json
+          schema:
+            type: string
+        - in: header
+          name: Accept
+          description: ""
+          example: application/json
+          schema:
+            type: string
+      responses:
+        200:
+          description: "Get all name days for tomorrow for specific country"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  day: 24
+                  month: 2
+                  nameday:
+                    sk: Matej
+                  country: sk
+                properties:
+                  day:
+                    type: integer
+                    example: 24
+                  month:
+                    type: integer
+                    example: 2
+                  nameday:
+                    type: object
+                    example:
+                      sk: Matej
+                  country:
+                    type: string
+                    example: sk
+        422:
+          description: "Get all name days for tomorrow - wrong timezone"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error:
+                    timezone:
+                      - "The selected timezone is invalid."
+                properties:
+                  error:
+                    type: object
+                    example:
+                      timezone:
+                        - "The selected timezone is invalid."
+      tags:
+        - Endpoints
+      security: []
+  /api/V1/yesterday:
+    get:
+      summary: "Get nameday for yesterday\nEndpoint lets you get nameday for yesterday. Beware that the default timezone is 'Europe/Prague'"
+      description: ""
+      parameters:
+        - in: query
+          name: country
+          example: us
+          required: false
+          schema:
+            type: string
+            example: us
+        - in: query
+          name: timezone
+          example: Chile/EasterIsland
+          required: false
+          schema:
+            type: string
+            example: Chile/EasterIsland
+        - in: header
+          name: Content-Type
+          description: ""
+          example: application/json
+          schema:
+            type: string
+        - in: header
+          name: Accept
+          description: ""
+          example: application/json
+          schema:
+            type: string
+      responses:
+        200:
+          description: "Get all name days for yesterday for specific country"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  day: 24
+                  month: 2
+                  nameday:
+                    sk: Matej
+                  country: sk
+                properties:
+                  day:
+                    type: integer
+                    example: 24
+                  month:
+                    type: integer
+                    example: 2
+                  nameday:
+                    type: object
+                    example:
+                      sk: Matej
+                  country:
+                    type: string
+                    example: sk
+        422:
+          description: "Get all name days for yesterday - wrong timezone"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error:
+                    timezone:
+                      - "The selected timezone is invalid."
+                properties:
+                  error:
+                    type: object
+                    example:
+                      timezone:
+                        - "The selected timezone is invalid."
+      tags:
+        - Endpoints
+      security: []
+  /api/V1/getdate:
+    get:
+      summary: "Get nameday for specific date\nThis endpoint lets you get nameday for this day. Beware that the default timezone is 'Europe/Prague'"
+      description: ""
+      parameters:
+        - in: query
+          name: day
+          description: "Valid day"
+          example: 18
+          required: false
+          schema:
+            type: integer
+            description: "Valid day"
+            example: 18
+        - in: query
+          name: month
+          description: "Valid month"
+          example: 11
+          required: false
+          schema:
+            type: integer
+            description: "Valid month"
+            example: 11
+        - in: query
+          name: country
+          example: hu
+          required: false
+          schema:
+            type: string
+            example: hu
+        - in: header
+          name: Content-Type
+          description: ""
+          example: application/json
+          schema:
+            type: string
+        - in: header
+          name: Accept
+          description: ""
+          example: application/json
+          schema:
+            type: string
+      responses:
+        200:
+          description: "Get name days for specific date for specific country"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  day: 18
+                  month: 11
+                  nameday:
+                    ee: "Ilo, Ilu"
+                  country: ee
+                properties:
+                  day:
+                    type: integer
+                    example: 18
+                  month:
+                    type: integer
+                    example: 11
+                  nameday:
+                    type: object
+                    example:
+                      ee: "Ilo, Ilu"
+                  country:
+                    type: string
+                    example: ee
+        422:
+          description: "Get name days for specific date - wrong date"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error:
+                    month:
+                      - "The month must not be greater than 12."
+                      - "Date is invalid"
+                properties:
+                  error:
+                    type: object
+                    example:
+                      month:
+                        - "The month must not be greater than 12."
+                        - "Date is invalid"
+      tags:
+        - Endpoints
+      security: []
+  /api/V1/getname:
+    get:
+      summary: "search name day by name\nThis endpoint lets you search specific name and returns his/her name day date"
+      description: ""
+      parameters:
+        - in: query
+          name: name
+          description: "First name to look up"
+          example: Walenty
+          required: false
+          schema:
+            type: string
+            description: "First name to look up"
+            example: Walenty
+        - in: query
+          name: country
+          example: pl
+          required: false
+          schema:
+            type: string
+            example: pl
+        - in: header
+          name: Content-Type
+          description: ""
+          example: application/json
+          schema:
+            type: string
+        - in: header
+          name: Accept
+          description: ""
+          example: application/json
+          schema:
+            type: string
+      responses:
+        200:
+          description: "Get name day for specific name"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  "0":
+                    - day: 7
+                      month: 7
+                      name: Oliver
+                  country: sk
+                properties:
+                  0:
+                    type: array
+                    example:
+                      - day: 7
+                        month: 7
+                        name: Oliver
+                    items:
+                      type: object
+                  country:
+                    type: string
+                    example: sk
+        422:
+          description: "Get name day for specific name - wrong name"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error:
+                    name:
+                      - "The name must be at least 2 characters."
+                properties:
+                  error:
+                    type: object
+                    example:
+                      name:
+                        - "The name must be at least 2 characters."
+      tags:
+        - Endpoints
+      security: []
+tags:
+  - name: Endpoints
+    description: ""
