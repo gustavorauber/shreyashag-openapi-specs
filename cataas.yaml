@@ -42,14 +42,14 @@ paths:
         - name: filter
           in: query
           schema:
-          type: string
-          enum:
-            - blur
-            - mono
-            - sepia
-            - negative
-            - paint
-            - pixel
+            type: string
+            enum:
+              - blur
+              - mono
+              - sepia
+              - negative
+              - paint
+              - pixel
         - name: width
           in: query
           schema:
