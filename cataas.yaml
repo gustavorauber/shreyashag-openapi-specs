@@ -6,6 +6,7 @@ info:
     Cataas API - API for cat images. For getting the image url, join the image url in responses with https://cataas.com as a prefix.
 
     Example - /cat/LiJT1kTcbju7V9s0, url will be https://cataas.com/cat/LiJT1kTcbju7V9s0.
+    Tags can be combined as a comma-separated-list. Example tag1,tag2,tag3
   termsOfService: http://api_url/terms/
   contact:
     name: Kevin Balicot
