@@ -1,0 +1,83 @@
+openapi: 3.0.3
+info:
+  title: GoTiny API
+  version: 1.0.0
+  description: A link shortener API that's built with a failproof user experience as its main goal, for both the visitors of the landing page as well as developers.
+servers:
+  - url: https://gotiny.cc
+paths:
+  /api:
+    post:
+      summary: Create a GoTiny link
+      description: "The GoTiny API lets you quickly obtain a short code that's used to redirect to an URL specified by the user."
+      operationId: createGoTinyLink
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                input:
+                  type: string
+                  description: The URL to be shortened or a string that contains that URL. When multiple URLs are found in the provided string, short links will be generated for all of them.
+                long:
+                  type: string
+                  description: The URL to be shortened. Only used if input is not provided.
+                custom:
+                  type: string
+                  description: Generates a custom link. Custom codes should consist of 4-32 lowercase letters, numbers, - and/or _ symbols.
+                useFallback:
+                  type: boolean
+                  description: Set to false if you don't want to use a randomly generated 6-character fallback code and throw an error instead when a custom code can't be used.
+              example:
+                input: "https://amazon.com/very-long-url"
+                custom: "amazon"
+                useFallback: false
+      responses:
+        "200":
+          description: The short link has been successfully created.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  long:
+                    type: string
+                    description: The original URL that was shortened.
+                  code:
+                    type: string
+                    description: The randomly generated 6-character long code. This code will be used as an identifier to redirect to the long URL.
+              example:
+                long: "https://amazon.com/very-long-url"
+                code: "y68hxc"
+        "400":
+          description: The input provided is invalid.
+        "500":
+          description: An error occurred on the server.
+
+  /api/{code}:
+    get:
+      summary: Resolve a GoTiny link
+      description: "You can get the long URL that corresponds with a GoTiny link by making a GET request to https://gotiny.cc/api/<code>."
+      operationId: resolveGoTinyLink
+      parameters:
+        - name: code
+          in: path
+          required: true
+          description: The 6-character code generated when creating a short link.
+          schema:
+            type: string
+          example: y68hxc
+      responses:
+        "200":
+          description: The long URL that corresponds with the given code.
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: "https://amazon.com/very-long-url"
+        "400":
+          description: The code provided is invalid.
+        "500":
+          description: An error occurred on the server.
