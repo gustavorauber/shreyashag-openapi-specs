@@ -1,0 +1,460 @@
+openapi: 3.0.3
+info:
+  title: Random Data API
+  version: "2.0"
+  description: |
+    Developing and testing your web or mobile app can be hard without any data to work with. This is why Random Data API exists. Use any of our API endpoints and fetch data that will allow you faster development and testing cycle. All responses come with ID (integer) and UID (string).
+servers:
+  - url: https://random-data-api.com/api/v2
+    description: Random Data API server
+paths:
+  /users:
+    get:
+      summary: Get random user data
+      description: Get random user data
+      operationId: getRandomUser
+      parameters:
+        - in: query
+          name: size
+          description: The number of random users to retrieve
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: response_type
+          description: The response format. Must be "json".
+          schema:
+            type: string
+            enum:
+              - json
+              - xml
+          required: false
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+  /addresses:
+    get:
+      summary: Get random address data
+      description: Get random address data
+      operationId: getRandomAddress
+      parameters:
+        - in: query
+          name: size
+          description: The number of random addresses to retrieve
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: response_type
+          description: The response format. Must be "json".
+          schema:
+            type: string
+            enum:
+              - json
+              - xml
+          required: false
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Address'
+  /banks:
+    get:
+      summary: Get random bank data
+      description: Get random bank data
+      operationId: getRandomBank
+      parameters:
+        - in: query
+          name: size
+          description: The number of random banks to retrieve
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: response_type
+          description: The response format. Must be "json".
+          schema:
+            type: string
+            enum:
+              - json
+              - xml
+          required: false
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bank'
+  /appliances:
+    get:
+      summary: Get random appliance data
+      description: Get random appliance data
+      operationId: getRandomAppliance
+      parameters:
+        - in: query
+          name: size
+          description: The number of random appliances to retrieve
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: response_type
+          description: The response format. Must be "json".
+          schema:
+            type: string
+            enum:
+              - json
+              - xml
+          required: false
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Appliance'
+  /beers:
+    get:
+      summary: Get a random beer or list of beers
+      description: Returns a random beer or list of beers
+      operationId: getRandomBeer
+      parameters:
+        - name: size
+          in: query
+          description: The number of beers to return (max 100)
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 100
+            default: 1
+        - name: response_type
+          in: query
+          description: The format of the response (json or xml)
+          required: false
+          schema:
+            type: string
+            enum:
+              - json
+              - xml
+            default: json
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Beer'
+        "400":
+          description: Bad request
+  /blood_types:
+    get:
+      operationId: getRandomBloodType
+      summary: Get a random blood type or list of blood types
+      description: Returns a random blood type or list of blood types
+      parameters:
+        - name: size
+          in: query
+          description: The number of blood types to return (max 100)
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 100
+            default: 1
+        - name: response_type
+          in: query
+          description: The format of the response (json or xml)
+          required: false
+          schema:
+            type: string
+            enum:
+              - json
+              - xml
+            default: json
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BloodType'
+        "400":
+          description: Bad request
+  /credit_cards:
+    get:
+      summary: Get a random credit card or list of credit cards
+      description: Returns a random credit card or list of credit cards
+      operationId: getRandomCreditCard
+      parameters:
+        - name: size
+          in: query
+          description: The number of credit cards to return (max 100)
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 100
+            default: 1
+        - name: response_type
+          in: query
+          description: The format of the response (json or xml)
+          required: false
+          schema:
+            type: string
+            enum:
+              - json
+              - xml
+            default: json
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CreditCard'
+        "400":
+          description: Bad request
+components:
+  schemas:
+    Bank:
+      type: object
+      properties:
+        id:
+          type: integer
+        uid:
+          type: string
+        account_number:
+          type: string
+        iban:
+          type: string
+        bank_name:
+          type: string
+        routing_number:
+          type: string
+        swift_bic:
+          type: string
+      required:
+        - id
+        - uid
+        - account_number
+        - iban
+        - bank_name
+        - routing_number
+        - swift_bic
+    CreditCard:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique ID of the credit card.
+        uid:
+          type: string
+          format: uuid
+          description: Unique UID of the credit card.
+        credit_card_number:
+          type: string
+          description: The credit card number.
+        credit_card_expiry_date:
+          type: string
+          format: date
+          description: The expiry date of the credit card.
+        credit_card_type:
+          type: string
+          description: The type of the credit card.
+    Appliance:
+      type: object
+      properties:
+        id:
+          type: integer
+        uid:
+          type: string
+        brand:
+          type: string
+        equipment:
+          type: string
+      required:
+        - id
+        - uid
+        - brand
+        - equipment
+    Beer:
+      type: object
+      properties:
+        id:
+          type: integer
+        uid:
+          type: string
+        name:
+          type: string
+        abv:
+          type: string
+        description:
+          type: string
+        style:
+          type: string
+        brewery_name:
+          type: string
+        brewery_location:
+          type: string
+    BloodType:
+      type: object
+      properties:
+        id:
+          type: integer
+        uid:
+          type: string
+        type:
+          type: string
+        rh_factor:
+          type: string
+        group:
+          type: string
+    Address:
+      type: object
+      properties:
+        id:
+          type: integer
+        uid:
+          type: string
+        city:
+          type: string
+        street_name:
+          type: string
+        street_address:
+          type: string
+        secondary_address:
+          type: string
+        building_number:
+          type: string
+        mail_box:
+          type: string
+        community:
+          type: string
+        zip_code:
+          type: string
+        zip:
+          type: string
+        postcode:
+          type: string
+        time_zone:
+          type: string
+        street_suffix:
+          type: string
+        city_suffix:
+          type: string
+        city_prefix:
+          type: string
+        state:
+          type: string
+        state_abbr:
+          type: string
+        country:
+          type: string
+        country_code:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        full_address:
+          type: string
+    components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        uid:
+          type: string
+        password:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        avatar:
+          type: string
+        gender:
+          type: string
+        phone_number:
+          type: string
+        social_insurance_number:
+          type: string
+        date_of_birth:
+          type: string
+          format: date
+        employment:
+          type: object
+          properties:
+            title:
+              type: string
+            key_skill:
+              type: string
+        address:
+          type: object
+          properties:
+            city:
+              type: string
+            street_name:
+              type: string
+            street_address:
+              type: string
+            zip_code:
+              type: string
+            state:
+              type: string
+            country:
+              type: string
+            coordinates:
+              type: object
+              properties:
+                lat:
+                  type: number
+                lng:
+                  type: number
+        credit_card:
+          type: object
+          properties:
+            cc_number:
+              type: string
+        subscription:
+          type: object
+          properties:
+            plan:
+              type: string
+            status:
+              type: string
+            payment_method:
+              type: string
+            term:
+              type: string
