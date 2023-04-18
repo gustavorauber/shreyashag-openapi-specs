@@ -1,0 +1,213 @@
+openapi: 3.0.1
+info:
+  title: Dictum
+  description: API to get access to the collection of the most inspiring expressions of mankind.
+  contact:
+    name: Dmitry Fisenko
+    url: https://github.com/fisenkodv
+    email: dmitry@fisenko.net
+  license:
+    name: MIT
+    url: https://github.com/fisenkodv/dictum/blob/master/LICENSE
+  version: v1
+servers:
+  - url: https://api.fisenko.net
+paths:
+  /v1/authors/{language}:
+    get:
+      operationId: searchAuthors
+      description: search Authors by given language and query
+      summary: search Authors by given language and query
+      parameters:
+        - name: language
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - en
+        - name: query
+          in: query
+          schema:
+            type: string
+            nullable: true
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            format: int32
+            nullable: true
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            format: int32
+            nullable: true
+      responses:
+        "200":
+          description: searchAuthors 200 response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AuthorSummary"
+  /v1/authors/{language}/{authorId}/quotes:
+    get:
+      operationId: searchAuthorQuotes
+      description: get quotes by a particular author
+      summary: get quotes by a particular author
+      parameters:
+        - name: language
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - en
+        - name: authorId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: query
+          in: query
+          schema:
+            type: string
+            nullable: true
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            format: int32
+            nullable: true
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            format: int32
+            nullable: true
+      responses:
+        "200":
+          description: searchAuthorQuotes 200 response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/QuoteSummary"
+  /v1/quotes/{language}:
+    get:
+      operationId: searchQuotes
+      description: Search for quotes based on query
+      summary: Search for quotes based on query
+      parameters:
+        - name: language
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - en
+        - name: query
+          in: query
+          schema:
+            type: string
+            nullable: true
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            format: int32
+            nullable: true
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            format: int32
+            nullable: true
+      responses:
+        "200":
+          description: searchQuotes 200 response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/QuoteSummary"
+  /v1/quotes/{language}/random:
+    get:
+      operationId: getRandomQuote
+      description: Get a Random Quote
+      summary: Search for quotes based on query
+      parameters:
+        - name: language
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - en
+      responses:
+        "200":
+          description: getRandomQuote 200 response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuoteSummary"
+  /v1/statistics/{language}:
+    get:
+      operationId: getStatistics
+      description: Get Statistics such as total count of authors and quotes
+      summary: Get Statistics such as total count of authors and quotes
+      parameters:
+        - name: language
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - en
+      responses:
+        "200":
+          description: searchQuotes_1 200 response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatisticsDetail"
+components:
+  schemas:
+    AuthorDetail:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        bio:
+          type: string
+    AuthorSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    QuoteSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        text:
+          type: string
+        author:
+          $ref: "#/components/schemas/AuthorSummary"
+    StatisticsDetail:
+      type: object
+      properties:
+        authors:
+          type: integer
+          format: int64
+        quotes:
+          type: integer
+          format: int64
