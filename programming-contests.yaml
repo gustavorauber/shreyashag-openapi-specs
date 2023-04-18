@@ -1,0 +1,255 @@
+openapi: 3.0.0
+info:
+  title: Kontests.Net
+  version: 1.0.0
+  description: APIs for retrieving a list of contests from various websites.
+servers:
+  - url: https://kontests.net
+paths:
+  /api/v1/codeforces_gym:
+    get:
+      summary: Get CodeForces::Gym Contests
+      operationId: getCodeForcesGymContests
+      description: Returns a list of all CodeForces::Gym contests in the site.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Contest"
+  /api/v1/at_coder:
+    get:
+      summary: Get AtCoder Contests
+      operationId: getAtCoderContests
+      description: Returns a list of all AtCoder contests in the site.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Contest"
+  /api/v1/code_chef:
+    get:
+      summary: Get CodeChef Contests
+      operationId: getCodeChefContests
+      description: Returns a list of all CodeChef contests in the site.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Contest"
+  /api/v1/cs_academy:
+    get:
+      summary: Get CS Academy Contests
+      operationId: getCSAcademyContests
+      description: Returns a list of all CS Academy contests in the site.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Contest"
+  /api/v1/hacker_rank:
+    get:
+      summary: Get HackerRank Contests
+      operationId: getHackerRankContests
+      description: Returns a list of all HackerRank contests in the site.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Contest"
+  /api/v1/hacker_earth:
+    get:
+      summary: Get HackerEarth Contests
+      operationId: getHackerEarthContests
+      description: Returns a list of all HackerEarth contests in the site.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Contest"
+  /api/v1/kick_start:
+    get:
+      summary: Get Kick Start Contests
+      operationId: getKickStartContests
+      description: Returns a list of all Kick Start contests in the site.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Contest"
+  /api/v1/leet_code:
+    get:
+      summary: Get LeetCode Contests
+      operationId: getLeetCodeContests
+      description: Returns a list of all LeetCode contests in the site.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Contest"
+
+  /api/v1/all:
+    get:
+      summary: Get All Contests
+      operationId: getAllContests
+      description: Returns a list of all contests in the site.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Contest"
+  /api/v1/top_coder:
+    get:
+      summary: Get TopCoder Contests
+      operationId: getTopCoderContests
+      description: Returns a list of all TopCoder contests in the site.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Contest"
+  /api/v1/codeforces:
+    get:
+      summary: Get CodeForces Contests
+      operationId: getCodeForcesContests
+      description: Returns a list of all CodeForces contests in the site.
+      parameters:
+        - name: status
+          in: query
+          description: Filter by contest status.
+          schema:
+            type: string
+            enum:
+              - BEFORE
+              - CODING
+        - name: gym
+          in: query
+          description: Filter by gym contests.
+          schema:
+            type: boolean
+        - name: start__gt
+          in: query
+          description: Filter by start time greater than specified timestamp.
+          schema:
+            type: string
+            format: date-time
+        - name: start__lt
+          in: query
+          description: Filter by start time less than specified timestamp.
+          schema:
+            type: string
+            format: date-time
+        - name: end__gt
+          in: query
+          description: Filter by end time greater than specified timestamp.
+          schema:
+            type: string
+            format: date-time
+        - name: end__lt
+          in: query
+          description: Filter by end time less than specified timestamp.
+          schema:
+            type: string
+            format: date-time
+        - name: in_24_hours
+          in: query
+          description: Filter by contests starting within the next 24 hours.
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Contest"
+components:
+  schemas:
+    Contest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Contest name.
+        url:
+          type: string
+          description: Contest link.
+        start_time:
+          type: string
+          format: date-time
+          description: Start time of the contest in UTC (Format- %Y-%m-%dT%H:%M:%S.%LZ) if exists, - otherwise.
+        end_time:
+          type: string
+          format: date-time
+          description: End time of the contest in UTC (Format- %Y-%m-%dT%H:%M:%S.%LZ) if exists, - otherwise.
+        duration:
+          type: integer
+          description: Contest duration in seconds if exists, - otherwise.
+        site:
+          type: string
+          enum:
+            - CodeForces
+            - CodeForces::Gym
+            - TopCoder
+            - AtCoder
+            - CS Academy
+            - CodeChef
+            - HackerRank
+            - HackerEarth
+            - Kick Start
+            - LeetCode
+            - Toph
+          description: The website hosting the contest.
+        in_24_hours:
+          type: string
+          enum:
+            - Yes
+            - No
+          description: Yes if the contest starts within the next 24 hours, No otherwise.
+        status:
+          type: string
+          enum:
+            - CODING
+            - BEFORE
+          description: CODING if the contest is running, BEFORE otherwise.
