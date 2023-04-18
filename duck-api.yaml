@@ -1,0 +1,75 @@
+openapi: 3.0.0
+info:
+  title: Duck API
+  version: 1.0.0
+  description: This API provides access to images and gifs of ducks.
+servers:
+  - url : https://random-d.uk/api/v2
+paths:
+  /random:
+    get:
+      summary: Get a random image or gif of a duck
+      description: Returns a JSON object containing a link to a random image or gif of a duck and an optional attribution message.
+      operationId: getRandomDuck
+      parameters:
+        - name: type
+          in: query
+          description: The type of image to return (GIF or JPG).
+          required: false
+          schema:
+            type: string
+            enum:
+              - GIF
+              - JPG
+      responses:
+        '200':
+          description: A JSON object containing a link to a random image or gif of a duck and an optional attribution message.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    description: The URL of the random image or gif of a duck.
+                  message:
+                    type: string
+                    description: An optional attribution message.
+      tags:
+        - Duck
+  /list:
+    get:
+      summary: Get a list of all available duck images and gifs
+      description: Returns a JSON object containing an array of all available duck images and gifs and their counts. The complete image link is like - https://random-d.uk/api/47.gif
+      operationId: getAllDuckImagesAndGifs
+      responses:
+        '200':
+          description: A JSON object containing an array of all available duck images and gifs and their counts.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  images:
+                    type: array
+                    items:
+                      type: string
+                      description: The filenames of all available duck images.
+                  gifs:
+                    type: array
+                    items:
+                      type: string
+                      description: The filenames of all available duck gifs.
+                  http:
+                    type: array
+                    items:
+                      type: string
+                      description: The filenames of all available duck images representing HTTP status codes.
+                  image_count:
+                    type: integer
+                    description: The total number of duck images available.
+                  gif_count:
+                    type: integer
+                    description: The total number of duck gifs available.
+      tags:
+        - Duck
