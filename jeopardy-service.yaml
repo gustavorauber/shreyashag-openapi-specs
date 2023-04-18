@@ -1,0 +1,229 @@
+openapi: 3.0.0
+info:
+  title: Trivia API
+  version: "1"
+  description:
+    A RESTful API for accessing Jeopardy trivia data. For any date fields, use ISO 8601 format in yyyy-mm-dd. For count parameter, it is the number of items to be returned and defaults to 100.
+    For offset, it is the starting ID used for pagination.
+servers:
+  - url: https://jservice.io/api
+paths:
+  /clues:
+    get:
+      summary: Get Jeopardy clues
+      operationId: getClues
+      description: Returns a list of Jeopardy clues filtered by value, category, date, and offset
+      parameters:
+        - name: value
+          in: query
+          description: The value of the clue in dollars
+          schema:
+            type: integer
+        - name: category
+          in: query
+          description: The ID of the category you want to return
+          schema:
+            type: integer
+        - name: min_date
+          in: query
+          description: The earliest date to show, based on the original air date
+          schema:
+            type: string
+            format: date
+        - name: max_date
+          in: query
+          description: The latest date to show, based on the original air date
+          schema:
+            type: string
+            format: date
+        - name: offset
+          in: query
+          description: The number of clues to skip before returning results. Useful for pagination.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Clue"
+  /random:
+    get:
+      summary: Get random Jeopardy clues
+      operationId: getRandomClues
+      description: Returns a list of random Jeopardy clues
+      parameters:
+        - name: count
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Clue"
+  /final:
+    get:
+      summary: Get random Final Jeopardy question
+      operationId: getFinalQuestion
+      description: Returns a random Final Jeopardy question
+      parameters:
+        - name: count
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FinalQuestion"
+  /categories:
+    get:
+      summary: Get Jeopardy categories
+      operationId: getCategories
+      description: Returns a list of Jeopardy categories
+      parameters:
+        - name: count
+          in: query
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
+  /category:
+    get:
+      summary: Get Jeopardy clues for a specific category
+      operationId: getCategoryClues
+      description: Get Jeopardy clues for a specific category
+      parameters:
+        - name: id
+          in: query
+          description: The ID of the category to be used.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Clue"
+
+components:
+  schemas:
+    Clue:
+      type: object
+      properties:
+        id:
+          type: integer
+        answer:
+          type: string
+        question:
+          type: string
+        value:
+          type: integer
+        airdate:
+          type: string
+          format: date
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        category_id:
+          type: integer
+        game_id:
+          type: integer
+        invalid_count:
+          type: integer
+      required:
+        - id
+        - answer
+        - question
+        - value
+        - airdate
+        - created_at
+        - updated_at
+        - category_id
+        - game_id
+        - invalid_count
+    FinalQuestion:
+      type: object
+      properties:
+        id:
+          type: integer
+        answer:
+          type: string
+        question:
+          type: string
+        airdate:
+          type: string
+          format: date
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        category_id:
+          type: integer
+        game_id:
+          type: integer
+        invalid_count:
+          type: integer
+      required:
+        - id
+        - answer
+        - question
+        - airdate
+        - created_at
+        - updated_at
+        - category_id
+        - game_id
+        - invalid_count
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        clues_count:
+          type: integer
+      required:
+        - id
+        - title
+        - created_at
+        - updated_at
+        - clues_count
