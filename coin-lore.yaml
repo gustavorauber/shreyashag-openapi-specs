@@ -1,0 +1,269 @@
+openapi: 3.0.0
+info:
+  title: Global Crypto Data API
+  version: 1.0.0
+  description: This API provides information about the cryptocurrency market.
+servers:
+  - url: https://api.coinlore.net/api
+paths:
+  /global:
+    get:
+      summary: Get global crypto data
+      description: Returns information about the cryptocurrency market.
+      operationId: getGlobalCryptoData
+      responses:
+        "200":
+          description: A list containing information about the cryptocurrency market.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    coins_count:
+                      type: integer
+                      description: The number of coins in the cryptocurrency market.
+                    active_markets:
+                      type: integer
+                      description: The number of active markets in the cryptocurrency market.
+                    total_mcap:
+                      type: number
+                      format: float
+                      description: The total market capitalization of the cryptocurrency market.
+                    total_volume:
+                      type: number
+                      format: float
+                      description: The total volume of the cryptocurrency market.
+                    btc_d:
+                      type: string
+                      description: The percentage of the cryptocurrency market capitalization represented by Bitcoin.
+                    eth_d:
+                      type: string
+                      description: The percentage of the cryptocurrency market capitalization represented by Ethereum.
+                    mcap_change:
+                      type: string
+                      description: The percentage change in the cryptocurrency market capitalization over the last 24 hours.
+                    volume_change:
+                      type: string
+                      description: The percentage change in the cryptocurrency market volume over the last 24 hours.
+                    avg_change_percent:
+                      type: number
+                      format: float
+                      description: The average percentage change of all coins in the cryptocurrency market over the last 24 hours.
+                    volume_ath:
+                      type: integer
+                      description: The all-time high volume of the cryptocurrency market.
+                    mcap_ath:
+                      type: integer
+                      description: The all-time high market capitalization of the cryptocurrency market.
+      tags:
+        - Global Crypto Data
+  /tickers/:
+    get:
+      summary: Get all tickers
+      description: Returns information about all coins, with a maximum of 100 coins per request, using start and limit parameters.
+      operationId: getAllTickers
+      parameters:
+        - name: start
+          in: query
+          description: The starting index of the coins to return.
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: The maximum number of coins to return.
+          required: false
+          schema:
+            type: integer
+        - name: convert
+          in: query
+          description: The currency to convert the prices to ( ISO 4217 standard if fiat currency otherwise use ticker id).
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A list containing information about all coins.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: The unique identifier of the coin.
+                        symbol:
+                          type: string
+                          description: The ticker symbol of the coin.
+                        name:
+                          type: string
+                          description: The name of the coin.
+                        nameid:
+                          type: string
+                          description: The identifier of the coin used by Coinlore.
+                        rank:
+                          type: integer
+                          description: The rank of the coin in terms of market capitalization.
+                        price_usd:
+                          type: string
+                          description: The price of the coin in US dollars.
+                        percent_change_24h:
+                          type: string
+                          description: The percentage change in the price of the coin over the last 24 hours.
+                        percent_change_1h:
+                          type: string
+                          description: The percentage change in the price of the coin over the last hour.
+                        percent_change_7d:
+                          type: string
+                          description: The percentage change in the price of the coin over the last 7 days.
+                        price_btc:
+                          type: string
+                          description: The price of the coin in Bitcoin.
+                        market_cap_usd:
+                          type: string
+                          description: The market capitalization of the coin in US dollars.
+                        volume24:
+                          type: number
+                          format: float
+                          description: The trading volume of the coin over the last 24 hours.
+                        volume24a:
+                          type: number
+                          format: float
+                          description: The trading volume of the coin over the last 24 hours adjusted for transaction volume.
+                        csupply:
+                          type: string
+                          description: The circulating supply of the coin.
+                        tsupply:
+                          type: string
+                          description: The total supply of the coin.
+                        msupply:
+                          type: string
+                          description: The maximum supply of the coin.
+                  info:
+                    type: object
+                    properties:
+                      coins_num:
+                        type: integer
+                        description: The total number of coins in the Coinlore database.
+                      time:
+                        type: integer
+                        description: The Unix timestamp of when the data was last updated.
+      tags:
+        - Tickers
+  /ticker/:
+    get:
+      summary: Get ticker for specific coin
+      description: Returns information for a specific coin using its ID.
+      operationId: getTickerForSpecificCoin
+      parameters:
+        - name: id
+          in: query
+          description: The ID of the coin to return information for.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A list containing information about the specified coin.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The unique identifier of the coin.
+                    symbol:
+                      type: string
+                      description: The ticker symbol of the coin.
+                    name:
+                      type: string
+                      description: The name of the coin.
+                    nameid:
+                      type: string
+                      description: The identifier of the coin used by Coinlore.
+                    rank:
+                      type: integer
+                      description: The rank of the coin in terms of market capitalization.
+                    price_usd:
+                      type: string
+                      description: The price of the coin in US dollars.
+                    percent_change_24h:
+                      type: string
+                      description: The percentage change in the price of the coin over the last 24 hours.
+                    percent_change_1h:
+                      type: string
+                      description: The percentage change in the price of the coin over the last hour.
+                    percent_change_7d:
+                      type: string
+                      description: The percentage change in the price of the coin over the last 7 days.
+                    market_cap_usd:
+                      type: string
+                      description: The market capitalization of the coin in US dollars.
+                    volume24:
+                      type: string
+                      description: The trading volume of the coin over the last 24 hours.
+                    volume24_native:
+                      type: string
+                      description: The trading volume of the coin over the last 24 hours in its native currency.
+                    csupply:
+                      type: string
+                      description: The circulating supply of the coin.
+                    tsupply:
+                      type: string
+                      description: The total supply of the coin.
+                    msupply:
+                      type: string
+                      description: The maximum supply of the coin.
+      tags:
+        - Ticker
+  /coin/social_stats/:
+    get:
+      summary: Get social stats for a coin
+      description: Returns social statistics for a specific coin using its ID.
+      operationId: getSocialStatsForCoin
+      parameters:
+        - name: id
+          in: query
+          description: The ID of the coin to return social statistics for.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A list containing social statistics for the specified coin.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reddit:
+                    type: object
+                    properties:
+                      avg_active_users:
+                        type: number
+                        format: float
+                        description: The average number of active users on the coin's subreddit.
+                      subscribers:
+                        type: integer
+                        description: The number of subscribers to the coin's subreddit.
+                  twitter:
+                    type: object
+                    properties:
+                      followers_count:
+                        type: integer
+                        description: The number of followers of the coin's official Twitter account.
+                      status_count:
+                        type: integer
+                        description: The number of tweets made by the coin's official Twitter account.
+      tags:
+        - Social Stats
