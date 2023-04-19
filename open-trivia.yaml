@@ -1,0 +1,182 @@
+openapi: 3.0.0
+info:
+  title: Open Trivia DB API
+  version: 1.0.0
+  description: An API for retrieving trivia questions and related data from the Open Trivia DB.
+servers: 
+  - url: https://opentdb.com
+paths:
+  /api.php:
+    get:
+      summary: Retrieve a batch of trivia questions
+      operationId: getTriviaQuestions
+      description: |
+        Returns a batch of trivia questions based on the specified parameters.
+        Use a session token to ensure that the API does not return the same question twice.
+      parameters:
+        - name: amount
+          in: query
+          description: The number of questions to retrieve (1-50).
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+        - name: category
+          in: query
+          description: The ID of the category to retrieve questions from. Use the /api_category.php endpoint to retrieve a list of available categories and their IDs.
+          schema:
+            type: integer
+        - name: difficulty
+          in: query
+          description: The difficulty of the questions to retrieve (easy, medium, hard).
+          schema:
+            type: string
+            enum: [easy, medium, hard]
+        - name: type
+          in: query
+          description: The type of questions to retrieve (multiple, boolean).
+          schema:
+            type: string
+            enum: [multiple, boolean]
+        - name: token
+          in: query
+          description: A session token used to ensure that the API does not return the same question twice.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully returned results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response_code:
+                    type: integer
+                    description: A code indicating the success or failure of the request.
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        category:
+                          type: string
+                          description: The category of the question.
+                        type:
+                          type: string
+                          description: The type of the question (multiple or boolean).
+                        difficulty:
+                          type: string
+                          description: The difficulty of the question.
+                        question:
+                          type: string
+                          description: The text of the question.
+                        correct_answer:
+                          type: string
+                          description: The correct answer to the question.
+                        incorrect_answers:
+                          type: array
+                          items:
+                            type: string
+                          description: An array of incorrect answers to the question.
+        "400":
+          description: Invalid parameter. Arguments passed in are not valid.
+        "401":
+          description: Session token does not exist.
+        "402":
+          description: Session token has returned all possible questions for the specified query. Resetting the token is necessary.
+        "404":
+          description: Could not return results. The API doesn't have enough questions for the specified query.
+  /api_category.php:
+    get:
+      summary: Retrieve the list of available categories and their IDs
+      description: Returns a list of available categories and their IDs for use.
+      operationId: getCategories
+      responses:
+        "200":
+          description: Successfully returned results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trivia_categories:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: The ID of the category.
+                        name:
+                          type: string
+                          description: The name of the category.
+  /api_count.php:
+    get:
+      operationId: getCategoryCounts
+      summary: Retrieve the number of questions in a specific category
+      description: Returns the number of questions in the database, in a specific category.
+      parameters:
+        - name: category
+          in: query
+          description: The ID of the category to retrieve the question count for.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully returned results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  category_question_count:
+                    type: object
+                    properties:
+                      category_id:
+                        type: integer
+                        description: The ID of the category.
+                      total_question_count:
+                        type: integer
+                        description: The total number of questions in the category.
+                      verified_question_count:
+                        type: integer
+                        description: The number of verified questions in the category.
+                      pending_question_count:
+                        type: integer
+                        description: The number of pending questions in the category.
+                      rejected_question_count:
+                        type: integer
+                        description: The number of rejected questions in the category.
+        "400":
+          description: Invalid parameter. Arguments passed in are not valid.
+  /api_count_global.php:
+    get:
+      operationId: getGlobalCount
+      summary: Retrieve the total number of questions in the database
+      description: Returns the total number of ALL questions in the database. Total, Pending, Verified, and Rejected.
+      responses:
+        "200":
+          description: Successfully returned results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  overall_question_count:
+                    type: object
+                    properties:
+                      total_question_count:
+                        type: integer
+                        description: The total number of questions in the database.
+                      verified_question_count:
+                        type: integer
+                        description: The number of verified questions in the database.
+                      pending_question_count:
+                        type: integer
+                        description: The number of pending questions in the database.
+                      rejected_question_count:
+                        type: integer
+                        description: The number of rejected questions in the database.
