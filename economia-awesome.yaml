@@ -1,0 +1,149 @@
+openapi: 3.0.0
+info:
+  title: Economia Awesome API
+  description: The Economia Awesome API provides access to up-to-date foreign exchange rates The API returns various information related to the currency pairs, including the bid price (Purchase), ask price (Sale), variation (varBid), percentage of variation (pctChange), maximum (high) and minimum (low) prices. Additionally, the API provides a list of supported currency pairs, which can be used to make requests for specific currency pair data.
+
+  version: 1.0.0
+servers:
+  - url: https://economia.awesomeapi.com.br
+paths:
+  /json/available:
+    get:
+      summary: Get Available Coins
+      description: Retrieve the list of available coins supported by the AwesomeAPI. This is a long response and cannot be paginated currently.
+      operationId: getAvailableCoins
+      responses:
+        "200":
+          description: A list of available coins supported by the AwesomeAPI.
+          content:
+            application/json:
+              schema:
+                type: object
+        "404":
+          description: The requested resource is not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "The requested resource is not found."
+      tags:
+        - Coins
+  /json/last/{coins}:
+    get:
+      summary: Returns selected coins (updated every 30 seconds)
+      description: Returns selected coins (updated every 30 seconds)
+      operationId: getLastValues
+      parameters:
+        - in: path
+          name: coins
+          schema:
+            type: string
+          required: true
+          description: Selected currencies separated by a comma (,) Example- USD-BRL,EUR-BRL,BTC-BRL
+      responses:
+        "200":
+          description: Returns the last occurrence of the selected currencies.
+          content:
+            application/json:
+              schema:
+                type: object
+  /json/daily/{currency}/{number_days}:
+    get:
+      summary: Returns the close of the last days
+      description: Returns the close of the last days
+      operationId: getCloseNumberOfDays
+      parameters:
+        - in: path
+          name: currency
+          schema:
+            type: string
+          required: true
+          description: Ex currency code- USD-BRL
+        - in: path
+          name: number_days
+          schema:
+            type: integer
+          required: true
+          description: Numbers of days 30/60/90/.../360 days
+      responses:
+        "200":
+          description: Returns the close of the last days
+          content:
+            application/json:
+              schema:
+                type: object
+  /json/daily/{currency}:
+    get:
+      summary: Returns the close of a specific period
+      description: Returns the close of a specific period
+      operationId: getCloseSpecificPeriod
+      parameters:
+        - in: path
+          name: currency
+          schema:
+            type: string
+          required: true
+          description: Ex currency code- USD-BRL
+        - in: query
+          name: start_date
+          schema:
+            type: string
+            format: date
+          required: false
+          description: Start date of results in YYYYMMDD format Ex- 20180901
+        - in: query
+          name: end_date
+          schema:
+            type: string
+            format: date
+          required: false
+          description: Limit date of results in YYYYMMDD format Ex- 20180930
+      responses:
+        "200":
+          description: Returns the close of a specific period
+          content:
+            application/json:
+              schema:
+                type: object
+  /json/{currency}/{quantity}:
+    get:
+      summary: Returns sequential quotes for a single currency
+      description: Returns sequential quotes for a single currency
+      operationId: getSequentialQuotes
+      parameters:
+        - in: path
+          name: currency
+          schema:
+            type: string
+          required: true
+          description: Currency code E.g. USD-BRL
+        - in: path
+          name: quantity
+          schema:
+            type: number
+          required: true
+          description: Number of results to return
+        - in: query
+          name: start_date
+          schema:
+            type: string
+            format: date
+          required: false
+          description: Start date of results in YYYYMMDD format e.g.- 20200201
+        - in: query
+          name: end_date
+          schema:
+            type: string
+            format: date
+          required: false
+          description: Limit date for results in YYYYMMDD format e.g. 20200229
+      responses:
+        "200":
+          description: Returns sequential quotes for a single currency
+          content:
+            application/json:
+              schema:
+                type: object
