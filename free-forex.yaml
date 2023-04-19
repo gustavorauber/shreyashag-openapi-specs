@@ -1,0 +1,61 @@
+openapi: 3.0.0
+info:
+  title: Free Forex API
+  description: A simple API for getting live forex rates. To obtain all supported pairs, call getLiveForexRates without any pairs parameter.
+  version: 1.0.0
+servers:
+  - url: https://www.freeforexapi.com
+paths:
+  /api/live:
+    get:
+      summary: Get live forex rates or supported pairs depending on parameter.
+      description: Get live forex rates or supported pairs depending on parameter.
+      operationId: getLiveForexRates
+      parameters:
+        - name: pairs
+          in: query
+          required: false
+          description: One or more currency pairs as a comma-separated list
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  rates:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        rate:
+                          type: number
+                          format: double
+                        timestamp:
+                          type: integer
+                          format: int64
+                      required:
+                        - rate
+                        - timestamp
+                    description: A map of currency pairs and their rates
+                  code:
+                    type: integer
+                    example: 200
+                    description: The response code
+        "400":
+          description: Invalid input parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A message explaining the error
+                  code:
+                    type: integer
+                    example: 1001
+                    description: The error code
