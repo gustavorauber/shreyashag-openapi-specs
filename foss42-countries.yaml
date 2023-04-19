@@ -1,0 +1,144 @@
+openapi: 3.0.0
+info:
+  title: Country Code Dictionary API
+  description: API to fetch the country code dictionary where country names are keys and the Alpha-2 (two-lettered) country codes are the values corresponding to the keys.
+  version: 1.0.0
+servers:
+  - url: https://api.foss42.com
+paths:
+  /country/codes:
+    get:
+      summary: Fetch the country code dictionary
+      operationId: getCountryCodes
+      description: Returns the country code dictionary where country names are keys and the Alpha-2 (two-lettered) country codes are the values corresponding to the keys.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    additionalProperties:
+                      type: string
+                      description: The Alpha-2 (two-lettered) country code corresponding to the country name key.
+  /country/data:
+    get:
+      summary: Fetch World Bank data for a given country code
+      operationId: getWorldBankData
+      description: Returns some World Bank data for a country given by its ISO Alpha-2 or Alpha-3 country code.
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+          description: ISO Alpha-2 or Alpha-3 country code.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      area:
+                        type: number
+                        description: The area of the country in square kilometers.
+                      population:
+                        type: number
+                        description: The population of the country.
+  /country/subdivisions:
+    get:
+      summary: Fetch the country subdivision details for a given country code
+      operationId: getCountrySubdivisions
+      description: Returns the country subdivision details (states, territories, etc.) for a given ISO Alpha-2 or Alpha-3 country code.
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [AU, CA, CN, IN, JP, KR, US]
+          description: ISO Alpha-2 or Alpha-3 country code.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                          description: The subdivision code.
+                        name:
+                          type: string
+                          description: The name of the subdivision.
+                        category:
+                          type: string
+                          enum:
+                            [
+                              state,
+                              territory,
+                              province,
+                              autonomous region,
+                              special administrative region,
+                            ]
+                          description: The category of the subdivision.
+  /country/name:
+    get:
+      summary: Fetch the popular name of a country for a given country code
+      operationId: getCountryName
+      description: Returns the popular name of a country for a given ISO Alpha-2 or Alpha-3 country code.
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+          description: ISO Alpha-2 or Alpha-3 country code.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    description: The popular name of the country.
+  /country/flag:
+    get:
+      summary: Fetch the emoji country flag for a given country code
+      operationId: getCountryFlag
+      description: Returns the emoji country flag for a given ISO Alpha-2 or Alpha-3 country code.
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+          description: ISO Alpha-2 or Alpha-3 country code.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    description: The emoji country flag corresponding to the country code.
