@@ -2,8 +2,10 @@ openapi: 3.0.0
 info:
   title: Ron Swanson Quotes API
   version: "2"
+servers:
+  - url: https://ron-swanson-quotes.herokuapp.com/v2
 paths:
-  /v2/quotes:
+  /quotes:
     get:
       summary: Get a random Ron Swanson quote
       description: Get a random Ron Swanson quote
@@ -18,7 +20,7 @@ paths:
                 items:
                   type: string
                   example: "Capitalism: God’s way of determining who is smart and who is poor."
-  /v2/quotes/{count}:
+  /quotes/{count}:
     get:
       summary: Get {count} random Ron Swanson quotes
       description: Get {count} random Ron Swanson quotes
@@ -42,7 +44,7 @@ paths:
                   example:
                     - "Capitalism: God’s way of determining who is smart and who is poor."
                     - "Clear alcohols are for rich women on diets."
-  /v2/quotes/search/{term}:
+  /quotes/search/{term}:
     get:
       summary: Search for Ron Swanson quotes containing {term}
       description: Search for Ron Swanson quotes containing {term}
