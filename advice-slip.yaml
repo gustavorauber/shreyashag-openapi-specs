@@ -1,0 +1,73 @@
+openapi: "3.0.0"
+info:
+  title: Random Advice API
+  version: 1.0.0
+  description: API to get a random advice slip or search for advice by query
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  contact:
+    name: Random Advice API Support
+    email: support@randomadviceapi.com
+    url: https://randomadviceapi.com
+servers:
+  - url: https://api.adviceslip.com
+    description: Production server
+paths:
+  /advice:
+    get:
+      summary: Retrieve a random advice slip
+      description: Returns a random advice slip as a slip object.
+      responses:
+        "200":
+          description: Successfully returned results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  slip:
+                    type: object
+                    properties:
+                      slip_id:
+                        type: integer
+                        description: The unique ID of this advice slip.
+                      advice:
+                        type: string
+                        description: The advice being given.
+  /advice/search/{query}:
+    get:
+      summary: Search for advice by query
+      description: If an advice slip is found, containing the corresponding search term in {query}, an array of slip objects is returned inside a search object.
+      parameters:
+        - name: query
+          in: path
+          description: The search query.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully returned results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_results:
+                    type: integer
+                    description: Total number of matching advice slips found.
+                  query:
+                    type: string
+                    description: The search query provided.
+                  slips:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        slip_id:
+                          type: integer
+                          description: The unique ID of this advice slip.
+                        advice:
+                          type: string
+                          description: The advice being given.
