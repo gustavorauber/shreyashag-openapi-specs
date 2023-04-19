@@ -1,0 +1,137 @@
+openapi: 3.0.0
+info:
+  title: Foss42 Conversion APIs
+  description: Convert one type (or format) of data into another format or structure.
+  version: 1.0.0
+servers:
+  - url: https://api.foss42.com
+paths:
+  /convert/leet:
+    get:
+      summary: Convert text to Leet (1337) language
+      operationId: convertToLeet
+      description: Returns the Leet (1337) version of the input text.
+      parameters:
+        - name: text
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The input text to be converted to Leet.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    description: The Leet (1337) version of the input text.
+  /convert/mirror:
+    get:
+      summary: Text to Mirror
+      description: Returns the mirror version of the input text.
+      operationId: getTextToMirror
+      parameters:
+        - in: query
+          name: text
+          required: true
+          description: The input text to be mirrored
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+  /convert/phone2numeric:
+    get:
+      summary: Convert Phone to Numeric
+      operationId: phoneToNumeric
+      description: Converts a phone number with letters into its numeric equivalent
+      parameters:
+        - name: text
+          in: query
+          description: The text supplied to be converted into a numeric phone number
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+        "422":
+          description: Validation Error
+  /convert/slug:
+    get:
+      summary: Convert text to slug
+      description: Converts the input text into a human-readable slug.
+      operationId: convertTextToSlug
+      parameters:
+        - name: text
+          in: query
+          required: true
+          description: The text to be converted to a slug
+          schema:
+            type: string
+        - name: sep
+          in: query
+          description: The separator to be used in the slug (default is "-")
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    description: The generated slug
+        "422":
+          description: Validation error
+  /convert/upsidedown:
+    get:
+      operationId: textToUpsideDown
+      description: Returns the upside down version of the input text
+      parameters:
+        - in: query
+          name: text
+          required: true
+          description: The input text
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+        "422":
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
