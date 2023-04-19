@@ -1,0 +1,68 @@
+openapi: 3.0.0
+info:
+  title: Ron Swanson Quotes API
+  version: "2"
+paths:
+  /v2/quotes:
+    get:
+      summary: Get a random Ron Swanson quote
+      description: Get a random Ron Swanson quote
+      operationId: getRandomQuote
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  example: "Capitalism: God’s way of determining who is smart and who is poor."
+  /v2/quotes/{count}:
+    get:
+      summary: Get {count} random Ron Swanson quotes
+      description: Get {count} random Ron Swanson quotes
+      operationId: getRandomQuotes
+      parameters:
+        - name: count
+          in: path
+          description: Number of quotes to retrieve
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  example:
+                    - "Capitalism: God’s way of determining who is smart and who is poor."
+                    - "Clear alcohols are for rich women on diets."
+  /v2/quotes/search/{term}:
+    get:
+      summary: Search for Ron Swanson quotes containing {term}
+      description: Search for Ron Swanson quotes containing {term}
+      operationId: searchQuotes
+      parameters:
+        - name: term
+          in: path
+          description: The search term to look for in quotes
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  example:
+                    - "There's only one thing I hate more than lying: skim milk. Which is water that's lying about being milk."
+                    - "I hate everything."
