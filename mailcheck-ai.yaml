@@ -9,6 +9,8 @@ paths:
   /domain/{domain}:
     get:
       summary: Check a domain
+      description: Check a domain
+      operationId: checkDomain
       parameters:
         - name: domain
           in: path
@@ -61,6 +63,8 @@ paths:
   /email/{email}:
     get:
       summary: Check an email
+      description: Check an email ID
+      operationId: checkEmail
       parameters:
         - name: email
           in: path

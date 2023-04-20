@@ -9,6 +9,8 @@ paths:
   /email:
     get:
       summary: Validate email address
+      description: Validate email address
+      operationId: validateEmail
       parameters:
         - name: email
           in: query

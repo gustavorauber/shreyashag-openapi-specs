@@ -1,7 +1,9 @@
 openapi: 3.0.0
 info:
-  title: Get all Assets V2
-  description: Get the paginated list of all assets and their metrics and profiles
+  title: Messario Crypto
+  description: Messari provides a free API for crypto prices, market data metrics, on-chain metrics, and qualitative information (asset profile).
+  
+    This is the same API that powers the https://messari.io/ web app.
   version: 1.0.0
 servers:
   - url: https://data.messari.io/api
@@ -9,6 +11,7 @@ paths:
   /v2/assets:
     get:
       summary: Get all assets
+      description: Get all assets
       operationId: getAllAssetsV2
       parameters:
         - name: page
@@ -92,6 +95,7 @@ paths:
   /v1/markets:
     get:
       summary: Get all markets
+      description: Get all markets
       operationId: getAllMarkets
       parameters:
         - name: page
@@ -126,6 +130,7 @@ paths:
         - markets
   /v1/news:
     get:
+      description: Get all news
       summary: Get all news
       operationId: getAllNews
       parameters:
@@ -166,6 +171,7 @@ paths:
   /news/{assetKey}:
     get:
       summary: Get news for asset
+      description: Get news for asset
       operationId: getNewsForAsset
       parameters:
         - name: assetKey
