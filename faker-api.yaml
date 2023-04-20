@@ -6,7 +6,17 @@ info:
     _locale #
     Default: en_US
 
-    This parameter means the language of the API response we want to get and accept the locale format "en_EN". For example:
+    This parameter means the language of the API response we want to get.
+
+    These codes are language codes that follow the ISO 639-1 standard, which is a two-letter system for identifying languages. The codes are combined with a two-letter country code (ISO 3166-1), separated by an underscore. Examples - 
+
+    fr_FR: French language spoken in France
+
+    it_IT: Italian language spoken in Italy
+
+    en_US: English language spoken in the United States 
+
+    en_GB: English language spoken in the United Kingdom
 
     https://fakerapi.it/api/v1/persons?_locale=fr_FR
     This example returns people with french names.
@@ -16,12 +26,9 @@ info:
 
     Min: 1 - Max: 1000
 
-    This parameter means the number of rows we want to obtain and accept only integers. If you request more than 1000 rows (maximum) the system will return 1000 rows anyway. Example:
+    This parameter means the number of rows we want to obtain and accept only integers. If you request more than 1000 rows (maximum) the system will return 1000 rows anyway.
 
-    https://fakerapi.it/api/v1/companies?_quantity=5
-    This example returns 5 companies.
-
-    _seed #
+    _seed
     Default: null
 
     This parameter accept an integer and allows to get always the same results. So, executing the same request with _seed parameter set to the same value (ex. 12345) the results will never change.
@@ -33,7 +40,7 @@ paths:
       tags:
         - default
       summary: Addresses
-      description: Get 100 addresses with en_US locale
+      description: Get  addresses with given locale
       operationId: getAddresses
       parameters:
         - name: _quantity
@@ -241,7 +248,7 @@ paths:
         - default
       summary: Texts
       operationId: getTexts
-      description: Get 100 texts with it_IT locale and 250 characters length
+      description: Get texts with given locale and characters length
       parameters:
         - name: _quantity
           in: query
@@ -294,7 +301,7 @@ paths:
       summary: Custom
       operationId: getCustom
       description: >-
-        Get 100 rows with first name, last name, country, birthday, email and
+        Get rows with first name, last name, country, birthday, email and
         vat
       parameters:
         - name: _quantity
