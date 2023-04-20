@@ -1,0 +1,334 @@
+openapi: 3.0.0
+info:
+  title: Faker API - by Alessandro Pietrantonio
+  version: 1.0.0
+  description: |
+    _locale #
+    Default: en_US
+
+    This parameter means the language of the API response we want to get and accept the locale format "en_EN". For example:
+
+    https://fakerapi.it/api/v1/persons?_locale=fr_FR
+    This example returns people with french names.
+
+    _quantity #
+    Default: 10
+
+    Min: 1 - Max: 1000
+
+    This parameter means the number of rows we want to obtain and accept only integers. If you request more than 1000 rows (maximum) the system will return 1000 rows anyway. Example:
+
+    https://fakerapi.it/api/v1/companies?_quantity=5
+    This example returns 5 companies.
+
+    _seed #
+    Default: null
+
+    This parameter accept an integer and allows to get always the same results. So, executing the same request with _seed parameter set to the same value (ex. 12345) the results will never change.
+servers:
+  - url: https://fakerapi.it
+paths:
+  /api/v1/addresses:
+    get:
+      tags:
+        - default
+      summary: Addresses
+      description: Get 100 addresses with en_US locale
+      operationId: getAddresses
+      parameters:
+        - name: _quantity
+          in: query
+          schema:
+            type: integer
+          example: "100"
+        - name: _locale
+          in: query
+          schema:
+            type: string
+          example: en_US
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/books:
+    get:
+      tags:
+        - default
+      summary: Books
+      description: Get books
+      operationId: getBooks
+      parameters:
+        - name: _quantity
+          in: query
+          schema:
+            type: integer
+          example: "100"
+        - name: _locale
+          in: query
+          schema:
+            type: string
+          example: en_US
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/companies:
+    get:
+      tags:
+        - default
+      summary: Companies
+      operationId: getCompanies
+      description: Get companies with given locale
+      parameters:
+        - name: _quantity
+          in: query
+          schema:
+            type: integer
+          example: "100"
+        - name: _locale
+          in: query
+          schema:
+            type: string
+          example: en_US
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/credit_cards:
+    get:
+      tags:
+        - default
+      summary: Credit Cards
+      operationId: getCreditCardss
+      description: Get credit cards with given locale
+      parameters:
+        - name: _quantity
+          in: query
+          schema:
+            type: integer
+          example: "100"
+        - name: _locale
+          in: query
+          schema:
+            type: string
+          example: en_US
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/images:
+    get:
+      tags:
+        - default
+      summary: Images
+      operationId: getImages
+      description: Get images with height of given pixels and given locale
+      parameters:
+        - name: _quantity
+          in: query
+          schema:
+            type: integer
+          example: "100"
+        - name: _locale
+          in: query
+          schema:
+            type: string
+          example: en_US
+        - name: _type
+          description: Kind of images, example kittens
+          in: query
+          schema:
+            type: string
+          example:
+        - name: _height
+          in: query
+          schema:
+            type: integer
+          example: "300"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/persons:
+    get:
+      tags:
+        - default
+      summary: Persons
+      operationId: getPersons
+      description: Get persons with given locale and given gender
+      parameters:
+        - name: _quantity
+          in: query
+          schema:
+            type: integer
+          example: "100"
+        - name: _locale
+          in: query
+          schema:
+            type: string
+          example: en_US
+        - name: _gender
+          in: query
+          schema:
+            type: string
+          example: female
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/places:
+    get:
+      tags:
+        - default
+      summary: Places
+      operationId: getPlaces
+      description: Get places
+      parameters:
+        - name: _quantity
+          in: query
+          schema:
+            type: integer
+          example: "100"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/products:
+    get:
+      tags:
+        - default
+      summary: Products
+      operationId: getProducts
+      description: >-
+        Get products with given locale and specified parameters
+      parameters:
+        - name: _quantity
+          in: query
+          schema:
+            type: integer
+          example: "100"
+        - name: _locale
+          in: query
+          schema:
+            type: string
+          example: en_US
+        - name: _taxes
+          in: query
+          schema:
+            type: integer
+          example: "10"
+        - name: _categories_type
+          description: Example value, string
+          in: query
+          schema:
+            type: string
+          example: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/texts:
+    get:
+      tags:
+        - default
+      summary: Texts
+      operationId: getTexts
+      description: Get 100 texts with it_IT locale and 250 characters length
+      parameters:
+        - name: _quantity
+          in: query
+          schema:
+            type: integer
+          example: "100"
+        - name: _locale
+          in: query
+          schema:
+            type: string
+          example: it_IT
+        - name: _characters
+          in: query
+          schema:
+            type: integer
+          example: "250"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/users:
+    get:
+      tags:
+        - default
+      summary: Users
+      operationId: getUsers
+      description: Get users with given locale and gender
+      parameters:
+        - name: _quantity
+          in: query
+          schema:
+            type: integer
+          example: "100"
+        - name: _gender
+          in: query
+          schema:
+            type: string
+            enum: [male, female]
+          example: male
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/custom:
+    get:
+      tags:
+        - default
+      summary: Custom
+      operationId: getCustom
+      description: >-
+        Get 100 rows with first name, last name, country, birthday, email and
+        vat
+      parameters:
+        - name: _quantity
+          in: query
+          schema:
+            type: integer
+          example: "100"
+        - name: name
+          in: query
+          schema:
+            type: string
+          example: firstName
+        - name: surname
+          in: query
+          schema:
+            type: string
+          example: lastName
+        - name: from
+          in: query
+          schema:
+            type: string
+          example: country
+        - name: birthday
+          in: query
+          schema:
+            type: string
+          example: date
+        - name: vatId
+          in: query
+          schema:
+            type: string
+          example: vat
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
