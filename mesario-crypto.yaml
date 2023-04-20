@@ -1,0 +1,295 @@
+openapi: 3.0.0
+info:
+  title: Get all Assets V2
+  description: Get the paginated list of all assets and their metrics and profiles
+  version: 1.0.0
+servers:
+  - url: https://data.messari.io/api
+paths:
+  /v2/assets:
+    get:
+      summary: Get all assets
+      operationId: getAllAssetsV2
+      parameters:
+        - name: page
+          in: query
+          description: Page number, starts at 1. Increment to paginate through results (until result is empty array)
+          schema:
+            type: integer
+        - name: sort
+          in: query
+          description: Default sort is "marketcap desc", but the only valid value for this query param is "id" which translates to "id asc", which is useful for a stable sort while paginating
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Default is 20, max is 500
+          schema:
+            type: integer
+        - name: fields
+          in: query
+          description: Pare down the returned fields (comma-separated, drill down with a slash /). Example id,slug,symbol,metrics/market_data/price_usd
+          schema:
+            type: string
+        - name: with-metrics
+          in: query
+          description: Existence of this query param filters assets to those with quantitative data
+          schema:
+            type: boolean
+        - name: with-profiles
+          in: query
+          description: Existence of this query param filters assets to those with qualitative data
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+        - assets
+  /v2/assets/{assetKey}/profile:
+    get:
+      summary: Get asset profile
+      operationId: getAssetProfileV2
+      parameters:
+        - name: assetKey
+          in: path
+          description: This "key" can be the asset's ID (unique), slug (unique), or symbol (non-unique). We strongly recommend using ID or slug, as some relatively common symbols may produce unexpected results. In general, the oldest asset with a given symbol will be returned when symbol is used.
+          required: true
+          schema:
+            type: string
+        - name: fields
+          in: query
+          description: Pare down the returned fields (comma-separated, drill down with a slash /)
+          schema:
+            type: string
+        - name: as-markdown
+          in: query
+          description: Formatting (other than HTML links) is hidden. Use this query param to return content with markdown syntax
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: "#/components/schemas/ApiStatus"
+                  timestamp:
+                    type: string
+                  elapsed:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/AssetProfileV2"
+      tags:
+        - assets
+  /v1/markets:
+    get:
+      summary: Get all markets
+      operationId: getAllMarkets
+      parameters:
+        - name: page
+          in: query
+          description: Page number, starts at 1. Increment to paginate through results (until result is empty array)
+          schema:
+            type: integer
+        - name: fields
+          in: query
+          description: Pare down the returned fields (comma-separated, drill down with a slash /). Examples - id,exchange_id,base_asset_id,quote_asset_id,class,excluded_from_price,exchange_name,exchange_slug,base_asset_symbol,quote_asset_symbol,pair,price_usd,volume_last_24_hours,deviation_from_vwap_percent,last_trade_at
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: "#/components/schemas/ApiStatus"
+                  timestamp:
+                    type: string
+                  elapsed:
+                    type: integer
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Market"
+      tags:
+        - markets
+  /v1/news:
+    get:
+      summary: Get all news
+      operationId: getAllNews
+      parameters:
+        - name: page
+          in: query
+          description: Page number, starts at 1. Increment to paginate through results (until result is empty array)
+          schema:
+            type: integer
+        - name: fields
+          in: query
+          description:
+            Pare down the returned fields (comma-separated, drill down with a slash /).
+            Examples - id,title,url,author/name,pdfUrl,previewImage,published_at
+            content field returns a lot of text
+          schema:
+            type: string
+        - name: as-markdown
+          in: query
+          description: Formatting (other than HTML links) is hidden. Use this query param to return content with markdown syntax
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: "#/components/schemas/ApiStatus"
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/News"
+      tags:
+        - news
+  /news/{assetKey}:
+    get:
+      summary: Get news for asset
+      operationId: getNewsForAsset
+      parameters:
+        - name: assetKey
+          in: path
+          description: This "key" can be the asset's ID (unique), slug (unique), or symbol (non-unique). We strongly recommend using ID or slug, as some relatively common symbols may produce unexpected results. In general, the oldest asset with a given symbol will be returned when symbol is used.
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Page number, starts at 1. Increment to paginate through results (until result is empty array)
+          schema:
+            type: integer
+        - name: fields
+          in: query
+          description:
+            Pare down the returned fields (comma-separated, drill down with a slash /).
+
+            Examples - id,title,url,author/name,pdfUrl,previewImage,published_at
+            content field returns a lot of text
+          schema:
+            type: string
+        - name: as-markdown
+          in: query
+          description: Formatting (other than HTML links) is hidden. Use this query param to return content with markdown syntax
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: "#/components/schemas/ApiStatus"
+                  data:
+                    $ref: "#/components/schemas/News"
+      tags:
+        - news
+components:
+  schemas:
+    ApiStatus:
+      type: object
+      properties:
+        error_code:
+          type: integer
+        error_message:
+          type: string
+    News:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        author:
+          type: object
+          properties:
+            name:
+              type: string
+    Market:
+      type: object
+      properties:
+        id:
+          type: string
+        exchange_id:
+          type: string
+        base_asset_id:
+          type: string
+        quote_asset_id:
+          type: string
+        class:
+          type: string
+        excluded_from_price:
+          type: boolean
+        exchange_name:
+          type: string
+        exchange_slug:
+          type: string
+        base_asset_symbol:
+          type: string
+        quote_asset_symbol:
+          type: string
+        pair:
+          type: string
+        price_usd:
+          type: number
+          format: double
+        volume_last_24_hours:
+          type: number
+          format: double
+        deviation_from_vwap_percent:
+          type: number
+          format: double
+        last_trade_at:
+          type: string
+          format: date-time
+    AssetProfileV2:
+      type: object
+      properties:
+        profile:
+          type: object
+          properties:
+            general:
+              type: object
+              properties:
+                overview:
+                  type: object
+                  properties:
+                    is_verified:
+                      type: boolean
+            contributors:
+              type: object
+            advisors:
+              type: object
+            investors:
+              type: object
+            ecosystem:
+              type: object
+            economics:
+              type: object
+            technology:
+              type: object
+            governance:
+              type: object
