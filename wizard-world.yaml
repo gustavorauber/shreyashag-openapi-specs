@@ -57,11 +57,6 @@ paths:
     get:
       tags:
         - Houses
-      parameters:
-        - name: query
-          in: query
-          schema:
-            $ref: "#/components/schemas/GetHousesQuery"
       responses:
         "200":
           description: Success
@@ -239,9 +234,6 @@ components:
         lastName:
           type: string
           nullable: true
-      additionalProperties: false
-    GetHousesQuery:
-      type: object
       additionalProperties: false
     HouseDto:
       type: object
