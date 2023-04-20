@@ -64,7 +64,7 @@ paths:
       tags:
         - Deals
       summary: Deals
-      operationId: deals
+      operationId: getDeals
       description: >-
         Get a paged list of deals matching any number of criteria, all the
         following filtering parameters are optional.
@@ -348,6 +348,7 @@ paths:
       tags:
         - Games
       summary: List of Games
+      operationId: getGames
       description: >-
         Get a list of games that contain a given title or match a steamAppID.
         Response includes the cheapest current deal for each game.
@@ -493,6 +494,7 @@ paths:
                     https://steamcdn-a.akamaihd.net/steam/apps/35140/capsule_sm_120.jpg?t=1525990900
   /api/1.0/stores:
     get:
+      operationId: getStores
       tags:
         - Stores
       summary: Stores Info
