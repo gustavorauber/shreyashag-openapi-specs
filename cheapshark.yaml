@@ -1,0 +1,754 @@
+openapi: 3.0.0
+info:
+  title: CheapShark API
+  description: >-
+    [CheapShark](https://www.cheapshark.com/) is a price comparison website for
+    digital PC Games. We keep track of prices across multiple stores including
+    Steam, GreenManGaming, Fanatical, and many others.
+
+    In general the API is designed to be called in response to user input /
+    queries in your application. For example, a user searching for a particular
+    game or browsing through pages of deals. Excessive automated requests to
+    build a cached catalog of data **will run into rate limiting issues** and
+    should be avoided.
+
+  version: 1.0.0
+servers:
+  - url: https://www.cheapshark.com
+tags:
+  - name: Deals
+    description: >-
+      Each deal is the price (and metadata) for a game at a particular store.
+      For example: if a game is available on 3 stores, it will have 3 separate
+      deal entries, one for each store the game is listed on. For reference,
+      deal entries still exist even when the game is at full price.
+
+
+      On your website or app, you will use the CheapShark redirect page to link
+      users to a specific deal:
+
+
+      `https://www.cheapshark.com/redirect?dealID={id}`
+
+
+      **Important Note**: The redirect page is _not_ an API endpoint and will
+      **block** automated access. It is designed only to link and send your
+      users to deals. If your use-case _requires_ automation, please get in
+      touch for options!
+
+
+      ---
+
+
+      The deal rating property provides a quick way to compare how 'good' a deal
+      is. It is normalized on a scale from 0 to 10.
+
+
+      Pricing data is always in **USD**. All date fields (releaseDate,
+      lastChange, etc.) are returned in [Unix
+      Timestamp](https://www.unixtimestamp.com/) format, in seconds. Boolean
+      flags are a `0` or a `1`.
+  - name: Games
+    description: >-
+      Games are the parent for deals, they are grouped by their name. They have
+      one or more deals associated with them.
+
+
+      The Games endpoint can be useful when you need to search by title and
+      present which Games are available (before drilling down into deals).
+  - name: Stores
+    description: Information on stores we track
+paths:
+  /api/1.0/deals:
+    get:
+      tags:
+        - Deals
+      summary: Deals
+      operationId: deals
+      description: >-
+        Get a paged list of deals matching any number of criteria, all the
+        following filtering parameters are optional.
+
+        If id is passed, then returns information related to the particular deal.
+      parameters:
+        - name: storeID
+          in: query
+          schema:
+            type: integer
+          description: >-
+            `(optional, string)`
+
+
+            Comma separated list of store ID's to filter on. If not set, all
+            stores will be shown.
+          example: "1"
+        - name: pageNumber
+          in: query
+          schema:
+            type: string
+          description: >-
+            `(optional, integer)` Default `0`
+
+
+            The requested page number, value is 0 indexed.
+
+
+            The `X-Total-Page-Count` HTTP header on the response will give you
+            the max value for this parameter.
+        - name: pageSize
+          in: query
+          schema:
+            type: string
+          description: |-
+            `(optional, integer)` Default `60`
+
+            The number of deals per page, max value of `60`
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+          description: >-
+            `(optional, string)` Default `Deal Rating`
+
+
+            Criteria to sort the list by, possible values -
+
+            `Deal Rating`, `Title`, `Savings`, `Price`, `Metacritic`, `Reviews`,
+            `Release`, `Store`, `Recent`
+        - name: desc
+          in: query
+          schema:
+            type: string
+          description: |-
+            `(optional, boolean)` Default `0`
+
+            Determines sort direction
+        - name: lowerPrice
+          in: query
+          schema:
+            type: string
+          description: |-
+            `(optional, integer)` Default `0`
+
+            Only returns deals with a price _greater than_ this value
+        - name: upperPrice
+          in: query
+          schema:
+            type: integer
+          description: >-
+            `(optional, integer)`
+
+
+            Only returns deals with a price _less than or equal_ to this value
+            (`50` acts the same as no limit)
+          example: "15"
+        - name: metacritic
+          in: query
+          schema:
+            type: string
+          description: |-
+            `(optional, integer)`
+
+            Minimum Metacritic rating for a game
+        - name: steamRating
+          in: query
+          schema:
+            type: string
+          description: |-
+            `(optional, integer)`
+
+            Minimum Steam reviews rating for a game
+        - name: steamAppID
+          in: query
+          schema:
+            type: string
+          description: >-
+            `(optional, string)`
+
+
+            Look for deals on specific games, comma separated list of Steam App
+            ID (still bound by `pageSize`)
+        - name: title
+          in: query
+          schema:
+            type: string
+          description: |-
+            `(optional, string)`
+
+            Looks for the string contained anywhere in the game name
+        - name: exact
+          in: query
+          schema:
+            type: string
+          description: |-
+            `(optional, boolean)` Default `0`
+
+            Flag to allow only exact string match for `title` parameter
+        - name: AAA
+          in: query
+          schema:
+            type: string
+          description: |-
+            `(optional, boolean)` Default `0`
+
+            Flag to include only deals with retail price `> $29`
+        - name: steamworks
+          in: query
+          schema:
+            type: string
+          description: >-
+            `(optional, boolean)` Default `0`
+
+
+            Flag to include only deals that redeem on Steam (best guess, depends
+            on store support)
+        - name: onSale
+          in: query
+          schema:
+            type: string
+          description: |-
+            `(optional, boolean)` Default `0`
+
+            Flag to include only games that are currently on sale
+        - name: output
+          in: query
+          schema:
+            type: string
+          description: >-
+            `(optional, string)`
+
+
+            Option to output deals in `RSS` format (overrides page number/size
+            to `0/100`)
+        - name: id
+          in: query
+          schema:
+            type: string
+          description: |-
+            `(required, string)`
+             An Encoded Deal ID
+      responses:
+        "200":
+          description: OK
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Sun, 23 May 2021 14:10:27 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            CF-Ray:
+              schema:
+                type: string
+                example: 653ede20ba573dfd-EWR
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: "*"
+            Cache-Control:
+              schema:
+                type: string
+                example: >-
+                  max-age=300, s-maxage=600, stale-while-revalidate=30,
+                  stale-if-error=60, public
+            Vary:
+              schema:
+                type: string
+                example: Accept-Encoding
+            CF-Cache-Status:
+              schema:
+                type: string
+                example: MISS
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+                example: "*"
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+                example: GET, HEAD, OPTIONS
+            cf-request-id:
+              schema:
+                type: string
+                example: 0a3b29287100003dfdc3049000000001
+            Expect-CT:
+              schema:
+                type: string
+                example: >-
+                  max-age=604800,
+                  report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
+            PHP-Cache:
+              schema:
+                type: string
+                example: MISS
+            X-Powered-By:
+              schema:
+                type: string
+                example: >-
+                  The love of games, an addiction to deals, and a bit of code!
+                  :)
+            X-Total-Page-Count:
+              schema:
+                type: integer
+                example: "558"
+            Report-To:
+              schema:
+                type: string
+                example: >-
+                  {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report?s=6C6jlEHH%2F8eyPePKWn09SGPVWC%2FS0yfeRN1n5%2BcGUg58hAoZDkVTxGre9BLaeE%2FjSgrCIcOYXteIFcQW7E7Z9JkQVTNRQXuF7%2BZ22nfVCPcWHdA%3D"}],"group":"cf-nel","max_age":604800}
+            NEL:
+              schema:
+                type: string
+                example: '{"report_to":"cf-nel","max_age":604800}'
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            Content-Encoding:
+              schema:
+                type: string
+                example: br
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                - internalName: DEUSEXHUMANREVOLUTIONDIRECTORSCUT
+                  title: "Deus Ex: Human Revolution - Director's Cut"
+                  metacriticLink: /game/pc/deus-ex-human-revolution---directors-cut
+                  dealID: HhzMJAgQYGZ%2B%2BFPpBG%2BRFcuUQZJO3KXvlnyYYGwGUfU%3D
+                  storeID: "1"
+                  gameID: "102249"
+                  salePrice: "2.99"
+                  normalPrice: "19.99"
+                  isOnSale: "1"
+                  savings: "85.042521"
+                  metacriticScore: "91"
+                  steamRatingText: Very Positive
+                  steamRatingPercent: "92"
+                  steamRatingCount: "17993"
+                  steamAppID: "238010"
+                  releaseDate: 1382400000
+                  lastChange: 1621536418
+                  dealRating: "9.6"
+                  thumb: >-
+                    https://cdn.cloudflare.steamstatic.com/steam/apps/238010/capsule_sm_120.jpg?t=1619788192
+  /api/1.0/games:
+    get:
+      tags:
+        - Games
+      summary: List of Games
+      description: >-
+        Get a list of games that contain a given title or match a steamAppID.
+        Response includes the cheapest current deal for each game.
+
+        If id is passed, look up the particular game by id.
+        For multiple fetch, use ids parameter with multiple ids, example 1,2,3
+        **Note**: At least one search criteria must be set to receive a
+        response.
+      parameters:
+        - name: title
+          in: query
+          schema:
+            type: string
+          description: >-
+            `(required, string)` 
+
+
+            Search for a game by title, case insensitive (required when not
+            specifying `steamAppID`)
+          example: batman
+        - name: steamAppID
+          in: query
+          schema:
+            type: integer
+          description: >-
+            `(optional, integer)`
+
+
+            Instead of using `title`, you can search for a game by Steam’s AppID
+            - e.g. http://store.steampowered.com/app/35140/
+          example: "35140"
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: |-
+            `(optional, integer)` Default `60`
+
+            The maximum number of games to return, up to `60`
+          example: "60"
+        - name: exact
+          in: query
+          schema:
+            type: integer
+          description: |-
+            `(optional, boolean)` Default `0`
+
+            Flag to allow only exact string match for `title` parameter
+          example: "0"
+        - name: id
+          in: query
+          schema:
+            type: integer
+          description: |-
+            `(requied, integer)`
+            An existing gameID
+          example: "128"
+        - name: ids
+          in: query
+          schema:
+            type: string
+          description: |-
+            `(required, string)`
+            A comma seperated list of GameID's
+          example: 128,129,130
+      responses:
+        "200":
+          description: OK
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: "*"
+            CF-RAY:
+              schema:
+                type: string
+                example: 450a5703ee20719d-ORD
+            Cache-Control:
+              schema:
+                type: string
+                example: max-age=300
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Content-Encoding:
+              schema:
+                type: string
+                example: gzip
+            Content-Length:
+              schema:
+                type: integer
+                example: "245"
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Date:
+              schema:
+                type: string
+                example: Mon, 27 Aug 2018 00:14:47 GMT
+            Expect-CT:
+              schema:
+                type: string
+                example: >-
+                  max-age=604800,
+                  report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
+            MS-Author-Via:
+              schema:
+                type: string
+                example: DAV
+            PHP-Cache:
+              schema:
+                type: string
+                example: HIT
+            PHP-Cache-Age:
+              schema:
+                type: string
+                example: August 26 2018 20:13:00
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            Vary:
+              schema:
+                type: string
+                example: Accept-Encoding
+            X-Powered-By:
+              schema:
+                type: string
+                example: PleskLin
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                - gameID: "146"
+                  steamAppID: "35140"
+                  cheapest: "5.00"
+                  cheapestDealID: n96QeQ9FLRDoZToO75BS2Dx22PPtc7hlpcehVxUlW2c%3D
+                  external: "Batman: Arkham Asylum Game of the Year Edition"
+                  thumb: >-
+                    https://steamcdn-a.akamaihd.net/steam/apps/35140/capsule_sm_120.jpg?t=1525990900
+  /api/1.0/stores:
+    get:
+      tags:
+        - Stores
+      summary: Stores Info
+      description: >-
+        Returns a full list of store IDs, names, and a flag specifying if store
+        is active.
+
+        Response also includes an collection of banner / logo / icon image URLs
+        for each store. The URLs are all relative format, for example - 
+
+        `https://www.cheapshark.com/<image-url-here>`
+      parameters:
+        - name: lastChange
+          in: query
+          description:
+            Including the lastChange parameter on the Stores endpoint will return an object with a mapping of storeIDs to the last update / change time for that store (in Unix Timestamp format).
+
+            This can be useful to know for reducing the number of API requests for deals or games.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: "*"
+            CF-RAY:
+              schema:
+                type: string
+                example: 450a5dee5889719d-ORD
+            Cache-Control:
+              schema:
+                type: string
+                example: max-age=300
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Content-Encoding:
+              schema:
+                type: string
+                example: gzip
+            Content-Length:
+              schema:
+                type: integer
+                example: "599"
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Date:
+              schema:
+                type: string
+                example: Mon, 27 Aug 2018 00:19:30 GMT
+            Expect-CT:
+              schema:
+                type: string
+                example: >-
+                  max-age=604800,
+                  report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
+            MS-Author-Via:
+              schema:
+                type: string
+                example: DAV
+            PHP-Cache:
+              schema:
+                type: string
+                example: HIT
+            PHP-Cache-Age:
+              schema:
+                type: string
+                example: August 26 2018 20:14:46
+            Server:
+              schema:
+                type: string
+                example: cloudflare
+            Vary:
+              schema:
+                type: string
+                example: Accept-Encoding
+            X-Powered-By:
+              schema:
+                type: string
+                example: PleskLin
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                - storeID: "1"
+                  storeName: Steam
+                  isActive: 1
+                  images:
+                    banner: /img/stores/banners/0.png
+                    logo: /img/stores/logos/0.png
+                    icon: /img/stores/icons/0.png
+                - storeID: "2"
+                  storeName: GamersGate
+                  isActive: 1
+                  images:
+                    banner: /img/stores/banners/1.png
+                    logo: /img/stores/logos/1.png
+                    icon: /img/stores/icons/1.png
+                - storeID: "3"
+                  storeName: GreenManGaming
+                  isActive: 1
+                  images:
+                    banner: /img/stores/banners/2.png
+                    logo: /img/stores/logos/2.png
+                    icon: /img/stores/icons/2.png
+                - storeID: "4"
+                  storeName: Amazon
+                  isActive: 1
+                  images:
+                    banner: /img/stores/banners/3.png
+                    logo: /img/stores/logos/3.png
+                    icon: /img/stores/icons/3.png
+                - storeID: "5"
+                  storeName: GameStop
+                  isActive: 1
+                  images:
+                    banner: /img/stores/banners/4.png
+                    logo: /img/stores/logos/4.png
+                    icon: /img/stores/icons/4.png
+                - storeID: "6"
+                  storeName: Direct2Drive
+                  isActive: 1
+                  images:
+                    banner: /img/stores/banners/5.png
+                    logo: /img/stores/logos/5.png
+                    icon: /img/stores/icons/5.png
+                - storeID: "7"
+                  storeName: GoG
+                  isActive: 1
+                  images:
+                    banner: /img/stores/banners/6.png
+                    logo: /img/stores/logos/6.png
+                    icon: /img/stores/icons/6.png
+                - storeID: "8"
+                  storeName: Origin
+                  isActive: 1
+                  images:
+                    banner: /img/stores/banners/7.png
+                    logo: /img/stores/logos/7.png
+                    icon: /img/stores/icons/7.png
+                - storeID: "9"
+                  storeName: Get Games
+                  isActive: 0
+                  images:
+                    banner: /img/stores/banners/8.png
+                    logo: /img/stores/logos/8.png
+                    icon: /img/stores/icons/8.png
+                - storeID: "10"
+                  storeName: Shiny Loot
+                  isActive: 0
+                  images:
+                    banner: /img/stores/banners/9.png
+                    logo: /img/stores/logos/9.png
+                    icon: /img/stores/icons/9.png
+                - storeID: "11"
+                  storeName: Humble Store
+                  isActive: 1
+                  images:
+                    banner: /img/stores/banners/10.png
+                    logo: /img/stores/logos/10.png
+                    icon: /img/stores/icons/10.png
+                - storeID: "12"
+                  storeName: Desura
+                  isActive: 0
+                  images:
+                    banner: /img/stores/banners/11.png
+                    logo: /img/stores/logos/11.png
+                    icon: /img/stores/icons/11.png
+                - storeID: "13"
+                  storeName: Uplay
+                  isActive: 1
+                  images:
+                    banner: /img/stores/banners/12.png
+                    logo: /img/stores/logos/12.png
+                    icon: /img/stores/icons/12.png
+                - storeID: "14"
+                  storeName: IndieGameStand
+                  isActive: 0
+                  images:
+                    banner: /img/stores/banners/13.png
+                    logo: /img/stores/logos/13.png
+                    icon: /img/stores/icons/13.png
+                - storeID: "15"
+                  storeName: Fanatical
+                  isActive: 1
+                  images:
+                    banner: /img/stores/banners/14.png
+                    logo: /img/stores/logos/14.png
+                    icon: /img/stores/icons/14.png
+                - storeID: "16"
+                  storeName: Gamesrocket
+                  isActive: 0
+                  images:
+                    banner: /img/stores/banners/15.png
+                    logo: /img/stores/logos/15.png
+                    icon: /img/stores/icons/15.png
+                - storeID: "17"
+                  storeName: Games Republic
+                  isActive: 0
+                  images:
+                    banner: /img/stores/banners/16.png
+                    logo: /img/stores/logos/16.png
+                    icon: /img/stores/icons/16.png
+                - storeID: "18"
+                  storeName: SilaGames
+                  isActive: 1
+                  images:
+                    banner: /img/stores/banners/17.png
+                    logo: /img/stores/logos/17.png
+                    icon: /img/stores/icons/17.png
+                - storeID: "19"
+                  storeName: Playfield
+                  isActive: 0
+                  images:
+                    banner: /img/stores/banners/18.png
+                    logo: /img/stores/logos/18.png
+                    icon: /img/stores/icons/18.png
+                - storeID: "20"
+                  storeName: ImperialGames
+                  isActive: 0
+                  images:
+                    banner: /img/stores/banners/19.png
+                    logo: /img/stores/logos/19.png
+                    icon: /img/stores/icons/19.png
+                - storeID: "21"
+                  storeName: WinGameStore
+                  isActive: 1
+                  images:
+                    banner: /img/stores/banners/20.png
+                    logo: /img/stores/logos/20.png
+                    icon: /img/stores/icons/20.png
+                - storeID: "22"
+                  storeName: FunStockDigital
+                  isActive: 0
+                  images:
+                    banner: /img/stores/banners/21.png
+                    logo: /img/stores/logos/21.png
+                    icon: /img/stores/icons/21.png
+                - storeID: "23"
+                  storeName: GameBillet
+                  isActive: 1
+                  images:
+                    banner: /img/stores/banners/22.png
+                    logo: /img/stores/logos/22.png
+                    icon: /img/stores/icons/22.png
+                - storeID: "24"
+                  storeName: Voidu
+                  isActive: 1
+                  images:
+                    banner: /img/stores/banners/23.png
+                    logo: /img/stores/logos/23.png
+                    icon: /img/stores/icons/23.png
