@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Duck API
-  version: 1.0.0
+  version: 1.0.1
   description: This API provides access to images and gifs of ducks.
 servers:
   - url : https://random-d.uk/api/v2
@@ -14,13 +14,13 @@ paths:
       parameters:
         - name: type
           in: query
-          description: The type of image to return (GIF or JPG).
+          description: The type of image to return (gif or jpg).
           required: false
           schema:
             type: string
             enum:
-              - GIF
-              - JPG
+              - gif
+              - jpg
       responses:
         '200':
           description: A JSON object containing a link to a random image or gif of a duck and an optional attribution message.
