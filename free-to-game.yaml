@@ -9,6 +9,8 @@ paths:
   /api/games:
     get:
       summary: Get a list of games
+      description: Get a list of games
+      operationId: getGames
       parameters:
         - name: platform
           in: query
@@ -110,6 +112,8 @@ paths:
   /api/game:
     get:
       summary: Get details for a specific game
+      description: Get details for a specific game
+      operationId: getGameDetails
       parameters:
         - name: id
           in: query
@@ -150,6 +154,8 @@ paths:
   /api/filter:
     get:
       summary: Filter games by multiple tags for personalized results
+      description: Filter games by multiple tags for personalized results
+      operationId: filterGamesByMultipleTags
       parameters:
         - name: tag
           in: query
