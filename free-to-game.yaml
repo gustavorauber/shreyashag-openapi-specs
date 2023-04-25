@@ -1,0 +1,250 @@
+openapi: 3.0.0
+info:
+  title: FreeToGame API
+  version: 1.0.0
+  description: Access programmatically the best free-to-play games and free MMO games! The Free-To-Play Games Database API (Aka FreeToGame API) is available for everyone to use without any restrictions. Please note our API is free to use as long as you attribute FreeToGame.com as the source of the data. We hope to improve the API over time.
+servers:
+  - url: https://www.freetogame.com
+paths:
+  /api/games:
+    get:
+      summary: Get a list of games
+      parameters:
+        - name: platform
+          in: query
+          description: Filter games by platform
+          schema:
+            type: string
+            enum: [pc, browser, all]
+        - name: category
+          in: query
+          description: Filter games by category or tag
+          schema:
+            type: string
+            enum:
+              [
+                mmorpg,
+                shooter,
+                strategy,
+                moba,
+                racing,
+                sports,
+                social,
+                sandbox,
+                open-world,
+                survival,
+                pvp,
+                pve,
+                pixel,
+                voxel,
+                zombie,
+                turn-based,
+                first-person,
+                third-Person,
+                top-down,
+                tank,
+                space,
+                sailing,
+                side-scroller,
+                superhero,
+                permadeath,
+                card,
+                battle-royale,
+                mmo,
+                mmofps,
+                mmotps,
+                3d,
+                2d,
+                anime,
+                fantasy,
+                sci-fi,
+                fighting,
+                action-rpg,
+                action,
+                military,
+                martial-arts,
+                flight,
+                low-spec,
+                tower-defense,
+                horror,
+                mmorts,
+              ]
+        - name: sort-by
+          in: query
+          description: Sort games by release date, alphabetical or relevance
+          schema:
+            type: string
+            enum: [release-date, popularity, alphabetical or relevance]
+      responses:
+        "200":
+          description: A list of games
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    title:
+                      type: string
+                    thumbnail:
+                      type: string
+                    short_description:
+                      type: string
+                    game_url:
+                      type: string
+                    genre:
+                      type: string
+                    platform:
+                      type: string
+                    publisher:
+                      type: string
+                    developer:
+                      type: string
+                    release_date:
+                      type: string
+                    freetogame_profile_url:
+                      type: string
+  /api/game:
+    get:
+      summary: Get details for a specific game
+      parameters:
+        - name: id
+          in: query
+          required: true
+          description: ID of the game to retrieve
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Details for the specified game
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  thumbnail:
+                    type: string
+                  short_description:
+                    type: string
+                  game_url:
+                    type: string
+                  genre:
+                    type: string
+                  platform:
+                    type: string
+                  publisher:
+                    type: string
+                  developer:
+                    type: string
+                  release_date:
+                    type: string
+                  freetogame_profile_url:
+                    type: string
+  /api/filter:
+    get:
+      summary: Filter games by multiple tags for personalized results
+      parameters:
+        - name: tag
+          in: query
+          description: Filter games by multiple tags. Combine using dots(.) Example - mmorpg.shooter.strategy.moba
+          schema:
+            type: string
+            enum:
+              [
+                mmorpg,
+                shooter,
+                strategy,
+                moba,
+                racing,
+                sports,
+                social,
+                sandbox,
+                open-world,
+                survival,
+                pvp,
+                pve,
+                pixel,
+                voxel,
+                zombie,
+                turn-based,
+                first-person,
+                third-Person,
+                top-down,
+                tank,
+                space,
+                sailing,
+                side-scroller,
+                superhero,
+                permadeath,
+                card,
+                battle-royale,
+                mmo,
+                mmofps,
+                mmotps,
+                3d,
+                2d,
+                anime,
+                fantasy,
+                sci-fi,
+                fighting,
+                action-rpg,
+                action,
+                military,
+                martial-arts,
+                flight,
+                low-spec,
+                tower-defense,
+                horror,
+                mmorts,
+              ]
+        - name: platform
+          in: query
+          description: Filter games by platform
+          schema:
+            type: string
+            enum: [pc, browser, all]
+        - name: sort-by
+          in: query
+          description: Sort games by release date, alphabetical or relevance
+          schema:
+            type: string
+            enum: [release-date, popularity, alphabetical or relevance]
+      responses:
+        "200":
+          description: A list of games matching the specified filters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    title:
+                      type: string
+                    thumbnail:
+                      type: string
+                    short_description:
+                      type: string
+                    game_url:
+                      type: string
+                    genre:
+                      type: string
+                    platform:
+                      type: string
+                    publisher:
+                      type: string
+                    developer:
+                      type: string
+                    release_date:
+                      type: string
+                    freetogame_profile_url:
+                      type: string
