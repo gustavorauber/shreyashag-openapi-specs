@@ -1,0 +1,200 @@
+openapi: 3.0.0
+info:
+  title: Football Standings API
+  version: 1.0.0
+  description: API to retrieve football league standings and related data.
+servers:
+  - url: https://api-football-standings.azharimm.dev
+paths:
+  /leagues:
+    get:
+      summary: Get list of all available leagues
+      description: Get list of all available leagues
+      operationId: getLeagues
+      responses:
+        "200":
+          description: List of leagues
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        slug:
+                          type: string
+                        abbr:
+                          type: string
+                        logos:
+                          type: object
+                          properties:
+                            light:
+                              type: string
+                            dark:
+                              type: string
+  /leagues/{id}:
+    get:
+      summary: Get details for a specific league
+      description: Get details for a specific league
+      operationId: getLeagueDetails
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the league to retrieve
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: League details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      slug:
+                        type: string
+                      abbr:
+                        type: string
+                      logos:
+                        type: object
+                        properties:
+                          light:
+                            type: string
+                          dark:
+                            type: string
+  /leagues/{id}/seasons:
+    get:
+      summary: Get seasons for a specific league
+      description: Get seasons for a specific league
+      operationId: getLeagueSeasonsAvailable
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the league to retrieve seasons for
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of seasons for the league
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      desc:
+                        type: string
+                      abbreviation:
+                        type: string
+                      seasons:
+                        type: array
+                        items:
+                          type: integer
+  /leagues/{id}/standings:
+    get:
+      summary: Get standings for a specific league and season
+      description: Get standings for a specific league and season. This returns a lot of data and you may need to trim the data.
+      operationId: getLeagueSeasonStandings
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the league to retrieve standings for
+          required: true
+          schema:
+            type: string
+        - name: season
+          in: query
+          description: The season to retrieve standings for
+          required: true
+          schema:
+            type: integer
+        - name: sort
+          in: query
+          description: The sort order for standings (asc or desc)
+          schema:
+            type: string
+            enum: [asc, desc]
+      responses:
+        "200":
+          description: Standings for the league and season
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      abbreviation:
+                        type: string
+                      seasonDisplay:
+                        type: string
+                  season:
+                    type: integer
+                  standings:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        rank:
+                          type: integer
+                        teamName:
+                          type: string
+                        points:
+                          type: integer
+                        matches:
+                          type: integer
+                        wins:
+                          type: integer
+                        draws:
+                          type: integer
+                        losses:
+                          type: integer
+                        goalsFor:
+                          type: integer
+                        goalsAgainst:
+                          type: integer
+                        goalDifference:
+                          type: integer
+                        form:
+                          type: string
+                        description:
+                          type: string
+                        teamLogo:
+                          type: string
+                        teamId:
+                          type: integer
+                        teamSlug:
+                          type: string
+                        group:
+                          type: string
