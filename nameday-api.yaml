@@ -250,7 +250,7 @@ paths:
           name: day
           description: "Valid day"
           example: 18
-          required: false
+          required: true
           schema:
             type: integer
             description: "Valid day"
@@ -259,7 +259,7 @@ paths:
           name: month
           description: "Valid month"
           example: 11
-          required: false
+          required: true
           schema:
             type: integer
             description: "Valid month"
@@ -341,7 +341,7 @@ paths:
           name: name
           description: "First name to look up"
           example: Walenty
-          required: false
+          required: true
           schema:
             type: string
             description: "First name to look up"
@@ -349,7 +349,7 @@ paths:
         - in: query
           name: country
           example: pl
-          required: false
+          required: true
           schema:
             type: string
             example: pl
