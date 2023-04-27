@@ -158,6 +158,16 @@ paths:
       description: List all houses
       operationId: getHouses
       parameters:
+        - name: page
+          in: query
+          description: page number
+          schema:
+            type: integer
+        - name: pageSize
+          in: query
+          description: number of items per page
+          schema:
+            type: integer
         - name: name
           in: query
           description: Filter houses by name
