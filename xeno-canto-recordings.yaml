@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Xeno-Canto Recordings API
   description: |
-    API for searching and retrieving bird and grasshopper sound recordings from Xeno-Canto.
+    www.xeno-canto.org ("Xeno-canto", "XC") is a website for sharing recordings of wildlife sounds from all across the world.
 
     query parameter examples - 
 
