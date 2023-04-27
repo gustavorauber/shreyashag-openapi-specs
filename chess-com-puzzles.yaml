@@ -1,0 +1,70 @@
+openapi: 3.0.0
+info:
+  title: Chess.com Daily Puzzle API
+  description: Information about the daily puzzle and a randomly picked daily puzzle found on Chess.com
+  version: 1.0.0
+servers:
+  - url: https://api.chess.com
+paths:
+  /pub/puzzle:
+    get:
+      summary: Get the daily puzzle
+      description: Returns information about the daily puzzle found on Chess.com
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  title:
+                    type: string
+                    description: The title of the daily puzzle
+                  url:
+                    type: string
+                    description: The URL to the daily puzzle in Chess.com
+                  publish_time:
+                    type: integer
+                    description: The date of the published puzzle in Unix timestamp format
+                  fen:
+                    type: string
+                    description: The FEN of the published puzzle
+                  pgn:
+                    type: string
+                    description: The PGN of the published puzzle
+                  image:
+                    type: string
+                    description: The link to the image of the puzzle
+      x-jsonldContext: https://api.chess.com/context/DailyPuzzle.jsonld
+  /pub/puzzle/random:
+    get:
+      summary: Get a random daily puzzle
+      description: Returns information about a randomly picked daily puzzle found on Chess.com
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  title:
+                    type: string
+                    description: The title of the daily puzzle
+                  url:
+                    type: string
+                    description: The URL to the daily puzzle in Chess.com
+                  publish_time:
+                    type: integer
+                    description: The date of the published puzzle in Unix timestamp format
+                  fen:
+                    type: string
+                    description: The FEN of the published puzzle
+                  pgn:
+                    type: string
+                    description: The PGN of the published puzzle
+                  image:
+                    type: string
+                    description: The link to the image of the puzzle
+      x-jsonldContext: https://api.chess.com/context/DailyPuzzle.jsonld
