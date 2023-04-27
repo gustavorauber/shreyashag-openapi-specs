@@ -66,6 +66,8 @@ paths:
   /api/{departure}/{destination}/:
     get:
       summary: Retrieve BC Ferries sailings data
+      description: Retrieve BC Ferries sailings data
+      operationId: getSailingsDataFromDepartureToDestination
       parameters:
         - in: path
           name: departure
@@ -102,6 +104,8 @@ paths:
   /api/{departure}/:
     get:
       summary: Retrieve all BC Ferries sailings data for a departure terminal
+      description: Retrieve all BC Ferries sailings data for a departure terminal
+      operationId: getSailingsDataFromDeparture
       parameters:
         - in: path
           name: departure
@@ -122,6 +126,8 @@ paths:
   /api/:
     get:
       summary: Retrieve full schedule for all terminals
+      description: Retrieve full schedule for all terminals
+      operationId: getSailingsData
       responses:
         200:
           description: OK
