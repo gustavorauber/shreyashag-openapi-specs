@@ -3,7 +3,7 @@ info:
   title: BC Ferries API
   description: |
     Retrieve current data on BC Ferries sailings.
-
+    Here are the codes for locations.
     "TSA" -> Tsawwassen
 
     "SWB" -> Swartz Bay
@@ -21,44 +21,6 @@ info:
 
     "BOW" -> Bowen Island
 
-    Note: destination terminal must correspond with departure terminal, for example you can't put tsawwassen to langdale, it will return an error.
-
-    "TSA": [
-        "SWB"
-        "SGI"
-        "DUK"
-    ]
-
-    "SWB": [
-        "TSA"
-        "FUL"
-        "SGI"
-    ]
-
-    "HSB": [
-        "NAN"
-        "LNG"
-        "BOW"
-    ]
-
-    "DUK": [
-        "TSA"
-    ]
-
-    "LNG": [
-        "HSB"
-    ]
-    "NAN": [
-        "HSB"
-    ]
-
-    "FUL": [
-        "SWB"
-    ]
-
-    "BOW": [
-        "HSB"
-    ]
   version: 1.0.0
 servers:
   - url: https://www.bcferriesapi.ca
@@ -66,7 +28,46 @@ paths:
   /api/{departure}/{destination}/:
     get:
       summary: Retrieve BC Ferries sailings data
-      description: Retrieve BC Ferries sailings data
+      description: |
+        Retrieve BC Ferries sailings data. 
+        Destination terminal must correspond with departure terminal, for example you can't put tsawwassen to langdale, it will return an error.
+
+        "TSA": [
+            "SWB"
+            "SGI"
+            "DUK"
+        ]
+
+        "SWB": [
+            "TSA"
+            "FUL"
+            "SGI"
+        ]
+
+        "HSB": [
+            "NAN"
+            "LNG"
+            "BOW"
+        ]
+
+        "DUK": [
+            "TSA"
+        ]
+
+        "LNG": [
+            "HSB"
+        ]
+        "NAN": [
+            "HSB"
+        ]
+
+        "FUL": [
+            "SWB"
+        ]
+
+        "BOW": [
+            "HSB"
+        ]
       operationId: getSailingsDataFromDepartureToDestination
       parameters:
         - in: path
