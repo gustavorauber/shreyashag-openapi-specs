@@ -1,0 +1,250 @@
+openapi: 3.0.0
+info:
+  title: Chess.com API
+  description: |
+    API for retrieving chess-related data from Chess.com.
+
+    GM stands for Grandmaster, the highest title that can be earned in chess.
+
+    WGM stands for Woman Grandmaster, which is the highest title for women in chess.
+
+    IM stands for International Master, a title lower than Grandmaster but still a prestigious one.
+
+    WIM stands for Woman International Master.
+
+    FM stands for FIDE Master, a lower title than IM.
+
+    WFM stands for Woman FIDE Master.
+
+    NM stands for National Master, a title given by national chess federations.
+
+    WNM stands for Woman National Master.
+
+    CM stands for Candidate Master, a lower title than FM.
+
+    WCM stands for Woman Candidate Master.
+
+  version: 1.0.0
+servers:
+  - url: https://api.chess.com/pub
+paths:
+  /player/{username}:
+    get:
+      summary: Get additional details about a player in a game.
+      description: Returns information about a chess.com user, including their profile details, ratings, and more.
+      operationId: getPlayerByUsername
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          description: The username of the player to retrieve information about.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerProfile"
+  /titled/{title-abbrev}:
+    get:
+      summary: List of titled-player usernames.
+      description: Returns a list of usernames for chess.com players with the specified title.
+      operationId: get
+      parameters:
+        - in: path
+          name: title-abbrev
+          schema:
+            type: string
+            enum: [GM, WGM, IM, WIM, FM, WFM, NM, WNM, CM, WCM]
+          required: true
+          description: The abbreviation of the title to retrieve usernames for (GM, WGM, IM, WIM, FM, WFM, NM, WNM, CM, WCM).
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TitledPlayers"
+  /player/{username}/stats:
+    get:
+      summary: Get ratings, win/loss, and other stats about a player's game play, tactics, lessons and Puzzle Rush score.
+      description: Returns stats about a chess.com user's game play, tactics, lessons, and Puzzle Rush score for various game types.
+      operationId: getPlayerStats
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          description: The username of the player to retrieve stats for.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerStats"
+components:
+  schemas:
+    PlayerProfile:
+      type: object
+      properties:
+        "@id":
+          type: string
+        url:
+          type: string
+        username:
+          type: string
+        player_id:
+          type: integer
+        title:
+          type: string
+        status:
+          type: string
+        name:
+          type: string
+        avatar:
+          type: string
+        location:
+          type: string
+        country:
+          type: string
+        joined:
+          type: integer
+        last_online:
+          type: integer
+        followers:
+          type: integer
+        is_streamer:
+          type: boolean
+        twitch_url:
+          type: string
+        fide:
+          type: integer
+
+    TitledPlayers:
+      type: object
+      properties:
+        players:
+          type: array
+          items:
+            type: string
+
+    StatsObject:
+      type: object
+      properties:
+        last:
+          type: object
+          properties:
+            date:
+              type: integer
+            rating:
+              type: integer
+            rd:
+              type: integer
+        best:
+          type: object
+          properties:
+            date:
+              type: integer
+            rating:
+              type: integer
+            game:
+              type: string
+        record:
+          type: object
+          properties:
+            win:
+              type: integer
+            loss:
+              type: integer
+            draw:
+              type: integer
+            time_per_move:
+              type: integer
+            timeout_percent:
+              type: number
+        tournament:
+          type: object
+          properties:
+            count:
+              type: integer
+            withdraw:
+              type: integer
+            points:
+              type: integer
+            highest_finish:
+              type: integer
+
+    PlayerStats:
+      type: object
+      properties:
+        chess_daily:
+          $ref: "#/components/schemas/StatsObject"
+        chess_rapid:
+          $ref: "#/components/schemas/StatsObject"
+        chess_bullet:
+          $ref: "#/components/schemas/StatsObject"
+        chess_blitz:
+          $ref: "#/components/schemas/StatsObject"
+        chess960_daily:
+          $ref: "#/components/schemas/StatsObject"
+        chess960_rapid:
+          $ref: "#/components/schemas/StatsObject"
+        chess960_bullet:
+          $ref: "#/components/schemas/StatsObject"
+        chess960_blitz:
+          $ref: "#/components/schemas/StatsObject"
+        tactics:
+          type: object
+          properties:
+            highest:
+              type: object
+              properties:
+                rating:
+                  type: integer
+                date:
+                  type: integer
+            lowest:
+              type: object
+              properties:
+                rating:
+                  type: integer
+                date:
+                  type: integer
+        lessons:
+          type: object
+          properties:
+            highest:
+              type: object
+              properties:
+                rating:
+                  type: integer
+                date:
+                  type: integer
+            lowest:
+              type: object
+              properties:
+                rating:
+                  type: integer
+                date:
+                  type: integer
+        puzzle_rush:
+          type: object
+          properties:
+            daily:
+              type: object
+              properties:
+                total_attempts:
+                  type: integer
+                score:
+                  type: integer
+            best:
+              type: object
+              properties:
+                total_attempts:
+                  type: integer
+                score:
+                  type: integer
