@@ -1,0 +1,188 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: "Disney Characters API"
+  description: "An API to get information on Disney characters. The original docs can be accessed on https://disneyapi.dev/docs and additional specs are on https://github.com/ManuCastrillonM/disney-api"
+  contact:
+    url: "https://github.com/manuCastrillonM"
+servers:
+  - url: https://api.disneyapi.dev
+    description: "Main server"
+paths:
+  /character:
+    get:
+      tags:
+        - "Characters"
+      description: Searches for a character based on query parameters
+      operationId: GetCharacterByQueryParameters
+      parameters:
+        - name: name
+          in: query
+          schema:
+            type: string
+        - name: films
+          in: query
+          schema:
+            type: string
+        - name: allies
+          in: query
+          schema:
+            type: string
+        - name: enemies
+          in: query
+          schema:
+            type: string
+        - name: tvShows
+          in: query
+          schema:
+            type: string
+        - name: parkAttractions
+          in: query
+          schema:
+            type: string
+        - name: videoGames
+          in: query
+          schema:
+            type: string
+        - name: pageSize
+          in: query
+          description: Number of characters to fetch, used for pagination
+          schema:
+            type: integer
+        - name: page
+          description: numbering starts at 1. used for pagination
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully returned a list of characters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: integer
+                          description: Character's ID.
+                        films:
+                          type: array
+                          description: The films in which the character participates.
+                          items:
+                            type: string
+                        shortFilms:
+                          type: array
+                          description: Short films in which the character participates.
+                          items:
+                            type: string
+                        tvShows:
+                          type: array
+                          description: TV shows in which the character participates.
+                          items:
+                            type: string
+                        videoGames:
+                          type: array
+                          description: Video games in which the character participates.
+                          items:
+                            type: string
+                        parkAttractions:
+                          type: array
+                          description: Park attractions where the character is featured.
+                          items:
+                            type: string
+                        allies:
+                          type: array
+                          description: Character's allies.
+                          items:
+                            type: string
+                        enemies:
+                          type: array
+                          description: Character's enemies.
+                          items:
+                            type: string
+                        name:
+                          type: string
+                          description: Character's name.
+                        imageUrl:
+                          type: string
+                          description: URL with the character's image.
+                        url:
+                          type: string
+                          description: API URL for the character's detail.
+  /characters/{id}:
+    get:
+      tags:
+        - "Characters"
+      description: Retrieves information about a single character based on its id.\
+      operationId: GetChracterById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The character's id
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully returned a character
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: integer
+                    description: Character's ID.
+                  films:
+                    type: array
+                    description: The films in which the character participates.
+                    items:
+                      type: string
+                  shortFilms:
+                    type: array
+                    description: Short films in which the character participates.
+                    items:
+                      type: string
+                  tvShows:
+                    type: array
+                    description: TV shows in which the character participates.
+                    items:
+                      type: string
+                  videoGames:
+                    type: array
+                    description: Video games in which the character participates.
+                    items:
+                      type: string
+                  parkAttractions:
+                    type: array
+                    description: Park attractions where the character is featured.
+                    items:
+                      type: string
+                  allies:
+                    type: array
+                    description: Character's allies.
+                    items:
+                      type: string
+                  enemies:
+                    type: array
+                    description: Character's enemies.
+                    items:
+                      type: string
+                  name:
+                    type: string
+                    description: Character's name.
+                  imageUrl:
+                    type: string
+                    description: URL with the character's image.
+                  url:
+                    type: string
+                    description: API URL for the character's detail.
+tags:
+  - name: Characters
