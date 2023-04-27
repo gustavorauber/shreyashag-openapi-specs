@@ -10,6 +10,7 @@ paths:
     get:
       summary: Get the daily puzzle
       description: Returns information about the daily puzzle found on Chess.com
+      operationId: getDailyPuzzle
       responses:
         "200":
           description: OK
@@ -41,6 +42,7 @@ paths:
     get:
       summary: Get a random daily puzzle
       description: Returns information about a randomly picked daily puzzle found on Chess.com
+      operationId: getRandomPuzzle
       responses:
         "200":
           description: OK
