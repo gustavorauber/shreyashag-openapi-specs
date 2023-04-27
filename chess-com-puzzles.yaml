@@ -4,9 +4,9 @@ info:
   description: Information about the daily puzzle and a randomly picked daily puzzle found on Chess.com
   version: 1.0.0
 servers:
-  - url: https://api.chess.com
+  - url: https://api.chess.com/pub
 paths:
-  /pub/puzzle:
+  /puzzle:
     get:
       summary: Get the daily puzzle
       description: Returns information about the daily puzzle found on Chess.com
@@ -38,7 +38,7 @@ paths:
                     type: string
                     description: The link to the image of the puzzle
       x-jsonldContext: https://api.chess.com/context/DailyPuzzle.jsonld
-  /pub/puzzle/random:
+  /puzzle/random:
     get:
       summary: Get a random daily puzzle
       description: Returns information about a randomly picked daily puzzle found on Chess.com
