@@ -12,7 +12,7 @@ info:
 
     2. Long URLs should not contain spaces- any longUrl with spaces will be rejected. All spaces should be either percent encoded %20 or plus encoded +. Note that tabs, newlines and trailing spaces are all indications of errors. Please remember to strip leading and trailing whitespace from any user input before shortening.
 servers:
-  - url: https://cleanuri.com/
+  - url: https://cleanuri.com
 paths:
   /api/v1/shorten:
     post:
