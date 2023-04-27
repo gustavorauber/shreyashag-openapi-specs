@@ -1,0 +1,398 @@
+openapi: 3.0.0
+info:
+  title: A Song of Ice and Fire API
+  version: 1.0.0
+  description: "ABOUT AN API OF ICE AND FIRE
+
+  
+  An API of Ice And Fire is the world's greatest source for quantified and structured data from the universe of Ice and Fire (and the HBO series Game of Thrones). We give you access to data about all the Books, Characters and Houses in an easy to use JSON format.
+  
+  
+  Page numbering is 1-based
+  
+  
+  You can specify how many items you want to receive per page, the maximum is 50
+  
+  "
+servers:
+  - url: https://www.anapioficeandfire.com/api
+paths:
+  /books:
+    get:
+      summary: Get a list of all books
+      description: Get a list of all books
+      operationId: getBooks
+      responses:
+        '200':
+          description: A list of books
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+      parameters:
+        - name: name
+          in: query
+          description: Filter books by name
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: page number
+          schema:
+            type: integer
+        - name: pageSize
+          in: query
+          description: number of items per page
+          schema:
+            type: integer
+        - name: fromReleaseDate
+          in: query
+          description: Filter books by release date (after or on)
+          schema:
+            type: string
+            format: date
+        - name: toReleaseDate
+          in: query
+          description: Filter books by release date (before or on)
+          schema:
+            type: string
+            format: date
+  /books/{bookId}:
+    get:
+      summary: Get a specific book by ID
+      description: Get a specific book by ID
+      operationId: getBookById
+      parameters:
+        - name: bookId
+          in: path
+          description: ID of the book to retrieve
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: The book resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+  /characters:
+    get:
+      summary: Get a list of all characters
+      description: Get a list of all characters
+      operationId: getCharacters
+      responses:
+        '200':
+          description: A list of characters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Character'
+      parameters:
+        - name: name
+          in: query
+          description: Filter characters by name
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: page number
+          schema:
+            type: integer
+        - name: pageSize
+          in: query
+          description: number of items per page
+          schema:
+            type: integer
+        - name: gender
+          in: query
+          description: Filter characters by gender
+          schema:
+            type: string
+        - name: culture
+          in: query
+          description: Filter characters by culture
+          schema:
+            type: string
+        - name: born
+          in: query
+          description: Filter characters by birth year
+          schema:
+            type: string
+        - name: died
+          in: query
+          description: Filter characters by death year
+          schema:
+            type: string
+        - name: isAlive
+          in: query
+          description: Filter characters by whether they are alive or dead
+          schema:
+            type: boolean
+  /characters/{characterId}:
+    get:
+      summary: Get a specific character by ID
+      description: Get a specific character by ID
+      operationId: getCharacterById
+      parameters:
+        - name: characterId
+          in: path
+          description: ID of the character to retrieve
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: The character resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Character'
+  /houses:
+    get:
+      summary: List all houses
+      description: List all houses
+      operationId: getHouses
+      parameters:
+        - name: name
+          in: query
+          description: Filter houses by name
+          schema:
+            type: string
+        - name: region
+          in: query
+          description: Filter houses by region
+          schema:
+            type: string
+        - name: words
+          in: query
+          description: Filter houses by words
+          schema:
+            type: string
+        - name: hasWords
+          in: query
+          description: Filter houses by whether or not they have words
+          schema:
+            type: boolean
+        - name: hasTitles
+          in: query
+          description: Filter houses by whether or not they have titles
+          schema:
+            type: boolean
+        - name: hasSeats
+          in: query
+          description: Filter houses by whether or not they have seats
+          schema:
+            type: boolean
+        - name: hasDiedOut
+          in: query
+          description: Filter houses by whether or not they have died out
+          schema:
+            type: boolean
+        - name: hasAncestralWeapons
+          in: query
+          description: Filter houses by whether or not they have ancestral weapons
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/House'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+  /houses/{id}:
+    get:
+      summary: Get specific house
+      description: Get specific house
+      operationId: getHouseById
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the house to retrieve
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/House'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+components:
+  schemas:
+    House:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          description: The hypermedia URL of this resource
+        name:
+          type: string
+          description: The name of this house
+        region:
+          type: string
+          description: The region that this house resides in
+        coatOfArms:
+          type: string
+          description: Text describing the coat of arms of this house
+        words:
+          type: string
+          description: The words of this house
+        titles:
+          type: array
+          items:
+            type: string
+          description: The titles that this house holds
+        seats:
+          type: array
+          items:
+            type: string
+          description: The seats that this house holds
+        currentLord:
+          type: string
+          format: uri
+          description: The Character resource URL of this house's current lord
+        heir:
+          type: string
+          format: uri
+          description: The Character resource URL of this house's heir
+        overlord:
+          type: string
+          format: uri
+          description: The House resource URL that this house answers to
+    Book:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          description: The URL of the book resource
+        name:
+          type: string
+          description: The name of the book
+        isbn:
+          type: string
+          description: The book's ISBN
+        authors:
+          type: array
+          items:
+            type: string
+          description: The author(s) of the book
+        numberOfPages:
+          type: integer
+          description: The number of pages in the book
+        publisher:
+          type: string
+          description: The book's publisher
+        country:
+          type: string
+          description: The country where the book was published
+        mediaType:
+          type: string
+          description: The book's media type (e.g. Hardcover)
+        released:
+          type: string
+          format: date-time
+          description: The date the book was released
+        characters:
+          type: array
+          items:
+            type: string
+            format: uri
+          description: The character(s) that appear in the book
+        povCharacters:
+          type: array
+          items:
+            type: string
+            format: uri
+          description: The character(s) who narrate the book
+    Character:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          description: The hypermedia URL of this resource
+        name:
+          type: string
+          description: The name of this character
+        gender:
+          type: string
+          description: The gender of this character
+        culture:
+          type: string
+          description: The culture that this character belongs to
+        born:
+          type: string
+          description: Textual representation of when and where this character was born
+        died:
+          type: string
+          description: Textual representation of when and where this character died
+        titles:
+          type: array
+          items:
+            type: string
+          description: The titles that this character holds
+        aliases:
+          type: array
+          items:
+            type: string
+          description: The aliases that this character goes by
+        father:
+          type: string
+          format: uri
+          description: The character resource URL of this character's father
+        mother:
+          type: string
+          format: uri
+          description: The character resource URL of this character's mother
+        spouse:
+          type: string
+          format: uri
+          description: An array of Character resource URLs that has had a POV-chapter in this book
+        allegiances:
+          type: array
+          items:
+            type: string
+            format: uri
+          description: An array of House resource URLs that this character is loyal to
+        books:
+          type: array
+          items:
+            type: string
+            format: uri
+          description: An array of Book resource URLs that this character has been in
+        povBooks:
+          type: array
+          items:
+            type: string
+            format: uri
+          description: An array of Book resource URLs that this character has had a POV-chapter in
+        tvSeries:
+          type: array
+          items:
+            type: string
+          description: An array of names of the seasons of Game of Thrones that this character has been in
+        playedBy:
+          type: array
+          items:
+            type: string
+          description: An array of actor names that has played this character in the TV show Game Of Thrones
