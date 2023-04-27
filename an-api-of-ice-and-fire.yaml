@@ -2,18 +2,17 @@ openapi: 3.0.0
 info:
   title: A Song of Ice and Fire API
   version: 1.0.0
-  description: "ABOUT AN API OF ICE AND FIRE
+  description: |
+    ABOUT AN API OF ICE AND FIRE
 
-  
-  An API of Ice And Fire is the world's greatest source for quantified and structured data from the universe of Ice and Fire (and the HBO series Game of Thrones). We give you access to data about all the Books, Characters and Houses in an easy to use JSON format.
-  
-  
-  Page numbering is 1-based
-  
-  
-  You can specify how many items you want to receive per page, the maximum is 50
-  
-  "
+
+    An API of Ice And Fire is the world's greatest source for quantified and structured data from the universe of Ice and Fire (and the HBO series Game of Thrones). We give you access to data about all the Books, Characters and Houses in an easy to use JSON format.
+
+
+    Page numbering is 1-based
+
+
+    You can specify how many items you want to receive per page, the maximum is 50
 servers:
   - url: https://www.anapioficeandfire.com/api
 paths:
@@ -23,14 +22,14 @@ paths:
       description: Get a list of all books
       operationId: getBooks
       responses:
-        '200':
+        "200":
           description: A list of books
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Book'
+                  $ref: "#/components/schemas/Book"
       parameters:
         - name: name
           in: query
@@ -72,26 +71,26 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: The book resource
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Book'
+                $ref: "#/components/schemas/Book"
   /characters:
     get:
       summary: Get a list of all characters
       description: Get a list of all characters
       operationId: getCharacters
       responses:
-        '200':
+        "200":
           description: A list of characters
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Character'
+                  $ref: "#/components/schemas/Character"
       parameters:
         - name: name
           in: query
@@ -146,12 +145,12 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: The character resource
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Character'
+                $ref: "#/components/schemas/Character"
   /houses:
     get:
       summary: List all houses
@@ -198,18 +197,28 @@ paths:
           description: Filter houses by whether or not they have ancestral weapons
           schema:
             type: boolean
+        - name: page
+          in: query
+          description: page number
+          schema:
+            type: integer
+        - name: pageSize
+          in: query
+          description: number of items per page
+          schema:
+            type: integer
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/House'
-        '400':
+                  $ref: "#/components/schemas/House"
+        "400":
           description: Bad Request
-        '404':
+        "404":
           description: Not Found
   /houses/{id}:
     get:
@@ -225,15 +234,15 @@ paths:
             type: integer
             minimum: 1
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/House'
-        '400':
+                $ref: "#/components/schemas/House"
+        "400":
           description: Bad Request
-        '404':
+        "404":
           description: Not Found
 components:
   schemas:
