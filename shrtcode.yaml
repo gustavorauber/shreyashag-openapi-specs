@@ -1,0 +1,86 @@
+openapi: 3.0.0
+info:
+  title: Shrtcode API
+  version: "2.0"
+  description: |
+    The Shrtcode API is a URL shortening service that allows developers to programmatically create short links for long URLs and retrieve information about those links. The API offers two main methods shortenLink for creating short links and getInformationOnShortenedLink for retrieving information on shortened links. The response format is in JSON and includes information such as the short link code, the full short link, and the original long URL. The Shrtcode API is a simple and efficient way to integrate URL shortening into web and mobile applications.
+servers:
+  - url: https://api.shrtco.de/v2/
+paths:
+  /shorten:
+    get:
+      summary: Create a short link for a given URL
+      description: Create a short link for a given URL
+      operationId: shortenLink
+      parameters:
+        - name: url
+          in: query
+          description: URL to shorten
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Short link created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  result:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      short_link:
+                        type: string
+                      full_short_link:
+                        type: string
+                      short_link2:
+                        type: string
+                      full_short_link2:
+                        type: string
+                      share_link:
+                        type: string
+                      full_share_link:
+                        type: string
+                      original_link:
+                        type: string
+  /info:
+    get:
+      summary: Get information on a shortened link
+      description: Get information on a shortened link
+      operationId: getInformationOnShortenedLink
+      parameters:
+        - name: code
+          in: query
+          description: Code of the shortened link
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Information retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  result:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      url:
+                        type: string
+                      password_protected:
+                        type: boolean
+                      blocked:
+                        type: boolean
+                      created:
+                        type: string
+                        format: date-time
