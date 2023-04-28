@@ -1,0 +1,178 @@
+openapi: 3.0.0
+info:
+  title: PRC Exam API
+  version: 1.0.0
+  description: |
+    Compiled from [Republic of the Philippines PROFESSIONAL REGULATION COMMISSION](https://www.prc.gov.ph/2022-schedule-examination) examination schedule.
+servers:
+  - url: https://api.whenisthenextboardexam.com
+paths:
+  /exams/upcoming:
+    get:
+      summary: Get upcoming exams
+      tags:
+        - Exams
+      responses:
+        "200":
+          description: The list of upcoming exams
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Exam"
+        "400":
+          description: Bad Request
+  /exams/{year}:
+    get:
+      summary: Get the exams by year
+      tags:
+        - Exams
+      parameters:
+        - in: path
+          name: year
+          schema:
+            type: number
+          required: true
+          description: The exam year
+      responses:
+        "200":
+          description: The corresponding exams
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Exam"
+        "400":
+          description: Bad Request
+        "404":
+          description: The exam does not exist
+  /exam/upcoming:
+    get:
+      summary: Get nearest upcoming exam
+      tags:
+        - Exams
+      responses:
+        "200":
+          description: The nearest upcoming exam
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Exam"
+        "400":
+          description: Bad Request
+  /exam/{name}:
+    get:
+      summary: Get the exam by name
+      tags:
+        - Exams
+      parameters:
+        - in: path
+          name: name
+          schema:
+            type: string
+          required: true
+          description: The exam name
+      responses:
+        "200":
+          description: The corresponding exams
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Exam"
+        "400":
+          description: Bad Request
+        "404":
+          description: The exam does not exist
+  /professions:
+    get:
+      summary: Get supported professions
+      tags:
+        - Professions
+      responses:
+        "200":
+          description: The list of professions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Profession"
+        "400":
+          description: Bad Request
+components:
+  schemas:
+    Exam:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: The auto-generated 12-byte ObjectId
+        name:
+          type: string
+          description: The examination name
+        type:
+          type: string
+          description: The examination type
+        year:
+          type: number
+          description: The examination year
+        dates:
+          type: array
+          items:
+            type: string
+          description: The date/s of exam
+        places:
+          type: array
+          items:
+            type: string
+          description: The location/s of exam
+        applicationStart:
+          type: string
+          description: The opening date of online processing
+        applicationEnd:
+          type: string
+          description: The deadline date in filing of applications
+        resultDate:
+          type: string
+          description: The target date of release of exam results
+      example:
+        _id: 507f1f77bcf86cd799439011
+        name: Veterinarians
+        type: null
+        year: 2022
+        dates:
+          - "2022-03-28T16:00:00.000Z"
+          - "2022-03-29T16:00:00.000Z"
+          - "2022-03-30T16:00:00.000Z"
+        places:
+          - NCR
+          - Baguio
+          - Cagayan de Oro
+          - Cebu
+          - Davao
+          - Legaspi
+          - Tuguegarao
+        applicationStart: 12/29/21
+        applicationEnd: 3/1/21
+        resultDate: 4/5/22
+    Profession:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: The auto-generated 12-byte ObjectId
+        name:
+          type: string
+          description: The profession name
+      example:
+        _id: 507f1f77bcf86cd799439011
+        name: Veterinarians
+tags:
+  - name: Exams
+    description: The exam details API
+  - name: Professions
+    description: The profession details API
