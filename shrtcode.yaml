@@ -5,7 +5,7 @@ info:
   description: |
     The Shrtcode API is a URL shortening service that allows developers to programmatically create short links for long URLs and retrieve information about those links. The API offers two main methods shortenLink for creating short links and getInformationOnShortenedLink for retrieving information on shortened links. The response format is in JSON and includes information such as the short link code, the full short link, and the original long URL. The Shrtcode API is a simple and efficient way to integrate URL shortening into web and mobile applications.
 servers:
-  - url: https://api.shrtco.de/v2/
+  - url: https://api.shrtco.de/v2
 paths:
   /shorten:
     get:
