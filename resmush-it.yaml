@@ -4,7 +4,7 @@ info:
   description: A service for optimizing image compression. reSmush.it limits its use to PNG, JPG, GIF, BMP and TIF pictures for FREE up to 5MB.
   version: 1.4.2
 servers:
-  - url: http://api.resmush.it
+  - url: https://api.resmush.it
     description: Production server
 paths:
   /ws.php:
