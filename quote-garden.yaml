@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Quote Garden API
-  version: 2.0.0
+  version: 2.0.1
   description: The Quote Garden API is a RESTful API that provides access to a vast collection of quotes from various authors and genres. Users can retrieve random quotes, filter quotes based on author or genre, and search for quotes using keywords. The API supports pagination, allowing users to navigate through the collection of quotes efficiently by specifying the number of quotes per page and the desired page number. This API is an excellent resource for developers looking to integrate quote-related functionalities into their applications or websites.
 servers:
   - url: https://quote-garden.onrender.com/api/v3
@@ -48,8 +48,41 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/QuoteListResponse"
+  /genres:
+    get:
+      summary: Get all genres
+      operationId: getAllGenres
+      responses:
+        "200":
+          description: A list of all quote genres 
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenreResponse"
 components:
   schemas:
+    GenreResponse:
+      type: object
+      properties:
+        statusCode: 
+          type: string
+        message:
+          type: string
+        pagination:
+          type: object
+          properties:
+            currentPage:
+              type: integer
+            nextPage:
+              type: integer
+            totalPage:
+              type: integer
+        totalQuotes:
+          type: integer
+        data:
+          type: array
+          items:
+            type: string
     QuoteResponse:
       type: object
       properties:
