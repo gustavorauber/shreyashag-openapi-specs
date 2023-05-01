@@ -1,0 +1,503 @@
+openapi: 3.0.0
+info:
+  title: Pokémon TCG API
+  version: 2.0.0
+  description: |
+    The Pokémon TCG API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.
+
+    For searching -
+
+    Keyword matching:
+
+    Search for all cards that have "charizard" in the name field: name:charizard
+
+    Search for the phrase "venusaur v" in the name field: name:"venusaur v"
+
+    Search for "charizard" in the name field AND the type "mega" in the subtypes field: name:charizard subtypes:mega
+
+    Search for "charizard" in the name field AND either the subtypes of "mega" or "vmax": name:charizard (subtypes:mega OR subtypes:vmax)
+
+    Search for all "mega" subtypes, but NOT water types: subtypes:mega -types:water
+
+    Wildcard Matching:
+
+    Search for any card that starts with "char" in the name field: name:char*
+
+    Search for any card that starts with "char" in the name and ends with "der": name:char*der
+
+    Exact Matching:
+
+    Search for any card named "charizard." That is, no other word except for "charizard" appears in the name field: !name:charizard
+
+    Range Searches:
+
+    Search for only cards that feature the original 151 pokemon: nationalPokedexNumbers:[1 TO 151]
+
+    Search for cards with a max HP up to 100: hp:[* TO 100]
+
+    Search for cards with any HP greater than or equal to 150: hp:[150 TO *]
+
+    Searching on nested fields:
+
+    To search nested fields, use a period "." as a separator. For example, to filter by the set id: set.id:sm1
+
+    Or to filter on cards where they have an attack named "Spelunk": attacks.name:Spelunk
+
+    Filtering on legalities:
+
+    Find cards that are banned in Standard: legalities.standard:banned
+
+servers:
+  - url: https://api.pokemontcg.io/v2
+
+paths:
+  /cards:
+    get:
+      summary: Search cards
+      description: Search for one or many cards given a search query. Available fields for select and orderby - id, name, supertype, subtypes, hp, types, evolvesTo, rules, attacks, weaknesses, retreatCost, convertedRetreatCost, set, number, artist, rarity, nationalPokedexNumbers, legalities, images, tcgplayer
+      operationId: searchCards
+      parameters:
+        - in: query
+          name: q
+          description: The search query. See API documentation for search syntax examples.
+          schema:
+            type: string
+        - in: query
+          name: page
+          description: The page of data to access.
+          schema:
+            type: integer
+            minimum: 1
+          example: 1
+        - in: query
+          name: pageSize
+          description: The maximum amount of cards to return.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 250
+          example: 50
+        - in: query
+          name: orderBy
+          description: The field(s) to order the results by. Prefixing a field name with '-' indicates descending order.
+          schema:
+            type: string
+          example: name,-set.releaseDate
+        - in: query
+          name: select
+          description: A comma delimited list of fields to return in the response (ex. ?select=id,name). By default, all fields are returned if this query parameter is not used.
+          schema:
+            type: string
+          example: id,name,set.name
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CardList"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /cards/{id}:
+    get:
+      summary: Get a card
+      description: Fetch the details of a single card.
+      operationId: getCardDetails
+      parameters:
+        - in: path
+          name: id
+          description: The Id of the card
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: select
+          description: A comma delimited list of fields to return in the response (ex. ?select=id,name). By default, all fields are returned if this query parameter is not used.
+          schema:
+            type: string
+          example: id,name,types
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Card"
+        "404":
+          description: Card not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Card not found
+        "400":
+          $ref: "#/components/responses/BadRequest"
+  /v2/sets:
+    get:
+      summary: Search for one or many sets given a search query. Use search logic similar to cards as described in the plugin description.
+      description: Available fields for select and order by - id, name, series, printedTotal, total, legalities, ptcgoCode, releaseDate, updatedAt, images
+      operationId: searchSets
+      parameters:
+        - name: q
+          in: query
+          description: The search query. Examples can be found in the documentation.
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: The page of data to access.
+          schema:
+            type: integer
+            default: 1
+        - name: pageSize
+          in: query
+          description: The maximum amount of sets to return.
+          schema:
+            type: integer
+            default: 250
+            maximum: 250
+        - name: orderBy
+          in: query
+          description: The field(s) to order the results by. Examples can be found in the documentation.
+          schema:
+            type: string
+        - name: select
+          in: query
+          description: A comma delimited list of fields to return in the response.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A list of sets matching the search criteria.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Set"
+                  page:
+                    type: integer
+                    example: 1
+                  pageSize:
+                    type: integer
+                    example: 250
+                  count:
+                    type: integer
+                    example: 123
+                  totalCount:
+                    type: integer
+                    example: 123
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /v2/sets/{id}:
+    get:
+      summary: Fetch details of a single set.
+      description: Fetch details of a single set.
+      operationId: getSetDetails
+      parameters:
+        - in: path
+          name: id
+          description: The ID of the set.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Set"
+        "400":
+          description: Client errors
+        "500":
+          description: Server errors
+
+  /types:
+    get:
+      summary: Get types
+      operationId: getPokemonTypes
+      description: Returns a list of all possible Pokémon types.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                      - Colorless
+                      - Darkness
+                      - Dragon
+                      - Fairy
+                      - Fighting
+                      - Fire
+                      - Grass
+                      - Lightning
+                      - Metal
+                      - Psychic
+                      - Water
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /subtypes:
+    get:
+      summary: Get subtypes
+      operationId: getPokemonSubTypes
+      description: Returns a list of all possible Pokémon subtypes.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                      - Ancient
+                      - BREAK
+                      - Baby
+                      - Basic
+                      - Dark
+                      - EX
+                      - GX
+                      - Grass
+                      - Item
+                      - Level-Up
+                      - Lightning
+                      - MEGA
+                      - Pokémon Tool
+                      - Pokémon Tool F
+                      - Restored
+                      - Rocket's Secret Machine
+                      - Single Strike
+                      - Stadium
+                      - Stage 1
+                      - Stage 2
+                      - Supporter
+                      - TAG TEAM
+                      - Technical Machine
+                      - V
+                      - VMAX
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /supertypes:
+    get:
+      summary: Get supertypes
+      operationId: getPokemonSuperTypes
+      description: Returns a list of all possible Pokémon supertypes.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                      - Energy
+                      - Pokémon
+                      - Trainer
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /rarities:
+    get:
+      summary: Get rarities
+      operationId: getPokemonRarities
+      description: Returns a list of all possible Pokémon card rarities.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                      - Amazing Rare
+                      - Common
+                      - LEGEND
+                      - Promo
+                      - Rare
+                      - Rare ACE
+                      - Rare BREAK
+                      - Rare Holo
+                      - Rare Holo EX
+                      - Rare Holo GX
+                      - Rare Holo LV.X
+                      - Rare Holo Star
+                      - Rare Holo V
+                      - Rare Holo VMAX
+                      - Rare Prime
+                      - Rare Prism Star
+                      - Rare Rainbow
+                      - Rare Secret
+                      - Rare Shining
+                      - Rare Shiny
+                      - Rare Shiny GX
+                      - Rare Ultra
+                      - Uncommon
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+components:
+  responses:
+    BadRequest:
+      description: Bad request. Please ensure that your request is properly formatted and includes valid parameters.
+  schemas:
+    CardList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Card"
+        page:
+          type: integer
+          description: The page of data returned.
+        pageSize:
+          type: integer
+          description: The maximum number of cards returned.
+        count:
+          type: integer
+          description: The total number of cards returned by the query.
+      description: A list of cards returned by the search query.
+    Card:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the card.
+        name:
+          type: string
+          description: The name of the card.
+        supertype:
+          type: string
+          description: The supertype of the card, such as "Pokémon", "Trainer", or "Energy".
+        subtypes:
+          type: array
+          items:
+            type: string
+          description: The subtypes of the card, if any.
+        hp:
+          type: string
+          description: The hit points of the Pokémon, if applicable.
+        types:
+          type: array
+          items:
+            type: string
+          description: The types of the Pokémon or Energy card.
+        evolvesTo:
+          type: array
+          items:
+            type: string
+          description: The Pokémon that this card can evolve into, if any.
+        rules:
+          type: array
+          items:
+            type: string
+          description: The rules text of the card, if any.
+        attacks:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of the attack.
+              cost:
+                type: array
+                items:
+                  type: string
+                description: The energy cost of the attack.
+              convertedEnergyCost:
+                type: integer
+                description: The converted energy cost of the attack.
+              damage:
+                type: string
+                description: The amount of damage dealt by the attack
+    Set:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the set.
+        name:
+          type: string
+          description: The name of the set.
+        series:
+          type: string
+          description: The series that the set belongs to.
+        printedTotal:
+          type: integer
+          description: The number of cards in the set that have been printed.
+        total:
+          type: integer
+          description: The total number of cards in the set, including those that have not been printed.
+        legalities:
+          type: object
+          properties:
+            unlimited:
+              type: string
+              description: The legality of the set in the Unlimited format.
+            standard:
+              type: string
+              description: The legality of the set in the Standard format.
+            expanded:
+              type: string
+              description: The legality of the set in the Expanded format.
+          description: The legalities of the set in different formats.
+        ptcgoCode:
+          type: string
+          description: The code used for the set in the Pokémon Trading Card Game Online.
+        releaseDate:
+          type: string
+          format: date
+          description: The date that the set was released.
+        updatedAt:
+          type: string
+          format: date-time
+          description: The last time that the set information was updated.
+        images:
+          type: object
+          properties:
+            symbol:
+              type: string
+              format: uri
+              description: The URL for the set symbol image.
+            logo:
+              type: string
+              format: uri
+              description: The URL for the set logo image.
+          description: The images associated with the set.
+      description: A set of cards in the Pokémon TCG.

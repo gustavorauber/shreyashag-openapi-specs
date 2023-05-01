@@ -1,0 +1,138 @@
+openapi: 3.0.0
+info:
+  title: BC Ferries API
+  description: |
+    Retrieve current data on BC Ferries sailings.
+    Here are the codes for locations.
+    "TSA" -> Tsawwassen
+
+    "SWB" -> Swartz Bay
+
+    "SGI" -> Southern Gulf Islands
+
+    "DUK" -> Duke Point (Nanaimo)
+
+    "FUL" -> Fulford Harbour (Salt Spring Island)
+
+    "HSB" -> Horseshoe Bay 
+    "NAN" -> Departure Bay (Nanaimo)
+
+    "LNG" -> Langford
+
+    "BOW" -> Bowen Island
+
+  version: 1.0.0
+servers:
+  - url: https://www.bcferriesapi.ca
+paths:
+  /api/{departure}/{destination}/:
+    get:
+      summary: Retrieve BC Ferries sailings data
+      description: |
+        Retrieve BC Ferries sailings data. 
+        Destination terminal must correspond with departure terminal, for example you can't put tsawwassen to langdale, it will return an error.
+
+        "TSA": [
+            "SWB"
+            "SGI"
+            "DUK"
+        ]
+
+        "SWB": [
+            "TSA"
+            "FUL"
+            "SGI"
+        ]
+
+        "HSB": [
+            "NAN"
+            "LNG"
+            "BOW"
+        ]
+
+        "DUK": [
+            "TSA"
+        ]
+
+        "LNG": [
+            "HSB"
+        ]
+        "NAN": [
+            "HSB"
+        ]
+
+        "FUL": [
+            "SWB"
+        ]
+
+        "BOW": [
+            "HSB"
+        ]
+      operationId: getSailingsDataFromDepartureToDestination
+      parameters:
+        - in: path
+          name: departure
+          required: true
+          description: The departure terminal code
+          schema:
+            type: string
+            enum: [TSA, SWB, HSB, DUK, LNG, NAN, FUL, BOW]
+        - in: path
+          name: destination
+          required: true
+          description: The destination terminal code
+          schema:
+            type: string
+            enum:
+              - TSA
+              - SWB
+              - SGI
+              - DUK
+              - FUL
+              - HSB
+              - NAN
+              - LNG
+              - BOW
+      responses:
+        200:
+          description: OK
+        400:
+          description: Invalid input
+        404:
+          description: Data not found
+        500:
+          description: Internal server error
+  /api/{departure}/:
+    get:
+      summary: Retrieve all BC Ferries sailings data for a departure terminal
+      description: Retrieve all BC Ferries sailings data for a departure terminal
+      operationId: getSailingsDataFromDeparture
+      parameters:
+        - in: path
+          name: departure
+          required: true
+          description: The departure terminal code
+          schema:
+            type: string
+            enum: [TSA, SWB, HSB, DUK, LNG, NAN, FUL, BOW]
+      responses:
+        200:
+          description: OK
+        400:
+          description: Invalid input
+        404:
+          description: Data not found
+        500:
+          description: Internal server error
+  /api/:
+    get:
+      summary: Retrieve full schedule for all terminals
+      description: Retrieve full schedule for all terminals
+      operationId: getSailingsData
+      responses:
+        200:
+          description: OK
+        404:
+          description: Data not found
+        500:
+          description: Internal server error

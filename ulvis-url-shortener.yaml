@@ -1,0 +1,70 @@
+openapi: 3.0.0
+info:
+  title: Free URL Shortener API
+  version: 1.0.0
+  description: Free URL shortener offers a powerful API to interact with other sites.
+servers:
+  - url: https://ulvis.net
+paths:
+  /api.php:
+    get:
+      operationId: shortenUrl
+      summary: Shorten a URL
+      description: Shorten a URL with parameters
+      parameters:
+        - name: url
+          in: query
+          description: The URL to shorten, include http/https prefix in the url
+          required: true
+          schema:
+            type: string
+        - name: custom
+          in: query
+          description: Custom name for the shortened URL
+          schema:
+            type: string
+        - name: type
+          in: query
+          description: Response type (json or xml)
+          schema:
+            type: string
+            enum: [json, xml]
+        - name: private
+          in: query
+          description: Set URL to private (not listed)
+          schema:
+            type: integer
+            enum: [0, 1]
+        - name: password
+          in: query
+          description: Set URL password (max 10 chars)
+          schema:
+            type: string
+            maxLength: 10
+        - name: uses
+          in: query
+          description: Number of uses for the URL
+          schema:
+            type: integer
+        - name: expire
+          in: query
+          description: Date (MM/DD/YYYY) when URL expires
+          schema:
+            type: string
+        - name: via
+          in: query
+          description: Signature to track your application
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Shortened URL
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  url:
+                    type: string

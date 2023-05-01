@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: API to validate email addresses
 servers:
-  - url: https://api.eva.pingutil.com
+  - url: http://api.eva.pingutil.com
 paths:
   /email:
     get:

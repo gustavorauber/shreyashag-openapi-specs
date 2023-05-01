@@ -1,0 +1,77 @@
+openapi: 3.0.0
+info:
+  title: NetworkCalc DNS API
+  description: API for looking up DNS records, WHOIS registration information, and SPF records
+  version: 1.0.0
+servers:
+  - url: https://networkcalc.com/api
+paths:
+  /dns/lookup/{hostname}:
+    get:
+      summary: Look up DNS records for a hostname, domain name, or IP address
+      parameters:
+        - name: hostname
+          in: path
+          description: The hostname, domain name, or IP address to look up
+          required: true
+          schema:
+            type: string
+          example: example.com
+      responses:
+        "200":
+          description: DNS records for the specified hostname
+          content:
+            application/json:
+              schema:
+                type: object
+                # The exact schema for the DNS record response is not specified in the provided documentation
+    /dns/whois/{hostname}:
+      get:
+        summary: Get the WHOIS registration information for a website's hostname, domain, or IP address
+        parameters:
+          - name: hostname
+            in: path
+            description: The hostname, domain name, or IP address to look up
+            required: true
+            schema:
+              type: string
+            example: example.com
+        responses:
+          "200":
+            description: WHOIS registration information for the specified hostname
+            content:
+              application/json:
+                schema:
+                  type: object
+                  # The exact schema for the WHOIS registration information is not specified in the provided documentation
+    /dns/spf/{hostname}:
+      post:
+        summary: Look up the published SPF record for a domain or validate the syntax of a to-be-published SPF record
+        parameters:
+          - name: hostname
+            in: path
+            description: The hostname, domain name, or IP address to look up
+            required: true
+            schema:
+              type: string
+            example: example.com
+        requestBody:
+          description: Optional SPF record to validate
+          required: false
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  spf:
+                    type: string
+                    description: An SPF record to validate. If specified, {hostname} is ignored.
+                    example: "v=spf1 include:_spf.google.com ~all"
+        responses:
+          "200":
+            description: SPF record for the specified hostname, or validation result for the provided SPF record
+            content:
+              application/json:
+                schema:
+                  type: object
+                  # The exact schema for the SPF record or validation result is not specified in the provided documentation

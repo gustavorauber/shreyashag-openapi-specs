@@ -1,0 +1,72 @@
+openapi: 3.0.0
+info:
+  title: reSmush.it API
+  description: A service for optimizing image compression. reSmush.it limits its use to PNG, JPG, GIF, BMP and TIF pictures for FREE up to 5MB.
+  version: 1.4.2
+servers:
+  - url: https://api.resmush.it
+    description: Production server
+paths:
+  /ws.php:
+    get:
+      summary: Compress an image file
+      description: Compress an image file
+      operationId: compressImage
+      parameters:
+        - name: img
+          in: query
+          description: URL of the image file to compress
+          required: true
+          schema:
+            type: string
+        - name: exif
+          in: query
+          description: |
+            EXIF data are remove by default, reducing file size. However, these data can be keeped while compression by specifying the parameter with the value true. Default value is false
+          required: false
+          schema:
+            type: boolean
+        - name: qlty
+          in: query
+          description: |
+            Quality level for JPG compression (0-100)
+            minimum: 0
+            maximum: 100
+            default: 92
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Compression successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  src:
+                    type: string
+                    description: URL of the source image file
+                  dest:
+                    type: string
+                    description: URL of the compressed image file
+                  src_size:
+                    type: integer
+                    description: Size of the source image file (in bytes)
+                  dest_size:
+                    type: integer
+                    description: Size of the compressed image file (in bytes)
+                  percent:
+                    type: number
+                    format: float
+                    description: Percentage of compression gain
+                  expires:
+                    type: string
+                    format: date-time
+                    description: Date when the file will be deleted from the server
+                  error:
+                    type: integer
+                    description: Error code (0 if no error)
+                  error_long:
+                    type: string
+                    description: Error description

@@ -1,0 +1,155 @@
+openapi: 3.0.0
+info:
+  title: Xeno-Canto Recordings API
+  description: |
+    www.xeno-canto.org ("Xeno-canto", "XC") is a website for sharing recordings of wildlife sounds from all across the world.
+
+    query parameter examples - 
+
+    Basic Queries:
+
+    Search for all recordings of the species Tinamus major: Tinamus major
+
+    Search for all recordings of unidentified species: mystery
+
+    Search for recordings featuring multiple species: soundscape
+
+
+    Advanced Queries:
+
+    Search for all recordings of sparrows in the genus Zonotrichia: gen:zonotrichia
+
+    Search for all recordings from Brazil: cnt:brazil
+
+    Search for all recordings from the location Tambopata: loc:tambopata
+
+    Search for all recordings that have a member of the Antthrush family identified as a background voice: also:formicariidae
+
+    Search for all recordings identified as songs: type:song
+
+    Search for recordings with a quality rating of A: q:A
+
+    Search for recordings lasting between 10 and 15 seconds: len:10-15
+
+    Search for recordings licensed under an Attribution-NonCommercial-ShareAlike license: lic:BY-NC-SA
+
+    Other Parameters:
+
+    Search for recordings uploaded in the past 3 days: since:3
+
+    Search for recordings that were recorded in May of 2010: year:2010 month:5
+
+    Search for grasshopper recordings that were recorded at a temperature over 20°C: temp:">20"
+
+    Search for recordings with a specific sampling rate of 48,000 Hz: smp:48000
+
+
+    Combine queries, example query for recordings in last 3 days in brazil - since:3 cnt:brazil
+
+  version: 1.0.0
+servers:
+  - url: https://xeno-canto.org
+paths:
+  /api/2/recordings:
+    get:
+      summary: Search for recordings
+      description: Returns a list of recordings that match the specified search criteria.
+      parameters:
+        - name: query
+          in: query
+          required: true
+          description: The search query in the format described on the search tips page.
+          schema:
+            type: string
+        - name: page
+          in: query
+          required: false
+          description: The page number of the results to return. If not specified, the first page will be returned.
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Recordings"
+components:
+  schemas:
+    Recording:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique ID of the recording.
+        gen:
+          type: string
+          description: The genus of the bird or grasshopper.
+        sp:
+          type: string
+          description: The species of the bird or grasshopper.
+        en:
+          type: string
+          description: The English common name of the bird or grasshopper.
+        rec:
+          type: string
+          description: The name of the recordist who made the recording.
+        cnt:
+          type: string
+          description: The country where the recording was made.
+        loc:
+          type: string
+          description: The location where the recording was made.
+        lat:
+          type: number
+          description: The latitude of the recording location.
+        lon:
+          type: number
+          description: The longitude of the recording location.
+        alt:
+          type: integer
+          description: The altitude of the recording location in meters.
+        type:
+          type: string
+          description: The type of sound, such as song or call.
+        url:
+          type: string
+          description: The URL where the recording can be accessed.
+        file:
+          type: string
+          description: The filename of the recording.
+        file-name:
+          type: string
+          description: The full filename of the recording.
+        file-type:
+          type: string
+          description: The file type of the recording.
+        quality:
+          type: string
+          description: The quality rating of the recording, from A (highest quality) to E (lowest quality).
+        length:
+          type: integer
+          description: The length of the recording in seconds.
+        date:
+          type: string
+          description: The date the recording was made, in YYYY-MM-DD format.
+        time:
+          type: string
+          description: The time the recording was made, in HH:MM:SS format.
+    Recordings:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: The current page number of the results.
+        numPages:
+          type: integer
+          description: The total number of pages of results.
+        numRecordings:
+          type: integer
+          description: The total number of recordings in the results.
+        recordings:
+          type: array
+          items:
+            $ref: "#/components/schemas/Recording"

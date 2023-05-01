@@ -1,0 +1,200 @@
+openapi: "3.0.0"
+info:
+  title: OpenNorth API
+  version: 1.0.0
+  description: API for representatives in OpenNorth API Canada
+servers:
+  - url: https://represent.opennorth.ca
+paths:
+  /elections/:
+    get:
+      summary: Get list of Elections
+      description: Get list of Elections
+      operationId: getElections
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Number of results per page
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: Offset of page
+      responses:
+        "200":
+          description: OK
+  /representative-sets/:
+    get:
+      summary: Get list of representative sets
+      description: Get list of representative sets
+      operationId: getRepresentativeSets
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Number of results per page
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: Offset of page
+      responses:
+        "200":
+          description: OK
+  /candidates/:
+    get:
+      summary: Get list of candidates for elections
+      description: Get list of candidates for elections
+      operationId: getElectionCandidates
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Number of results per page
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: Offset of page
+      responses:
+        "200":
+          description: OK
+  /representatives/:
+    get:
+      operationId: getRepresentatives
+      summary: Get list of representatives
+      description: Get list of representatives
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Number of results per page
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: Offset of page
+        - in: query
+          name: point
+          schema:
+            type: string
+          description: Latitude and longitude to filter by
+        - in: query
+          name: districts
+          schema:
+            type: string
+          description: Comma-separated list of district names to filter by
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: Search by name
+        - in: query
+          name: first_name
+          schema:
+            type: string
+          description: Search by first name
+        - in: query
+          name: last_name
+          schema:
+            type: string
+          description: Search by last name
+        - in: query
+          name: gender
+          schema:
+            type: string
+          description: Search by gender
+        - in: query
+          name: district_name
+          schema:
+            type: string
+          description: Search by district name
+        - in: query
+          name: elected_office
+          schema:
+            type: string
+          description: Search by elected office
+        - in: query
+          name: party_name
+          schema:
+            type: string
+          description: Search by party name
+      responses:
+        "200":
+          description: OK
+  /representatives/{set}:
+    get:
+      summary: Get list of representatives from a representative set
+      description: Get list of representatives from a representative set
+      operationId: getSetRepresentatives
+      parameters:
+        - in: path
+          name: set
+          schema:
+            type: string
+          description: The Representative set
+          required: true
+
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Number of results per page
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: Offset of page
+        - in: query
+          name: point
+          schema:
+            type: string
+          description: Latitude and longitude to filter by
+        - in: query
+          name: districts
+          schema:
+            type: string
+          description: Comma-separated list of district names to filter by
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: Search by name
+        - in: query
+          name: first_name
+          schema:
+            type: string
+          description: Search by first name
+        - in: query
+          name: last_name
+          schema:
+            type: string
+          description: Search by last name
+        - in: query
+          name: gender
+          schema:
+            type: string
+          description: Search by gender
+        - in: query
+          name: district_name
+          schema:
+            type: string
+          description: Search by district name
+        - in: query
+          name: elected_office
+          schema:
+            type: string
+          description: Search by elected office
+        - in: query
+          name: party_name
+          schema:
+            type: string
+          description: Search by party name
+      responses:
+        "200":
+          description: OK

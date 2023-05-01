@@ -1,0 +1,90 @@
+openapi: 3.0.0
+info:
+  title: RPS-101 API
+  description: |
+    Welcome to RPS-101. 
+
+    Ever wondered what Rock, Paper, Scissors would be like if it had 101 objects instead of 3?
+  version: 1.0.0
+servers:
+  - url: https://rps101.pythonanywhere.com/api/v1
+    description: Production server
+paths:
+  /objects/all:
+    get:
+      summary: Get an array of all objects
+      description: Get an array of all objects
+      operationId: getAllObjects
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /objects/{object_name}:
+    get:
+      summary: Get the winning outcomes for a given object
+      description: Get the winning outcomes for a given object
+      operationId: getWinningOutcomesForObject
+      parameters:
+        - name: object_name
+          in: path
+          description: Name of the object to retrieve winning outcomes for
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  object:
+                    type: string
+                    description: Name of the object
+                  winning_outcomes:
+                    type: array
+                    items:
+                      type: array
+                      items:
+                        type: string
+  /match:
+    get:
+      summary: Get the result of a match between two objects
+      description: Get the result of a match between two objects
+      operationId: playMatch
+      parameters:
+        - name: object_one
+          in: query
+          description: Name of the first object
+          required: true
+          schema:
+            type: string
+        - name: object_two
+          in: query
+          description: Name of the second object
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  winner:
+                    type: string
+                    description: Name of the winning object
+                  outcome:
+                    type: string
+                    description: Description of the outcome
+                  loser:
+                    type: string
+                    description: Name of the losing object

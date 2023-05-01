@@ -1,0 +1,139 @@
+openapi: 3.0.0
+info:
+  title: Asterrank Minor Planet Center API
+  description: |
+    Access the MPCORB.DAT data files from the Minor Planet Center.
+
+    Here's a list of the response field names and their meanings for the Minor Planet Center API:
+
+    1. rms: the root mean square error of the fit of the orbit to the observations
+    2. epoch: the epoch of the elements in a format like YYMMDD.DDDDD
+    3. readable_des: the name of the object or a brief description
+    4. H: the absolute magnitude of the object
+    5. num_obs: the number of observations that were used in the computation of the orbit
+    6. ref: the reference code for the object
+    7. G: the slope parameter for the phase curve
+    8. last_obs: the date of the last observation in a format like YYYYMMDD
+    9. comp: the computer name that computed the orbit
+    10. M: the mean anomaly of the object at epoch in degrees
+    11. U: the status of the orbit
+    12. e: the eccentricity of the orbit
+    13. a: the semi-major axis of the orbit in astronomical units
+    14. om: the longitude of the ascending node of the orbit in degrees
+    15. pert_p: the name of the perturbing planet or planets (if applicable)
+    16:d: the mean daily motion of the object in degrees per day
+    17: i: the inclination of the orbit in degrees
+    18: des: the designation of the object
+    19: flags: flags indicating various characteristics of the object
+    20: num_opp: the number of oppositions used in the computation of the orbit
+    21: w: the argument of perihelion of the orbit in degrees
+    22: pert_c: the type of perturbation
+
+  version: 1.0.0
+servers:
+  - url: http://asterank.com
+paths:
+  /api/mpc:
+    get:
+      summary: Get minor planet data
+      description: Get minor planet data.
+      operationId: getMinorPlanetData
+      parameters:
+        - name: query
+          in: query
+          description: |
+            A JSON object that uses the MongoDB query language to filter results.
+            For example, let's build a request that returns asteroids with roughly circular orbits, low inclination, and semi-major axis less than 1.5 AU.
+
+            We construct the following query: {"e":{"$lt":0.1},"i":{"$lt":4},"a":{"$lt":1.5}}
+
+          required: false
+          schema:
+            type: object
+            example:
+              { "e": { "$lt": 0.1 }, "i": { "$lt": 4 }, "a": { "$lt": 1.5 } }
+        - name: limit
+          in: query
+          description: The maximum number of results to return.
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            example: 10
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    rms:
+                      type: number
+                      example: 0.6
+                    epoch:
+                      type: string
+                      example: "K134I"
+                    readable_des:
+                      type: string
+                      example: "(1) Ceres"
+                    H:
+                      type: number
+                      example: 3.34
+                    num_obs:
+                      type: integer
+                      example: 6342
+                    ref:
+                      type: string
+                      example: "MPO247369"
+                    G:
+                      type: number
+                      example: 0.12
+                    last_obs:
+                      type: string
+                      example: "20121203"
+                    comp:
+                      type: string
+                      example: "MPCLINUX  "
+                    M:
+                      type: number
+                      example: 327.85412
+                    U:
+                      type: string
+                      example: " "
+                    e:
+                      type: number
+                      example: 0.0761669
+                    a:
+                      type: number
+                      example: 2.767993
+                    om:
+                      type: number
+                      example: 80.33008
+                    pert_p:
+                      type: string
+                      example: "30h"
+                    d:
+                      type: number
+                      example: 0.2140211
+                    i:
+                      type: number
+                      example: 10.59423
+                    des:
+                      type: string
+                      example: "00001"
+                    flags:
+                      type: string
+                      example: "0000"
+                    num_opp:
+                      type: integer
+                      example: 100
+                    w:
+                      type: number
+                      example: 72.16707
+                    pert_c:
+                      type: string
+                      example: "M-v"

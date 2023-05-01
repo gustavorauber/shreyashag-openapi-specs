@@ -1,0 +1,227 @@
+openapi: 3.0.0
+info:
+  title: Node Package Registry API
+  version: 1.0.0
+  description: |
+    The Node Package Registry API provides endpoints for accessing package 
+    metadata and searching for packages.
+
+servers:
+  - url: https://registry.npmjs.org
+
+paths:
+  /:
+    get:
+      summary: Get Registry Metadata
+      operationId: getRegistryMetadata
+      description: |
+        Returns metadata about the registry.
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  db_name:
+                    type: string
+                    description: The name of the registry database
+                  doc_count:
+                    type: integer
+                    description: The number of documents in the database
+                  doc_del_count:
+                    type: integer
+                    description: The number of deleted documents in the database
+                  update_seq:
+                    type: integer
+                    description: The current update sequence number
+                  purge_seq:
+                    type: integer
+                    description: The current purge sequence number
+                  compact_running:
+                    type: boolean
+                    description: Whether the database is currently being compacted
+                  disk_size:
+                    type: integer
+                    description: The total size of the database on disk
+                  data_size:
+                    type: integer
+                    description: The size of the data in the database
+                  instance_start_time:
+                    type: string
+                    description: The start time of the registry instance
+                  disk_format_version:
+                    type: integer
+                    description: The version of the disk format
+                  committed_update_seq:
+                    type: integer
+                    description: The committed update sequence number
+
+  /{package}:
+    get:
+      summary: Get Package Metadata
+      operationId: getPackageMetadata
+      description: |
+        Returns metadata about the specified package.
+      parameters:
+        - name: package
+          in: path
+          description: The name of the package
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                description: The package metadata document
+
+  /{package}/{version}:
+    get:
+      summary: Get Package Version Metadata
+      operationId: getPackageVersionMetadata
+      description: |
+        Returns metadata about the specified version of a package.
+      parameters:
+        - name: package
+          in: path
+          description: The name of the package
+          required: true
+          schema:
+            type: string
+        - name: version
+          in: path
+          description: The version of the package
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                description: The package version metadata document
+
+  /-/v1/search:
+    get:
+      summary: Search for Packages
+      operationId: searchPackages
+      description: |
+        Searches for packages matching the provided criteria.
+        special search qualifiers:
+
+        Special search qualifiers can be provided in the full-text query:
+
+        author:bcoe: Show/filter results in which bcoe is the author
+
+        maintainer:bcoe: Show/filter results in which bcoe is qualifier as a maintainer
+
+        keywords:batman: Show/filter results that have batman in the keywords
+
+        separating multiple keywords with
+        , acts like a logical OR
+        + acts like a logical AND
+        ,- can be used to exclude keywords
+
+        not:unstable: Exclude packages whose version is < 1.0.0
+
+        not:insecure: Exclude packages that are insecure or have vulnerable dependencies (based on the nsp registry)
+
+        is:unstable: Show/filter packages whose version is < 1.0.0
+
+        is:insecure: Show/filter packages that are insecure or have vulnerable dependencies (based on the nsp registry)
+
+        boost-exact:false: Do not boost exact matches, defaults to true
+      parameters:
+        - name: text
+          in: query
+          description: The full-text search query to apply
+          schema:
+            type: string
+        - name: size
+          in: query
+          description: The number of results to return (default 20, max 250)
+          schema:
+            type: integer
+        - name: from
+          in: query
+          description: The offset to start returning results from
+          schema:
+            type: integer
+        - name: quality
+          in: query
+          description: |
+            The weight to assign to package quality in search results, between 0 and 1
+          schema:
+            type: number
+            minimum: 0
+            maximum: 1
+        - name: popularity
+          in: query
+          description: |
+            The weight to assign to package popularity in search results, between 0 and 1
+          schema:
+            type: number
+            minimum: 0
+            maximum: 1
+        - name: maintenance
+          in: query
+          description: |
+            The weight to assign to package maintenance in search results, between 0 and 1
+          schema:
+            type: number
+            minimum: 0
+            maximum: 1
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  objects:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        package:
+                          type: object
+
+                        score:
+                          type: object
+                          properties:
+                            final:
+                              type: number
+                              description: |
+                                The final score for the package, taking into account the weights assigned to quality, popularity, and maintenance
+                            detail:
+                              type: object
+                              description: |
+                                The individual scores for quality, popularity, and maintenance
+                              properties:
+                                quality:
+                                  type: number
+                                  description: The quality score for the package
+                                popularity:
+                                  type: number
+                                  description: The popularity score for the package
+                                maintenance:
+                                  type: number
+                                  description: The maintenance score for the package
+                        searchScore:
+                          type: number
+                          description: The search score for the package
+                  total:
+                    type: integer
+                    description: The total number of packages matching the search criteria
+                  time:
+                    type: string
+                    format: date-time
+                    description: The timestamp of when the search was performedg

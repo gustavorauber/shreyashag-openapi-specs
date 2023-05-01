@@ -152,49 +152,6 @@ paths:
       summary: Get CodeForces Contests
       operationId: getCodeForcesContests
       description: Returns a list of all CodeForces contests in the site.
-      parameters:
-        - name: status
-          in: query
-          description: Filter by contest status.
-          schema:
-            type: string
-            enum:
-              - BEFORE
-              - CODING
-        - name: gym
-          in: query
-          description: Filter by gym contests.
-          schema:
-            type: boolean
-        - name: start__gt
-          in: query
-          description: Filter by start time greater than specified timestamp.
-          schema:
-            type: string
-            format: date-time
-        - name: start__lt
-          in: query
-          description: Filter by start time less than specified timestamp.
-          schema:
-            type: string
-            format: date-time
-        - name: end__gt
-          in: query
-          description: Filter by end time greater than specified timestamp.
-          schema:
-            type: string
-            format: date-time
-        - name: end__lt
-          in: query
-          description: Filter by end time less than specified timestamp.
-          schema:
-            type: string
-            format: date-time
-        - name: in_24_hours
-          in: query
-          description: Filter by contests starting within the next 24 hours.
-          schema:
-            type: boolean
       responses:
         "200":
           description: OK

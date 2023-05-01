@@ -1,0 +1,47 @@
+openapi: 3.0.0
+info:
+  title: Wallstreetbets
+  version: 1.0.0
+  description: APIs for getting top stocks discussed on the Wallstreetbets subreddit
+servers:
+  - url: https://tradestie.com/api/v1
+paths:
+  /apps/reddit:
+    get:
+      summary: Get top 50 stocks discussed on the Wallstreetbets subreddit
+      description: Get top 50 stocks discussed on the Wallstreetbets subreddit
+      operationId: getTopFifty
+      parameters:
+        - name: date
+          in: query
+          description: The date for which the top 50 discussed stocks are to be retrieved (in yyyy-mm-dd format)
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A JSON array of top 50 stocks discussed on Wallstreetbets subreddit
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    no_of_comments:
+                      type: integer
+                      description: Number of comments on the subreddit for the stock
+                    sentiment:
+                      type: string
+                      description: Sentiment associated with the stock (Bullish or Bearish)
+                    sentiment_score:
+                      type: number
+                      format: float
+                      description: Sentiment score associated with the stock
+                    ticker:
+                      type: string
+                      description: Stock ticker symbol
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error

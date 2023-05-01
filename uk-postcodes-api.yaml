@@ -1,0 +1,172 @@
+openapi: 3.0.0
+info:
+  title: Postcode Lookup API
+  version: 1.0.0
+  description: |
+    Postcode & Geolocation API for the UK - Free, Open Source and based solely on Open Data.
+
+    Regularly Updated -Updated with the latest data from Ordnance Survey and Office for National Statistics when it becomes available
+
+servers:
+  - url: https://api.postcodes.io
+
+paths:
+  /postcodes/{postcode}:
+    get:
+      parameters:
+        - in: path
+          name: postcode
+          required: true
+          description: The postcode to lookup
+          schema:
+            type: string
+      summary: Lookup a postcode
+      description: Lookup a postcode
+      operationId: getPostcodeDetails
+      responses:
+        "200":
+          description: Postcode lookup result
+          content:
+            application/json:
+              schema:
+                type: object
+  /postcodes/:
+    get:
+      summary: Get nearest postcodes for a given longitude & latitude
+      description: Get nearest postcodes for a given longitude & latitude
+      operationId: getPostcodeByLatLong
+      parameters:
+        - in: query
+          name: lon
+          schema:
+            type: number
+          required: true
+          description: The longitude to search
+        - in: query
+          name: lat
+          schema:
+            type: number
+          required: true
+          description: The latitude to search
+      responses:
+        "200":
+          description: Postcode lookup result
+          content:
+            application/json:
+              schema:
+                type: object
+  /postcodes/{postcode}/nearest:
+    get:
+      summary: Get nearest postcodes for a given postcode
+      description: Get nearest postcodes for a given postcode
+      operationId: getNearestPincodeForGivenPincode
+      parameters:
+        - in: path
+          name: postcode
+          required: true
+          description: The postcode to lookup
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Postcode data
+          content:
+            application/json:
+              schema:
+                type: object
+  /random/postcodes:
+    get:
+      summary: Get a random postcode
+      description: Get a random postcode
+      operationId: getRandomPostcode
+      responses:
+        "200":
+          description: Postcode data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Postcode"
+  /postcodes/{postcode}/validate:
+    get:
+      summary: Validate a given postcode
+      description: Validate a given postcode
+      operationId: validatePostcode
+      parameters:
+        - in: path
+          name: postcode
+          required: true
+          description: The postcode to lookup
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Valid/Invalid Postcode data
+          content:
+            application/json:
+              schema:
+                type: object
+
+components:
+  schemas:
+    Postcode:
+      type: object
+      properties:
+        postcode:
+          type: string
+          description: The postcode
+        quality:
+          type: number
+          description: The quality score
+        eastings:
+          type: number
+          description: The eastings
+        northings:
+          type: number
+          description: The northings
+        country:
+          type: string
+          description: The country
+        nhs_ha:
+          type: string
+          description: The NHS health authority
+        longitude:
+          type: number
+          description: The longitude
+        latitude:
+          type: number
+          description: The latitude
+        european_electoral_region:
+          type: string
+          description: The European electoral region
+        primary_care_trust:
+          type: string
+          description: The primary care trust
+        region:
+          type: string
+          description: The region
+        lsoa:
+          type: string
+          description: The LSOA
+        msoa:
+          type: string
+          description: The MSOA
+        incode:
+          type: string
+          description: The inward code
+        outcode:
+          type: string
+          description: The outward code
+        parliamentary_constituency:
+          type: string
+          description: The parliamentary constituency
+        admin_district:
+          type: string
+          description: The administrative district
+        parish:
+          type: string
+          description: The parish
+        admin_county:
+          type: string
+          description: The administrative county
+        date_of_introduction:
+          type: string

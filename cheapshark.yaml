@@ -120,7 +120,7 @@ paths:
           schema:
             type: string
           description: |-
-            `(optional, boolean)` Default `0`
+            `(optional, boolean)` Default `0` which means descending and 1 means ascending.
 
             Determines sort direction
         - name: lowerPrice

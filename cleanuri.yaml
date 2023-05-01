@@ -1,0 +1,57 @@
+openapi: 3.0.3
+info:
+  title: cleanuri.com API
+  version: 1.0.0
+  description:
+    cleanuri.com exposes its data via an Application Programming Interface (API), so developers can interact in a programmatic way with application.
+
+
+    Notes -
+
+    1. Long URLs should be URL-encoded. You can not include a longUrl in the request that has &, ?, \#, or other reserved parameters without first encoding it.
+
+    2. Long URLs should not contain spaces- any longUrl with spaces will be rejected. All spaces should be either percent encoded %20 or plus encoded +. Note that tabs, newlines and trailing spaces are all indications of errors. Please remember to strip leading and trailing whitespace from any user input before shortening.
+servers:
+  - url: https://cleanuri.com
+paths:
+  /api/v1/shorten:
+    post:
+      summary: Shorten a long URL
+      description: Given a long URL, returns a short link.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  format: uri
+              required:
+                - url
+        required: true
+      responses:
+        "200":
+          description: Successful response with short URL
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result_url:
+                    type: string
+                    format: uri
+                    description: Shortened URL
+                  error:
+                    type: string
+                    description: Information about the error, if it occurred
+        "400":
+          description: Bad request, missing or invalid parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Information about the error

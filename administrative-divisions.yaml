@@ -1,0 +1,27 @@
+openapi: 3.0.0
+info:
+  title: administrative-divisions-db API
+  version: 1.0.0
+  description: Administrative divisions of countries as a JSON API over Github
+servers:
+  - url: https://rawcdn.githack.com/kamikazechaser/administrative-divisions-db/master
+paths:
+  /api/{country_code}.json:
+    parameters:
+      - name: country_code
+        in: path
+        required: true
+        description: The ISO 3166-1 alpha-2 code of the country to get administrative division for (example IT, FR)
+        schema:
+          type: string
+    get:
+      summary: Get administrative divisions of a country
+      description: Retrieve the administrative divisions of a country as a JSON response.
+      operationId: getAdministrativeDivisions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
