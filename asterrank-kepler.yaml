@@ -27,6 +27,8 @@ paths:
   /api/kepler:
     get:
       summary: Query the Kepler Project database
+      description: Query the Kepler Project database
+      operationId: queryKeplerProjectDatabase
       parameters:
         - name: query
           in: query
