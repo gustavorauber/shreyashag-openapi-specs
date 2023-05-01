@@ -8,15 +8,28 @@ servers:
 paths:
   /quotes/random:
     get:
-      summary: Get a random quote
-      operationId: randomQuote
+      summary: Get random quotes
+      operationId: getRandomQuotes
+      parameters:
+        - name: author
+          in: query
+          schema:
+            type: string
+        - name: genre
+          in: query
+          schema:
+            type: string
+        - name: count
+          in: query
+          schema:
+            type: integer
       responses:
         "200":
-          description: A random quote
+          description: A list of quotes
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/QuoteResponse"
+                $ref: "#/components/schemas/QuoteListResponse"
 
   /quotes:
     get:
@@ -83,9 +96,11 @@ components:
           type: array
           items:
             type: string
-    QuoteResponse:
+    Quote:
       type: object
       properties:
+        _id:
+          type: string
         quoteText:
           type: string
         quoteAuthor:
@@ -95,11 +110,22 @@ components:
     QuoteListResponse:
       type: object
       properties:
-        totalPages:
+        statusCode: 
+          type: string
+        message:
+          type: string
+        pagination:
+          type: object
+          properties:
+            currentPage:
+              type: integer
+            nextPage:
+              type: integer
+            totalPage:
+              type: integer
+        totalQuotes:
           type: integer
-        currentPage:
-          type: integer
-        quotes:
+        data:
           type: array
           items:
-            $ref: "#/components/schemas/QuoteResponse"
+            $ref: "#/components/schemas/Quote"
