@@ -1,0 +1,96 @@
+openapi: 3.0.0
+info:
+  title: Kepler Project API
+  description: |
+    Asterank offers a queryable database for NASA's Kepler Project, providing data on over 2,000 exoplanets and unconfirmed "objects of interest."
+
+    The keys by which you can filter are - 
+
+    1. KOI: Object of Interest number
+    2. A: Semi-major axis (AU)
+    3. RPLANET: Planetary radius (Earth radii)
+    4. RSTAR: Stellar radius (Sol radii)
+    5. TSTAR: Effective temperature of host star as reported in KIC (k)
+    6. KMAG:  Kepler magnitude (kmag)
+    7. TPLANET: Equilibrium temperature of planet, per Borucki et al. (k)
+    8. T0: Time of transit center (BJD-2454900)
+    9. UT0:  Uncertainty in time of transit center (+-jd)
+    10. PER: Period (days)
+    11. UPER: Uncertainty in period (+-days)
+    12. DEC: Declination (@J200)
+    13. MSTAR: Derived stellar mass (msol)
+    14. RA: Right ascension (@J200)
+  version: 1.0.0
+servers:
+  - url: http://asterank.com
+paths:
+  /api/kepler:
+    get:
+      summary: Query the Kepler Project database
+      parameters:
+        - name: query
+          in: query
+          required: true
+          description: |
+            A JSON object that adheres to MongoDB's format for a 'find' operation. Allows you to filter results based on specific attributes provided by the Kepler Data Explorer. For example, to find Kepler Objects of Interest with estimated equilibrium temperatures between 290 and 320 Kelvin, you would use: {"TPLANET":{"$lt":320,"$gt":290}}.
+          schema:
+            type: object
+            example: { "TPLANET": { "$lt": 320, "$gt": 290 } }
+        - name: limit
+          in: query
+          required: false
+          description: |
+            Limits the number of results returned. Must be an integer. If not provided, all results that match the query will be returned.
+          schema:
+            type: integer
+            example: 10
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  KOI:
+                    type: string
+                    description: Object of Interest number
+                  A:
+                    type: number
+                    description: Semi-major axis (AU)
+                  RPLANET:
+                    type: number
+                    description: Planetary radius (Earth radii)
+                  RSTAR:
+                    type: number
+                    description: Stellar radius (Sol radii)
+                  TSTAR:
+                    type: number
+                    description: Effective temperature of host star as reported in KIC (k)
+                  KMAG:
+                    type: number
+                    description: Kepler magnitude (kmag)
+                  TPLANET:
+                    type: number
+                    description: Equilibrium temperature of planet, per Borucki et al. (k)
+                  T0:
+                    type: number
+                    description: Time of transit center (BJD-2454900)
+                  UT0:
+                    type: number
+                    description: Uncertainty in time of transit center (+-jd)
+                  PER:
+                    type: number
+                    description: Period (days)
+                  UPER:
+                    type: number
+                    description: Uncertainty in period (+-days)
+                  DEC:
+                    type: number
+                    description: Declination (@J200)
+                  RA:
+                    type: number
+                    description: Right ascension (@J200)
+                  MSTAR:
+                    type: number
+                    description: Derived stellar mass (msol)
