@@ -1,0 +1,246 @@
+openapi: 3.0.0
+info:
+  title: Open Trivia DB API
+  version: 1.0.0
+  description: |
+    The Open Trivia DB API provides a simple and free API for trivia 
+    questions. The API returns questions in various categories and difficulty 
+    levels, and supports session tokens to prevent the same question from 
+    being repeated.
+        
+        Session Tokens are unique keys that will help keep track of the 
+    questions the API has already retrieved. 
+    
+
+servers:
+  - url: https://opentdb.com
+
+paths:
+  /api_category.php:
+    get:
+      summary: Get Category List
+      operationId: getCategories
+      description: |
+        Returns the list of categories and ids in the database.
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trivia_categories:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: The id of the category
+                        name:
+                          type: string
+                          description: The name of the category
+
+  /api_count.php:
+    get:
+      summary: Get Category Question Count
+      operationId: getCategoryCount
+      description: |
+        Returns the number of questions in the database for the specified 
+category.
+      parameters:
+        - name: category
+          in: query
+          description: The id of the category
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  category_id:
+                    type: integer
+                    description: The id of the category
+                  category_question_count:
+                    type: integer
+                    description: The number of questions in the category
+
+  /api_count_global.php:
+    get:
+      summary: Get Global Question Count
+      operationId: getGlobalCount
+      description: |
+        Returns the number of questions in the database. Total, Pending, 
+Verified, and Rejected.
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_num_of_questions:
+                    type: integer
+                    description: The total number of questions in the 
+database
+                  total_num_of_pending_questions:
+                    type: integer
+                    description: The total number of pending questions in 
+the database
+                  total_num_of_verified_questions:
+                    type: integer
+                    description: The total number of verified questions in 
+the database
+                  total_num_of_rejected_questions:
+                    type: integer
+                    description: The total number of rejected questions in 
+the database
+
+  /api.php:
+    get:
+      summary: Get Trivia Questions
+      description: |
+        Returns a list of trivia questions based on the provided 
+parameters.
+      parameters:
+        - name: amount
+          in: query
+          description: The number of questions to retrieve (maximum 50)
+          required: true
+          schema:
+            type: integer
+            maximum: 50
+        - name: category
+          in: query
+          description: The category of the questions to retrieve 
+(optional)
+          schema:
+            type: integer
+        - name: difficulty
+          in: query
+          description: The difficulty level of the questions to retrieve 
+(optional)
+          schema:
+            type: string
+            enum:
+              - easy
+              - medium
+              - hard
+        - name: type
+          in: query
+          description: The type of questions to retrieve (optional)
+          schema:
+            type: string
+            enum:
+              - multiple
+              - boolean
+        - name: encode
+          in: query
+          description: The encoding format for the questions (optional)
+          schema:
+            type: string
+            enum:
+              - urlLegacy
+              - url3986
+              - base64
+        - name: token
+          in: query
+          description: |
+            By appending a Session Token to a API Call, the API will never 
+give you the same question twice. Over the lifespan of a Session Token, 
+there will eventually reach a point where you have exhausted all the 
+possible questions in the database. At this point, the API will respond 
+with the approperate "Response Code". From here, you can either "Reset" 
+the Token, which will wipe all past memory, or you can ask for a new one.
+          schema:
+            type: string
+          required: false
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response_code:
+                    type: integer
+                    description: The response code indicating the status 
+of the request
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        category:
+                          type: string
+                          description: The category of the question
+                        type:
+                          type: string
+                          description: The type of the question
+                        difficulty:
+                          type: string
+                          description: The difficulty level of the 
+question
+                        question:
+                          type: string
+                          description: The question text
+                        correct_answer:
+                          type: string
+                          description: The correct answer
+                        incorrect_answers:
+                          type: array
+                          items:
+                            type: string
+                          description: The list of incorrect answers
+
+  /api_token.php:
+    get:
+      summary: Retrieve Session Token
+      operationId: getOrResetToken
+      description: |
+        Returns a session token that can be used to retrieve unique 
+questions.
+      parameters:
+        - name: command
+          in: query
+          description: The command to execute
+          required: true
+          schema:
+            type: string
+            enum:
+              - request
+              - reset
+        - name: token
+          in: query
+          description: The session token to reset (required for reset 
+command)
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response_code:
+                    type: integer
+                    description: The response code indicating the status 
+of the request
+                  response_message:
+                    type: string
+                    description: The message associated with the response 
+code
+                  token:
+                    type: string
+                    description: The session
+
