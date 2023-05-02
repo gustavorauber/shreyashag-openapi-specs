@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Gutendex API
-  version: 1.0.0
+  version: 1.0.1
   description: API for accessing book data from Project Gutenberg
 servers:
   - url: https://gutendex.com
@@ -11,6 +11,7 @@ paths:
       summary: Get a list of books from Project Gutenberg
       description: Returns a list of book information in the database. By default, books are ordered by popularity, determined by their numbers of downloads from Project Gutenberg.
         The endpoint returns 0-32 books.
+      operationId: findBooks
       parameters:
         - name: author_year_start
           in: query
@@ -89,6 +90,7 @@ paths:
   /books/{id}:
     get:
       summary: Get information about an individual book
+      operationId: getBookById
       parameters:
         - in: path
           name: id
