@@ -1,0 +1,232 @@
+openapi: 3.0.3
+info:
+  title: GamerPower API
+  version: 1.0.0
+  description: |
+    Access the best giveaways in gaming, from free games to beta keys to free in-game loot and more.
+
+
+    Will look on steam, epic-games-store, android for game and loot givaways.
+
+    type parameter can be - 
+      - game
+      - loot
+      - beta
+
+    platform parameter can be - 
+    - pc
+    - steam
+    - epic-games-store
+    - ubisoft
+    - gog
+    - itchio
+    - ps4
+    - ps5
+    - xbox-one
+    - xbox-series-xs
+    - switch
+    - android
+    - ios
+    - vr
+    - battlenet
+    - origin
+    - drm-free
+    - xbox-360
+
+    Multiple platform and type parameters can be combined using a dot (.) for filter operation.
+
+    For example - GET https://www.gamerpower.com/api/filter?platform=epic-games-store.steam.android&type=game.loot
+
+  contact:
+    email: contact@gamerpower.com
+  license:
+    name: Attribution Required
+    url: https://creativecommons.org/licenses/by/4.0/
+servers:
+  - url: https://www.gamerpower.com
+paths:
+  /api/giveaways:
+    get:
+      summary: Get all live giveaways or filter by platform, type, and sort order
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: string
+          description: The ID of the giveaway to get more details.
+
+        - in: query
+          name: platform
+          schema:
+            type: string
+            enum:
+              [
+                pc,
+                steam,
+                epic-games-store,
+                ubisoft,
+                gog,
+                itchio,
+                ps4,
+                ps5,
+                xbox-one,
+                xbox-series-xs,
+                switch,
+                android,
+                ios,
+                vr,
+                battlenet,
+                origin,
+                drm-free,
+                xbox-360,
+              ]
+          description: Filter giveaways by platform.
+        - in: query
+          name: type
+          schema:
+            type: string
+            enum: [game, loot, beta]
+          description: Filter giveaways by type
+        - in: query
+          name: sort-by
+          schema:
+            type: string
+            enum: [date, value, popularity]
+          description: Sort giveaways by date, value, or popularity
+      responses:
+        "200":
+          description: Returns a list of giveaways matching the specified filters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Giveaway"
+  /api/filter:
+    get:
+      summary: Get personalized results by filtering and grouping platforms and giveaway types
+      parameters:
+        - in: query
+          name: platform
+          schema:
+            type: string
+          description: Filter giveaways by multiple platforms
+        - in: query
+          name: type
+          schema:
+            type: string
+          description: Filter giveaways by multiple types
+      responses:
+        "200":
+          description: Returns a list of giveaways matching the specified filters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Giveaway"
+  /api/worth:
+    get:
+      summary: Get total number of live giveaways and estimated worth in US dollars
+      parameters:
+        - in: query
+          name: platform
+          schema:
+            type: string
+            enum:
+              [
+                pc,
+                steam,
+                epic-games-store,
+                ubisoft,
+                gog,
+                itchio,
+                ps4,
+                ps5,
+                xbox-one,
+                xbox-series-xs,
+                switch,
+                android,
+                ios,
+                vr,
+                battlenet,
+                origin,
+                drm-free,
+                xbox-360,
+              ]
+          description: Filter giveaways by platform
+        - in: query
+          name: type
+          schema:
+            type: string
+            enum: [game, loot, beta]
+          description: Filter giveaways by type
+      responses:
+        "200":
+          description: Returns the total number of live giveaways and estimated worth in US dollars
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_giveaways:
+                    type: integer
+                    description: Total number of live giveaways matching the specified filters
+                  estimated_worth:
+                    type: number
+                    format: float
+                    description: Estimated total worth of the live giveaways in US dollars
+components:
+  schemas:
+    Giveaway:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique ID of the giveaway
+        title:
+          type: string
+          description: Title of the giveaway
+        description:
+          type: string
+          description: Description of the giveaway
+        image:
+          type: string
+          format: uri
+          description: URL of the giveaway image
+        platform:
+          type: string
+          enum:
+            [
+              pc,
+              steam,
+              epic-games-store,
+              ubisoft,
+              gog,
+              itchio,
+              ps4,
+              ps5,
+              xbox-one,
+              xbox-series-xs,
+              switch,
+              android,
+              ios,
+              vr,
+              battlenet,
+              origin,
+              drm-free,
+              xbox-360,
+            ]
+          description: Platform of the giveaway
+        type:
+          type: string
+          enum: [game, loot, beta]
+          description: Type of the giveaway
+        value:
+          type: number
+          format: float
+          description: Estimated value of the giveaway in US dollars
+        end_date:
+          type: string
+          format: date-time
+          description: End date and
