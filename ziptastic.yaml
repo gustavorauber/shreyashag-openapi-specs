@@ -1,0 +1,165 @@
+openapi: 3.0.3
+info:
+  title: ZipTastic API
+  version: 1.0.0
+  description: An API for retrieving location data based on zip codes.
+
+servers:
+  - url: https://zip.getziptastic.com
+
+paths:
+  /:
+    get:
+      summary: Retrieve location data for a US zip code.
+      description: Retrieve location data for a US zip code.
+      operationId: getUSZipcodeInfo
+      parameters:
+        - name: zip
+          in: query
+          description: The zip code to retrieve data for, example 10002
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  country:
+                    type: string
+                    description: The country code (always "US" for v1)
+                    example: US
+                  state:
+                    type: string
+                    description: The state (two-letter abbreviation).
+                    example: MI
+                  city:
+                    type: string
+                    description: The city name.
+                    example: Lansing
+  /v2/{country}/{zipcode}:
+    get:
+      summary: Retrieve location data for a given country and postal code.
+      description: Retrieve location data for a given country and postal code.
+      operationId: getCountryZipcodeInfo
+      parameters:
+        - name: country
+          in: path
+          description: The country code for the postal code.
+          required: true
+          schema:
+            type: string
+            enum:
+              [
+                AD,
+                AR,
+                AS,
+                AT,
+                AU,
+                BD,
+                BE,
+                BG,
+                BR,
+                CA,
+                CH,
+                CZ,
+                DE,
+                DK,
+                DO,
+                ES,
+                FI,
+                FO,
+                FR,
+                GB,
+                GF,
+                GG,
+                GL,
+                GP,
+                GT,
+                GU,
+                GY,
+                HR,
+                HU,
+                IM,
+                IN,
+                IS,
+                IT,
+                JE,
+                JP,
+                LI,
+                LK,
+                LT,
+                LU,
+                MC,
+                MD,
+                MH,
+                MK,
+                MP,
+                MQ,
+                MX,
+                MY,
+                NL,
+                NO,
+                NZ,
+                PH,
+                PK,
+                PL,
+                PM,
+                PR,
+                PT,
+                RE,
+                RU,
+                SE,
+                SI,
+                SJ,
+                SK,
+                SM,
+                TH,
+                TR,
+                US,
+                VA,
+                VI,
+                YT,
+                ZA,
+              ]
+        - name: zipcode
+          in: path
+          description: The postal code to retrieve data for.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  country:
+                    type: string
+                    description: The country code.
+                    example: US
+                  state:
+                    type: string
+                    description: The state or region (if available).
+                    example: Michigan
+                  city:
+                    type: string
+                    description: The city name.
+                    example: Lansing
+                  postal_code:
+                    type: string
+                    description: The city name.
+                    example: 560065
+                  state_short:
+                    type: string
+                    description: The city name.
+                    example: 19
+                  county:
+                    type: string
+                    description: The city name.
+                    example: Bengaluru
