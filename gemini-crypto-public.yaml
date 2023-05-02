@@ -1,0 +1,142 @@
+openapi: 3.0.3
+info:
+  title: Gemini Crypto Public API
+  version: 1.0.0
+  description: API for trading and other operations on the Gemini cryptocurrency exchange
+  contact:
+    email: support@gemini.com
+servers:
+  - url: https://api.gemini.com
+paths:
+  /v1/symbols:
+    get:
+      summary: Retrieve all available trading symbols
+      responses:
+        "200":
+          description: Returns a list of available symbols
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /v1/symbols/details/{symbol}:
+    get:
+      summary: Retrieve extra details on a specific symbol
+      parameters:
+        - in: path
+          name: symbol
+          required: true
+          schema:
+            type: string
+          description: Trading pair symbol
+      responses:
+        "200":
+          description: Returns extra details on the specified symbol
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  symbol:
+                    type: string
+                    description: Trading pair symbol
+                  base_currency:
+                    type: string
+                    description: Base currency of the trading pair
+                  quote_currency:
+                    type: string
+                    description: Quote currency of the trading pair
+                  tick_size:
+                    type: number
+                    format: float
+                    description: Tick size for the trading pair
+                  quote_increment:
+                    type: number
+                    format: float
+                    description: Quote increment for the trading pair
+                  min_order_size:
+                    type: number
+                    format: float
+                    description: Minimum order size for the trading pair
+                  status:
+                    type: string
+                    enum: [open, suspend]
+                    description: Status of the trading pair
+  /v1/network/{token}:
+    get:
+      summary: Retrieve the associated network for a requested token
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema:
+            type: string
+          description: Token identifier
+      responses:
+        "200":
+          description: Returns the associated network for the specified token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: Token identifier
+                  network:
+                    type: string
+                    description: Associated network for the token
+  /v1/pubticker/{symbol}:
+    get:
+      summary: Retrieve recent trading activity for a symbol
+      parameters:
+        - in: path
+          name: symbol
+          required: true
+          schema:
+            type: string
+          description: Trading pair symbol
+      responses:
+        "200":
+          description: Returns information about recent trading activity for the symbol
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bid:
+                    type: number
+                    format: float
+                    description: Current highest bid price for the symbol
+                  ask:
+                    type: number
+                    format: float
+                    description: Current lowest ask price for the symbol
+                  last:
+                    type: number
+                    format: float
+                    description: Price of the last trade for the symbol
+                  volume:
+                    type: object
+                    description: 24-hour volume for the symbol
+                    properties:
+                      currency:
+                        type: string
+                        description: Currency of the volume amount
+                      amount:
+                        type: number
+                        format: float
+                        description: 24-hour volume for
+  /v1/feepromos:
+    get:
+      summary: Retrieve symbols with fee promotions
+      responses:
+        "200":
+          description: Returns a list of symbols with active fee promotions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string

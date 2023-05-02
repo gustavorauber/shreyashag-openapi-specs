@@ -1,0 +1,87 @@
+openapi: 3.0.0
+info:
+  title: Hong Kong GeoData Store APIs
+  description: APIs for finding locations, nearby facilities, and discovering facilities in Hong Kong
+  version: 1.0.0
+servers:
+  - url: https://geodata.gov.hk/gs/api/v1.0.0
+paths:
+  /locationSearch:
+    get:
+      summary: Find locations in Hong Kong
+      description: Find locations in Hong Kong
+      operationId: locationSearch
+      parameters:
+        - in: query
+          name: q
+          required: true
+          description: The input string to search for addresses, building names, place names, or facility names
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /searchNearby:
+    get:
+      summary: Find facilities located within 1 km of a geographic location
+      description: Find facilities located within 1 km of a geographic location
+      operationId: searchNearby
+      parameters:
+        - in: query
+          name: x
+          required: true
+          description: The coordinate value of HK80 Easting (m)
+          schema:
+            type: string
+        - in: query
+          name: y
+          required: true
+          description: The coordinate value of HK80 Northing (m)
+          schema:
+            type: string
+        - in: query
+          name: lang
+          description: The language in the output JSON. Use value "zh" to get search results in Traditional Chinese. Use value "en" to get search results in English.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /identify:
+    get:
+      summary: Discover facilities at a geographic location
+      description: Discover facilities at a geographic location
+      operationId: identify
+      parameters:
+        - in: query
+          name: x
+          required: true
+          description: The coordinate value of HK80 Easting (m)
+          schema:
+            type: string
+        - in: query
+          name: y
+          required: true
+          description: The coordinate value of HK80 Northing (m)
+          schema:
+            type: string
+        - in: query
+          name: lang
+          description: The language in the output JSON. Use value "zh" to get search results in Traditional Chinese. Use value "en" to get search results in English.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
