@@ -1,0 +1,62 @@
+openapi: 3.0.0
+info:
+  title: GeoJS API
+  description: Provides endpoints for retrieving country, geo, and PTR information about an IP address
+  version: 1.0.0
+servers:
+  - url: https://get.geojs.io/v1
+paths:
+  /ip/country.json:
+    get:
+      summary: Get country information about an IP
+      description: Get country information about an IP
+      operationId: getCountryInfoFromIP
+      parameters:
+        - in: query
+          name: ip
+          description: |
+            The IP address to retrieve country information for. Example - 1.1.1.1,8.8.8.8
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ip:
+                    type: string
+                    description: The requested IP address
+                    example: "8.8.8.8"
+                  country:
+                    type: string
+                    description: Two-letter country code
+                    example: "US"
+                  country_3:
+                    type: string
+                    description: Three-letter country code
+                    example: "USA"
+                  name:
+                    type: string
+                    description: Country name in English
+                    example: "United States"
+  /ip/geo.json:
+    get:
+      summary: Get geographical information about an IP
+      description: Get geographical information about an IP
+      operationId: getGeoInfoFromIP
+      parameters:
+        - in: query
+          name: ip
+          description: The IP address to retrieve geographical information for. Example 1.1.1.1,8.8.8.8
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
