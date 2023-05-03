@@ -9,6 +9,8 @@ paths:
   /courses:
     get:
       summary: Get a list of all courses
+      description: Get a list of all courses
+      operationId: getCourses
       parameters:
         - name: lang
           in: query
@@ -33,6 +35,8 @@ paths:
   /course/{subject_code}:
     get:
       summary: Get information about a specific course
+      description: Get information about a specific course
+      operationId: getCourseInformation
       parameters:
         - name: subject_code
           required: true
