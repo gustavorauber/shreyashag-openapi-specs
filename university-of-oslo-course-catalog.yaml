@@ -1,0 +1,116 @@
+openapi: 3.0.0
+info:
+  title: University of Oslo Course Catalog API
+  version: 1.0.0
+  description: An API for accessing course information at the University of Oslo (UiO)
+servers:
+  - url: https://data.uio.no/studies/v1
+paths:
+  /courses:
+    get:
+      summary: Get a list of all courses
+      parameters:
+        - name: lang
+          in: query
+          description: Desired language on notice (default Norwegian)
+          schema:
+            type: string
+            enum: [en]
+        - name: limit
+          in: query
+          description: Desired maximum number of instances (0 means no limit)
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Course"
+  /course/{subject_code}:
+    get:
+      summary: Get information about a specific course
+      parameters:
+        - name: subject_code
+          required: true
+          in: path
+          description: A valid subject code at UiO
+          schema:
+            type: string
+        - name: lang
+          in: query
+          description: Desired language on notice (default Norwegian)
+          schema:
+            type: string
+            enum: [en]
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CourseInfo"
+        "404":
+          description: Course not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    Course:
+      type: object
+      properties:
+        course_code:
+          type: string
+        course_name:
+          type: string
+        course_description:
+          type: string
+        course_credit_points:
+          type: integer
+        course_language:
+          type: string
+    CourseInfo:
+      type: object
+      properties:
+        course_code:
+          type: string
+        course_name:
+          type: string
+        course_description:
+          type: string
+        course_credit_points:
+          type: integer
+        course_language:
+          type: string
+        semester_code:
+          type: string
+        semester_start_date:
+          type: string
+          format: date-time
+        semester_end_date:
+          type: string
+          format: date-time
+        teaching_language:
+          type: string
+        teaching_time_and_place:
+          type: string
+        teaching_form:
+          type: string
+        exam_form:
+          type: string
+        assessment_form:
+          type: string
+        assessment_grading_scale:
+          type: string
+    Error:
+      type: object
+      properties:
+        error_code:
+          type: integer
+        error_message:
+          type: string
