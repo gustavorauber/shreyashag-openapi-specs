@@ -1,0 +1,107 @@
+openapi: 3.0.0
+info:
+  title: VATComply API
+  version: 1.0.0
+  description: An API for validating VAT numbers and getting currency exchange rates. You can find vat numbers from websites like http://www.vat-lookup.co.uk/
+servers:
+  - url: https://api.vatcomply.com/
+paths:
+  /vat:
+    get:
+      summary: Validate a VAT number
+      description: |
+        This endpoint allows you to check whether a VAT number is valid.
+        If the VAT number is valid, it returns information about the company with the country's VAT rates.
+      operationId: validateVAT
+      parameters:
+        - name: vat_number
+          in: query
+          description: The VAT number to validate
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  valid:
+                    type: boolean
+                    description: Whether the VAT number is valid or not
+                  vat_number:
+                    type: string
+                    description: The validated VAT number
+                  name:
+                    type: string
+                    description: The name of the company associated with the VAT number
+                  address:
+                    type: string
+                    description: The address of the company associated with the VAT number
+                  country_code:
+                    type: string
+                    description: The ISO 3166-1 alpha-2 country code of the country associated with the VAT number
+  /rates:
+    get:
+      summary: Get currency exchange rates
+      operationId: getExchangeRates
+      description: |
+        This endpoint returns foreign exchange reference rates published by the European Central Bank.
+        The data refreshes around 16:00 CET every working day.
+      parameters:
+        - name: base
+          in: query
+          description: The currency to quote against
+          schema:
+            type: string
+        - name: date
+          in: query
+          description: |
+            The date for historical exchange rates (format: YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  date:
+                    type: string
+                    description: The date of the exchange rates
+                    format: date
+                  base:
+                    type: string
+                    description: The currency the exchange rates are quoted against
+                  rates:
+                    type: object
+                    description: The exchange rates for each currency
+                    additionalProperties:
+                      type: number
+  /currencies:
+    get:
+      summary: Get a list of currencies
+      operationId: getCurrencies
+      description: |
+        This endpoint returns a list of currencies.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: The name of the currency
+                    symbol:
+                      type: string
+                      description: The symbol of the currency
