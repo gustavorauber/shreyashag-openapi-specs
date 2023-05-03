@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: An API for validating VAT numbers and getting currency exchange rates. You can find vat numbers from websites like http://www.vat-lookup.co.uk/
 servers:
-  - url: https://api.vatcomply.com/
+  - url: https://api.vatcomply.com
 paths:
   /vat:
     get:
@@ -21,7 +21,7 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
@@ -51,6 +51,14 @@ paths:
         This endpoint returns foreign exchange reference rates published by the European Central Bank.
         The data refreshes around 16:00 CET every working day.
       parameters:
+        - name: symbols
+          in: query
+          description: |
+            Request specific exchange rates by setting the symbols parameter
+            GET /rates?symbols=USD,GBP
+          required: false
+          schema:
+            type: string
         - name: base
           in: query
           description: The currency to quote against
@@ -64,7 +72,7 @@ paths:
             type: string
             format: date
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
@@ -90,7 +98,7 @@ paths:
       description: |
         This endpoint returns a list of currencies.
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
