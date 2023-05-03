@@ -1,0 +1,71 @@
+openapi: 3.0.0
+info:
+  title: ZenQuotes API
+  version: 1.0.0
+  description: A simple API for getting random inspirational quotes.
+servers:
+  - url: https://zenquotes.io/api/
+paths:
+  /quotes:
+    get:
+      summary: Get a list of random quotes
+      description: |
+        This endpoint returns a list of 50 random quotes from the ZenQuotes database.
+        The response is cached and can be looped locally to avoid calling the server each time.
+      operationId: getRandomQuotes
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuoteList"
+  /today:
+    get:
+      summary: Get the quote of the day
+      operationId: getQuoteOfTheDay
+      description: |
+        This endpoint returns a single quote from the ZenQuotes database, which is refreshed daily.
+        The response should be cached and refreshed daily to reduce server load.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quote"
+  /random:
+    get:
+      summary: Get a single random quote
+      operationId: getSingleRandomQuote
+      description: |
+        This endpoint returns a single random quote from the ZenQuotes database.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quote"
+components:
+  schemas:
+    QuoteList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Quote"
+
+    Quote:
+      type: object
+      properties:
+        q:
+          type: string
+          description: The quote text
+        a:
+          type: string
+          description: The author of the quote
+        C:
+          type: string
+          description: character count
+        h:
+          type: string
+          description: A hash value of the quote
