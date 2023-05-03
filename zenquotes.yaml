@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: A simple API for getting random inspirational quotes.
 servers:
-  - url: https://zenquotes.io/api/
+  - url: https://zenquotes.io/api
 paths:
   /quotes:
     get:
