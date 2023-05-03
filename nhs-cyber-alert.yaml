@@ -1,0 +1,92 @@
+openapi: 3.0.0
+info:
+  title: NHS Cyber Alert API
+  version: 1.0.0
+  description: An API for accessing cyber alert information from the UK's National Health Service (NHS)
+servers:
+  - url: https://digital.nhs.uk/restapi/CyberAlert
+paths:
+  /page:
+    get:
+      summary: Get a list of cyber alerts
+      description: Get a list of cyber alerts. Returns 10 items per page.
+      operationId: getCyberAlertsList
+      parameters:
+        - name: _limited
+          in: query
+          description: If true, return only a limited subset of the most important fields
+          schema:
+            type: string
+            enum: [true]
+        - name: page
+          in: query
+          description: The number of the page to be returned
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CyberAlertList"
+  /single:
+    get:
+      summary: Get details of a single NHS cyber alert
+      description: Get details of a single NHS cyber alert
+      operationId: getCyberAlertDetails
+      parameters:
+        - name: threatid
+          in: query
+          description: The threat ID of the alert to be returned, normally formatted AA-1111
+          schema:
+            type: string
+        - name: _limited
+          in: query
+          description: If true, return only the basic details of the alert
+          schema:
+            type: string
+            enum: [true]
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CyberAlert"
+components:
+  schemas:
+    CyberAlert:
+      type: object
+      properties:
+        threatid:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        publisheddate:
+          type: string
+          format: date-time
+        modifieddate:
+          type: string
+          format: date-time
+        affectedproduct:
+          type: string
+        url:
+          type: string
+        attachmentfilename:
+          type: string
+    CyberAlertList:
+      type: object
+      properties:
+        page:
+          type: integer
+        total_pages:
+          type: integer
+        total_count:
+          type: integer
+        alerts:
+          type: array
+          items:
+            $ref: "#/components/schemas/CyberAlert"
