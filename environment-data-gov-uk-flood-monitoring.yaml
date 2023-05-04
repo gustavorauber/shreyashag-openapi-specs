@@ -1,0 +1,124 @@
+openapi: 3.0.0
+info:
+  title: UK Flood Monitoring APIs
+  version: 1.0.0
+  description: |
+    APIs for accessing Environment Agency data.
+    The Environment Agency issue warnings of floods that cover specific warning or alert areas. The floods API provides a listing of all current such warnings and is updated every 15 minutes.
+
+      A warning may be at one of four possible severity levels:
+      
+      Level	Name - 	Meaning
+      
+      * 1	- Severe Flood Warning	Severe Flooding, Danger to Life.
+      * 2	- Flood Warning	Flooding is Expected, Immediate Action Required.
+      * 3	- Flood Alert	Flooding is Possible, Be Prepared.
+      * 4	- Warning no Longer in Force	The warning is no longer in force
+servers:
+  - url: https://environment.data.gov.uk/flood-monitoring
+paths:
+  /id/floods:
+    get:
+      summary: Get all flood warnings and alerts
+      description: |
+        Get all flood warnings and alerts. 
+        Area code is present in the response which can be used to call getFloodAreaDetails.
+        
+        Use lat and long and r to return only warnings applying to flood areas which are within r km of the given latitude/longitude (in WGS84 coordinates), this may be approximated by a bounding box.
+      parameters:
+        - in: query
+          name: _offset
+          schema:
+            type: integer
+        - in: query
+          name: _limit
+          schema:
+            type: integer
+        - in: query
+          name: min-severity
+          description: Filter by minimum severity level (1-4)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 4
+        - in: query
+          name: county
+          description: Return only warnings applying to flood areas whose county name contains the string x. x can be a list of county names separated by "," in which case alerts which mention any of the named counties will be returned.
+          schema:
+            type: string
+        - in: query
+          name: lat
+          description: Latitude of point to search from
+          schema:
+            type: number
+          required: false
+        - in: query
+          name: long
+          description: Longitude of point to search from
+          schema:
+            type: number
+          required: false
+        - in: query
+          name: dist
+          description: Distance in kilometers from point to search from
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A list of flood warnings and alerts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                  metadata:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      offset:
+                        type: integer
+                      limit:
+                        type: integer
+        '404':
+          description: Flood warnings not found
+  /id/floods/{id}:
+    get:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      description: Get details of flood
+      operationId: getFloodWarningDetails
+      responses:
+        '200':
+          description: Details of a flood warning or alert
+          content:
+            application/json:
+              schema:
+                type: object
+  /id/floodAreas/{area-code}:
+    get:
+      parameters:
+        - name: area-code
+          in: path
+          required: true
+          schema:
+            type: string
+      description: Get details of flood area
+      operationId: getFloodAreaDetails
+      responses:
+        '200':
+          description: Details of a flood warning or alert
+          content:
+            application/json:
+              schema:
+                type: object
+  
+     
