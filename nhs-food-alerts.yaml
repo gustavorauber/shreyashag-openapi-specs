@@ -6,7 +6,7 @@ info:
 servers:
   - url: https://data.food.gov.uk/food-alerts
 paths:
-  id:
+  /id:
     get:
       description: Retrieve a list of food alerts
       operationId: getFoodAlertList
@@ -65,7 +65,7 @@ paths:
                   $ref: "#/components/schemas/FoodAlert"
         "404":
           description: Food alerts not found
-  id/{id}:
+  /id/{id}:
     get:
       description: Retrieve an individual food alert
       operationId: getFoodAlertDetails
@@ -85,7 +85,7 @@ paths:
                 $ref: "#/components/schemas/FoodAlert"
         "404":
           description: Food alert not found
-  def/allergens:
+  /def/allergens:
     get:
       description: Retrieve a list of allergen codes
       operationId: getAllergens
@@ -107,7 +107,7 @@ paths:
                 type: array
                 items:
                   type: string
-  def/pathogen-risks:
+  /def/pathogen-risks:
     get:
       operationId: getPathogenRisks
       parameters:
@@ -129,7 +129,7 @@ paths:
                 type: array
                 items:
                   type: string
-  def/hazards:
+  /def/hazards:
     get:
       operationId: getHazards
       parameters:
@@ -151,7 +151,7 @@ paths:
                 type: array
                 items:
                   type: string
-  def/reasons:
+  /def/reasons:
     get:
       operationId: getReasons
       parameters:
