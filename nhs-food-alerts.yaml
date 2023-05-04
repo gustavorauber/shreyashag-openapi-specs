@@ -1,0 +1,227 @@
+openapi: 3.0.0
+info:
+  title: Food Alert API
+  version: 1.0.0
+  description: API for retrieving food alerts
+servers:
+  - url: https://data.food.gov.uk
+paths:
+  /food-alerts/id:
+    get:
+      description: Retrieve a list of food alerts
+      operationId: getFoodAlertList
+      parameters:
+        - in: query
+          name: type
+          description: Filter by type of alert (Type of the alert, will be a generic Alert and one of AA (Allergy Alert), PRIN (Product Recall Information Notice) or FAFA (Food Alert For Action).)
+          schema:
+            type: string
+            enum: [PRIN, AA, FAFA]
+        - in: query
+          name: problem.allergen
+          description: Filter by allergen code
+          schema:
+            type: string
+        - in: query
+          name: since
+          description: |
+            Filter alerts since this ISO time, example 2018-01-29T16:10:00Z
+          schema:
+            type: string
+        - in: query
+          name: search
+          description: Filter by a term in the alert (e.g. "salmonella")
+          schema:
+            type: string
+        - in: query
+          name: _view
+          description: Choose a view type (default or full)
+          schema:
+            type: string
+        - in: query
+          name: _offset
+          schema:
+            type: integer
+        - in: query
+          name: _limit
+          schema:
+            type: integer
+        - in: query
+          name: _sort
+          description: |
+            Without applying this, defaults to relevance. 
+            Negative prefix signifies descending order of the field
+          schema:
+            type: string
+            enum: [created, -created, modified, -modified]
+      responses:
+        "200":
+          description: A list of food alerts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FoodAlert"
+        "404":
+          description: Food alerts not found
+  /food-alerts/id/{id}:
+    get:
+      description: Retrieve an individual food alert
+      operationId: getFoodAlertDetails
+      parameters:
+        - in: path
+          name: id
+          description: ID of the food alert to retrieve
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A food alert object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FoodAlert"
+        "404":
+          description: Food alert not found
+  /food-alerts/def/allergens:
+    get:
+      description: Retrieve a list of allergen codes
+      operationId: getAllergens
+      parameters:
+        - in: query
+          name: _offset
+          schema:
+            type: integer
+        - in: query
+          name: _limit
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: A list of allergen codes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /food-alerts/def/pathogen-risks:
+    get:
+      operationId: getPathogenRisks
+      parameters:
+        - in: query
+          name: _offset
+          schema:
+            type: integer
+        - in: query
+          name: _limit
+          schema:
+            type: integer
+      description: Retrieve a list of pathogen risk codes
+      responses:
+        "200":
+          description: A list of pathogen risk codes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /food-alerts/def/hazards:
+    get:
+      operationId: getHazards
+      parameters:
+        - in: query
+          name: _offset
+          schema:
+            type: integer
+        - in: query
+          name: _limit
+          schema:
+            type: integer
+      description: Retrieve a list of hazard categories
+      responses:
+        "200":
+          description: A list of hazard categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /food-alerts/def/reasons:
+    get:
+      operationId: getReasons
+      parameters:
+        - in: query
+          name: _offset
+          schema:
+            type: integer
+        - in: query
+          name: _limit
+          schema:
+            type: integer
+      description: Retrieve a list of reasons for alerts
+      responses:
+        "200":
+          description: A list of reasons for alerts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+components:
+  schemas:
+    FoodAlert:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the food alert
+        title:
+          type: string
+          description: Title of the food alert
+        type:
+          type: string
+          description: Type of alert (mandatory, advisory, or allergy alert)
+        date:
+          type: string
+          description: Date when the food alert was issued
+        problem:
+          type: object
+          description: The problem that triggered the food alert
+          properties:
+            allergen:
+              type: string
+              description: Allergen code (if the alert is an allergy alert)
+            pathogen:
+              type: string
+              description: Pathogen risk code (if the alert is a mandatory or advisory alert)
+          required:
+            - allergen
+            - pathogen
+        description:
+          type: string
+          description: Additional details about the food alert
+        action:
+          type: string
+          description: Recommended actions to be taken in response to the food alert
+        distribution:
+          type: string
+          description: Distribution information for the food product(s) affected by the alert
+        _links:
+          type: object
+          properties:
+            self:
+              type: object
+              properties:
+                href:
+                  type: string
+            related:
+              type: object
+              properties:
+                href:
+                  type: string
