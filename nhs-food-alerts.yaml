@@ -4,9 +4,9 @@ info:
   version: 1.0.0
   description: API for retrieving food alerts
 servers:
-  - url: https://data.food.gov.uk
+  - url: https://data.food.gov.uk/food-alerts
 paths:
-  /food-alerts/id:
+  id:
     get:
       description: Retrieve a list of food alerts
       operationId: getFoodAlertList
@@ -16,7 +16,7 @@ paths:
           description: Filter by type of alert (Type of the alert, will be a generic Alert and one of AA (Allergy Alert), PRIN (Product Recall Information Notice) or FAFA (Food Alert For Action).)
           schema:
             type: string
-            enum: [PRIN, AA, FAFA]
+            enum: [PRIN, AA, Fnhs-food-alerts.yamlAFA]
         - in: query
           name: problem.allergen
           description: Filter by allergen code
@@ -65,7 +65,7 @@ paths:
                   $ref: "#/components/schemas/FoodAlert"
         "404":
           description: Food alerts not found
-  /food-alerts/id/{id}:
+  id/{id}:
     get:
       description: Retrieve an individual food alert
       operationId: getFoodAlertDetails
@@ -85,7 +85,7 @@ paths:
                 $ref: "#/components/schemas/FoodAlert"
         "404":
           description: Food alert not found
-  /food-alerts/def/allergens:
+  def/allergens:
     get:
       description: Retrieve a list of allergen codes
       operationId: getAllergens
@@ -107,7 +107,7 @@ paths:
                 type: array
                 items:
                   type: string
-  /food-alerts/def/pathogen-risks:
+  def/pathogen-risks:
     get:
       operationId: getPathogenRisks
       parameters:
@@ -129,7 +129,7 @@ paths:
                 type: array
                 items:
                   type: string
-  /food-alerts/def/hazards:
+  def/hazards:
     get:
       operationId: getHazards
       parameters:
@@ -151,7 +151,7 @@ paths:
                 type: array
                 items:
                   type: string
-  /food-alerts/def/reasons:
+  def/reasons:
     get:
       operationId: getReasons
       parameters:
