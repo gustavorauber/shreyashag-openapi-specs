@@ -50,8 +50,6 @@ paths:
                         type: array
                         items:
                           $ref: "#/components/schemas/NewsItem"
-    servers:
-      - url: "https://ch.tetr.io/api/"
   /users/{user}:
     get:
       summary: Get user information
@@ -62,11 +60,6 @@ paths:
           name: user
           description: The lowercase username or user ID to look up
           required: true
-          schema:
-            type: string
-        - in: query
-          name: fields
-          description: Comma-separated fields to include in the response. By default, all fields are returned.
           schema:
             type: string
       responses:
