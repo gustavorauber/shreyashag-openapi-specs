@@ -7,7 +7,7 @@ info:
 
     The plugin is used for accessing Tetra game statistics
 servers:
-  - url: https://ch.tetr.io/api/
+  - url: https://ch.tetr.io/api
 paths:
   /news/{stream}:
     get:
