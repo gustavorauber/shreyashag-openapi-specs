@@ -1,0 +1,433 @@
+openapi: 3.0.0
+info:
+  title: Tetra API
+  version: 1.0.0
+  description: |
+    TETRIO is a free-to-win familiar yet fast-paced online stacker in the same genre as tetris, and played by millions across the globe. play multiplayer games against friends and foes all over the world, or claim a spot on the leaderboards - the stacker future is yours!
+
+    The plugin is used for accessing Tetra game statistics
+servers:
+  - url: https://ch.tetr.io/api/
+paths:
+  /news/{stream}:
+    get:
+      summary: Get the latest news items in a specified stream
+      description: Get the latest news items in a specified stream
+      operationId: getNewsGlobalOrUserNews
+      parameters:
+        - in: path
+          name: stream
+          description: The news stream to look up (either "global" or "user_{userID}").
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: limit
+          description: The amount of entries to return, between 1 and 100. 25 by default.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+      responses:
+        "200":
+          description: A list of latest news items in the specified stream
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: string
+                    nullable: true
+                  cache:
+                    $ref: "#/components/schemas/Cache"
+                  data:
+                    type: object
+                    properties:
+                      news:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/NewsItem"
+    servers:
+      - url: "https://ch.tetr.io/api/"
+  /users/{user}:
+    get:
+      summary: Get user information
+      description: Get user information
+      operationId: getUserDetails
+      parameters:
+        - in: path
+          name: user
+          description: The lowercase username or user ID to look up
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: fields
+          description: Comma-separated fields to include in the response. By default, all fields are returned.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          _id:
+                            type: string
+                          username:
+                            type: string
+                          role:
+                            type: string
+                          ts:
+                            type: string
+                          botmaster:
+                            type: string
+                          badges:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                label:
+                                  type: string
+                                ts:
+                                  type: string
+                              required:
+                                - id
+                                - label
+                            description: The user's badges
+                          xp:
+                            type: number
+                          gamesplayed:
+                            type: integer
+                          gameswon:
+                            type: integer
+                          gametime:
+                            type: number
+                          country:
+                            type: string
+                          badstanding:
+                            type: boolean
+                          supporter:
+                            type: boolean
+                          supporter_tier:
+                            type: integer
+                          verified:
+                            type: boolean
+                          league:
+                            type: object
+                            properties:
+                              gamesplayed:
+                                type: integer
+                              gameswon:
+                                type: integer
+                              rating:
+                                type: number
+                              rank:
+                                type: string
+                              bestrank:
+                                type: string
+                              standing:
+                                type: integer
+                              standing_local:
+                                type: integer
+                              next_rank:
+                                type: string
+                              prev_rank:
+                                type: string
+                              next_at:
+                                type: integer
+                              prev_at:
+                                type: integer
+                              percentile:
+                                type: number
+                              percentile_rank:
+                                type: string
+                              glicko:
+                                type: number
+                              rd:
+                                type: number
+                              apm:
+                                type: number
+                              pps:
+                                type: number
+                              vs:
+                                type: number
+                              decaying:
+                                type: boolean
+                          avatar_revision:
+                            type: integer
+                          banner_revision:
+                            type: integer
+                          bio:
+                            type: string
+                          connections:
+                            type: object
+                            properties:
+                              discord:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                  username:
+                                    type: string
+                                  friend_count:
+                                    type: integer
+                                required:
+                                  - id
+                                  - username
+                            required:
+                              - discord
+                            description: The user's third party connections
+                          distinguishment:
+                            type: object
+                            properties:
+                              type:
+                                type: string
+                            required:
+                              - type
+                        required:
+                          - _id
+                          - username
+                          - role
+                          - xp
+                required:
+                  - success
+                  - data
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    enum: [false]
+                  error:
+                    type: string
+                  cache:
+                    type: object
+                  data:
+                    type: object
+  /general/stats:
+    get:
+      summary: Get server statistics
+      description: Get server statistics
+      operationId: getServerStats
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: Whether the request was successful
+                  error:
+                    type: string
+                    nullable: true
+                    description: If unsuccessful, the reason the request failed
+                  cache:
+                    type: object
+                    nullable: true
+                    description: If successful, data about how this request was cached
+                  data:
+                    type: object
+                    nullable: true
+                    description: If successful, the requested data
+                    properties:
+                      usercount:
+                        type: integer
+                        description: The amount of users on the server, including anonymous accounts
+                      usercount_delta:
+                        type: number
+                        format: float
+                        description: The amount of users created a second (through the last minute)
+                      anoncount:
+                        type: integer
+                        description: The amount of anonymous accounts on the server
+                      rankedcount:
+                        type: integer
+                        description: The amount of ranked (visible in TETRA LEAGUE leaderboard) accounts on the server
+                      replaycount:
+                        type: integer
+                        description: The amount of replays stored on the server
+                      gamesplayed:
+                        type: integer
+                        description: The amount of games played across all users, including both off- and online modes
+                      gamesplayed_delta:
+                        type: number
+                        format: float
+                        description: The amount of games played a second (through the last minute)
+                      gamesfinished:
+                        type: integer
+                        description: The amount of games played across all users, including both off- and online modes, excluding games that were not completed (e.g. retries)
+                      gametime:
+                        type: number
+                        format: float
+                        description: The amount of seconds spent playing across all users, including both off- and online modes
+                      inputs:
+                        type: integer
+                        description: The amount of keys pressed across all users, including both off- and online modes
+                      piecesplaced:
+                        type: integer
+                        description: The amount of pieces placed across all users, including both off- and online modes
+  /users/lists/league:
+    get:
+      summary: Get TETRA LEAGUE leaderboard users
+      description: Get TETRA LEAGUE leaderboard users
+      operationId: getLeaderboard
+      parameters:
+        - name: after
+          in: query
+          description: |
+            The upper bound in TR. Use this to paginate downwards: take the lowest seen TR and pass that back through this field to continue scrolling. 25000 by default.
+          schema:
+            type: integer
+        - name: before
+          in: query
+          description: |
+            The lower bound in TR. Use this to paginate upwards: take the highest seen TR and pass that back through this field to continue scrolling. If set, the search order is reversed (returning the lowest items that match the query).
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: The amount of entries to return, between 1 and 100. 50 by default.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+        - name: country
+          in: query
+          description: The ISO 3166-1 country code to filter to. Leave unset to not filter by country.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Returns an array of users fulfilling the search criteria.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: Whether the request was successful.
+                  error:
+                    type: string
+                    nullable: true
+                    description: If unsuccessful, the reason the request failed.
+                  cache:
+                    $ref: "#/components/schemas/CacheObject"
+                  data:
+                    type: object
+                    properties:
+                      users:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/UserObject"
+  /news/:
+    get:
+      summary: Get the latest news items in any stream.
+      description: Get the latest news items in any stream.
+      operationId: getNews
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+          description: The amount of entries to return, between 1 and 100. 25 by default.
+      responses:
+        200:
+          description: The latest news items in any stream.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  error:
+                    type: string
+                    nullable: true
+                  cache:
+                    $ref: "#/components/schemas/CacheObject"
+                  data:
+                    type: object
+                    properties:
+                      news:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/NewsItem"
+components:
+  schemas:
+    NewsItem:
+      type: object
+      properties:
+        _id:
+          type: string
+        stream:
+          type: string
+        type:
+          type: string
+        data:
+          type: object
+        ts:
+          type: string
+    Cache:
+      type: object
+      properties:
+        hit:
+          type: boolean
+        age:
+          type: number
+    CacheObject:
+      type: object
+      properties:
+        time:
+          type: integer
+          description: Time when the data was last cached, in milliseconds since the UNIX epoch.
+        age:
+          type: integer
+          description: How long the data has been cached, in milliseconds.
+        stale:
+          type: boolean
+          description: Whether the data is stale (i.e. a new request is needed to refresh the cache).
+    UserObject:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: The user's internal ID.
+        username:
+          type: string
+          description: The user's username.
+        role:
+          type: string
+          description: The user's role (one of "anon", "user", "bot", "mod", "admin").
+        xp:
+          type: number
+          description: The user's XP in points.
+        country:
+          type: string
+          nullable: true
+          description: The user's ISO 3166-1 country code, or null if hidden/unknown
