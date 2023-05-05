@@ -9,6 +9,37 @@ info:
 servers:
   - url: https://ch.tetr.io/api
 paths:
+  /general/activity:
+    get:
+      summary: Get graph of user activity over the last 2 days
+      description: Get graph of user activity over the last 2 days. A user is seen as active if they logged in or received XP within the last 30 minutes.
+      tags:
+        - General
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: Whether the request was successful.
+                  error:
+                    type: string
+                    nullable: true
+                    description: If unsuccessful, the reason the request failed.
+                  cache:
+                    $ref: "#/components/schemas/Cache"
+                  data:
+                    type: object
+                    properties:
+                      activity:
+                        type: array
+                        items:
+                          type: integer
+                        description: An array of plot points, newest points first.
   /news/{stream}:
     get:
       summary: Get the latest news items in a specified stream
