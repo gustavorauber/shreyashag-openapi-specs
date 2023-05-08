@@ -7,7 +7,8 @@ info:
 
 
     Piles can be used for discarding, players hands, or whatever else. Piles are created on the fly, just give a pile a name and add a drawn card to the pile. If the pile didn't exist before, it does now. After a card has been drawn from the deck it can be moved from pile to pile.
-
+    
+    Cards need to be drawn from a deck before they can be added to a pile.
 
     The card codes are two character case-insensitive strings that represent a playing card. The first character represents the value of the card, one of A (for an ace), 2, 3, 4, 5, 6, 7, 8, 9, 0 (for a ten), J (jack), Q (queen), or K (king). The second character represents the suit of the card, one of S (Spades), D (Diamonds), C (Clubs), or H (Hearts).
 
