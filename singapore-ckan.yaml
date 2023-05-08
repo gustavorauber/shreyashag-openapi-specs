@@ -1,0 +1,599 @@
+---
+openapi: 3.0.0
+info:
+  title: Data.gov.sg APIs
+  description: |
+    Data.gov.sg CKAN API.
+
+    CKAN's Action API is a powerful, RPC-style API that exposes all of CKAN's core features to API clients. All of a CKAN website's core functionality (everything you can do with the web interface and more) can be used by external code that calls the CKAN API.
+  version: 1.0.0
+servers:
+  - url: https://data.gov.sg/api/action
+paths:
+  /package_list:
+    get:
+      summary: Return a list of datasets
+      description: Return a list of datasets
+      operationId: listPackages
+      tags:
+        - CKAN
+      parameters:
+        - name: limit
+          in: query
+          description: If given, the list of datasets will be broken into pages of at most limit datasets per page and only one page will be returned at a time (optional)
+          required: false
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: When limit is given, the offset to start returning packages from
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Dataset listing
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/CkanPackageList"
+                  - example:
+                      help: https://data.gov.sg/api/3/action/help_show?name=package_list
+                      success: true
+                      results:
+                        - gdp
+                        - population
+                        - water-consumption
+        default:
+          description: Error information
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/CkanError"
+                  - example:
+                      help: https://data.gov.sg/api/3/action/help_show?name=package_list
+                      success: false
+                      error: {}
+  /package_show:
+    get:
+      summary: Return the metadata of a dataset (package) and its resources
+      description: Return the metadata of a dataset (package) and its resources
+      operationId: showPackage
+      tags:
+        - CKAN
+      parameters:
+        - name: id
+          in: query
+          description: The id or name of the dataset
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Dataset metadata
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/CkanPackageShow"
+                  - properties:
+                      help:
+                        example: https://data.gov.sg/api/3/action/help_show?name=package_show
+                      success:
+                        example: true
+        default:
+          description: Error information
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/CkanError"
+                  - example:
+                      help: https://data.gov.sg/api/3/action/help_show?name=package_show
+                      success: false
+                      error: {}
+      servers:
+        - url: https://data.gov.sg/api/action
+  /resource_show:
+    get:
+      summary: Return the metadata of a resource
+      description: Return the metadata of a resource
+      operationId: showResource
+      tags:
+        - CKAN
+      parameters:
+        - name: id
+          in: query
+          description: The id of the resource
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Resource metadata
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/CkanResourceShow"
+                  - properties:
+                      help:
+                        example: https://data.gov.sg/api/3/action/help_show?name=resource_show
+                      success:
+                        example: true
+        default:
+          description: Error information
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/CkanError"
+                  - example:
+                      help: https://data.gov.sg/api/3/action/help_show?name=resource_show
+                      success: false
+                      error: {}
+      servers:
+        - url: https://data.gov.sg/api/action
+  /datastore_search:
+    get:
+      summary: Search data in a resource
+      description: Search data in a resource
+      operationId: searchDatastore
+      tags:
+        - CKAN
+      parameters:
+        - name: resource_id
+          in: query
+          description: ID or alias of the resource to be searched against
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: "Maximum number of rows to return (optional, default: 100)"
+          required: false
+          schema:
+            type: integer
+            default: 100
+        - name: offset
+          in: query
+          description: Offset this number of rows (optional)
+          required: false
+          schema:
+            type: integer
+        - name: fields
+          in: query
+          description: "Fields to return (optional, default: all fields in original order)"
+          required: false
+          schema:
+            type: string
+        - name: filters
+          in: query
+          description: 'Dictionary of matching conditions, e.g {"key1": "a", "key2": "b"}'
+          required: false
+          schema:
+            type: string
+        - name: q
+          in: query
+          description: "Full text query. If it’s a string, it’ll search on all fields on each row. If it’s a dictionary as {“key1”: “a”, “key2”: “b”}, it’ll search on each specific field (optional)"
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          description: 'Comma-separated field names with ordering, eg.: "fieldname1, fieldname2 desc"'
+          required: false
+          schema:
+            type: string
+        - name: records_format
+          in: query
+          description: "The format for the records return value: ‘objects’ (default) list of {fieldname1: value1, ...} dicts, ‘lists’ list of [value1, value2, ...] lists, ‘csv’ string containing comma-separated values with no header, ‘tsv’ string containing tab-separated values with no header"
+          required: false
+          schema:
+            type: string
+            enum: [objects, lists, csv]
+            default: objects
+      responses:
+        "200":
+          description: Fetched data
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/CkanDatastoreSearch"
+                  - example:
+                      help: https://data.gov.sg/api/3/action/help_show?name=datastore_search
+                      success: true
+                      result:
+                        resource_id: f9dbfc75-a2dc-42af-9f50-425e4107ae84
+                        fields:
+                          - type: numeric
+                            id: year
+                          - type: text
+                            id: level_1
+                          - type: numeric
+                            id: value
+                        records:
+                          - year: 1960
+                            level_1: Total Residents
+                            value: 1646400
+                          - year: 1960
+                            level_1: Total Male Residents
+                            value: 859600
+                          - year: 1960
+                            level_1: Total Female Residents
+                            value: 786800
+                          - year: 1961
+                            level_1: Total Residents
+                            value: 1646400
+                          - year: 1961
+                            level_1: Total Male Residents
+                            value: 859600
+                        limit: 5
+                        total: 870
+                        _links:
+                          start: /api/action/datastore_search?limit=5&resource_id=f9dbfc75-a2dc-42af-9f50-425e4107ae84
+                          next: /api/action/datastore_search?offset=5&limit=5&resource_id=f9dbfc75-a2dc-42af-9f50-425e4107ae84
+        default:
+          description: Error information
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/CkanError"
+                  - example:
+                      help: https://data.gov.sg/api/3/action/help_show?name=datastore_search
+                      success: false
+                      error: {}
+      servers:
+        - url: https://data.gov.sg/api/action
+components:
+  schemas:
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    CkanBase:
+      type: object
+      required:
+        - help
+        - success
+      properties:
+        help:
+          type: string
+          description: URL that returns a help string for the API action
+        success:
+          type: boolean
+          description: Whether fetch is succesfully
+    CkanError:
+      allOf:
+        - $ref: "#/components/schemas/CkanBase"
+        - type: object
+          required:
+            - error
+          properties:
+            error:
+              type: object
+              description: Error type and description
+    CkanPackageList:
+      allOf:
+        - $ref: "#/components/schemas/CkanBase"
+        - type: object
+          required:
+            - result
+          properties:
+            result:
+              type: array
+              description: List of dataset names
+              items:
+                type: string
+                description: Package name
+    CkanPackageShow:
+      allOf:
+        - $ref: "#/components/schemas/CkanBase"
+        - type: object
+          required:
+            - result
+          properties:
+            result:
+              $ref: "#/components/schemas/CkanPackage"
+    CkanResourceShow:
+      allOf:
+        - $ref: "#/components/schemas/CkanBase"
+        - type: object
+          required:
+            - result
+          properties:
+            result:
+              $ref: "#/components/schemas/CkanResource"
+    CkanDatastoreSearch:
+      allOf:
+        - $ref: "#/components/schemas/CkanBase"
+        - type: object
+          required:
+            - result
+          properties:
+            result:
+              type: object
+              description: Resource
+              required:
+                - resource_id
+                - fields
+                - records
+              properties:
+                resource_id:
+                  type: string
+                  description: Resource id
+                fields:
+                  type: array
+                  description: Data fields
+                  items:
+                    type: object
+                    description: Data field
+                records:
+                  type: array
+                  description: Data rows
+                  items:
+                    type: object
+                    description: Data row in object format
+                limit:
+                  type: integer
+                  description: Limit for number of rows returned
+                total:
+                  type: integer
+                  description: Total number of rows
+                _links:
+                  type: object
+                  description: Pagination-related links
+                  properties:
+                    start:
+                      type: string
+                      description: Link back to first page
+                    next:
+                      type: string
+                      description: Link to next page
+    CkanPackage:
+      type: object
+      description: Package object
+      properties:
+        id:
+          type: string
+          description: Dataset id
+          example: d1778088-f56a-4353-891f-21f803b2dad5
+        name:
+          type: string
+          description: Dataset name
+          example: resident-population-by-ethnicity-gender-and-age-group
+        title:
+          type: string
+          description: Displayed dataset name
+          example: Singapore Residents By Age Group, Ethnic Group And Gender, End June, Annual
+        description:
+          type: string
+          description: Dataset description
+          example: Data for 1970 and from 1980 onwards refer to Singapore residents (citizens and permanent residents).
+        topics:
+          type: array
+          description: Related topics
+          items:
+            type: string
+          example:
+            - society
+        frequency:
+          type: string
+          description: Update frequency
+          example: annual
+        url:
+          type: string
+          description: Reference url
+          example: http://www.tablebuilder.singstat.gov.sg/publicfacing/createDataTable.action?refId=315&exportType=csv
+        notes:
+          type: string
+          description: Additional notes
+          example: ""
+        license_title:
+          type: string
+          description: License of use
+          example: License not specified
+        num_resources:
+          type: integer
+          description: Number of resources in dataset
+          example: 2
+        resources:
+          type: array
+          description: List of resources
+          items:
+            $ref: "#/components/schemas/CkanResource"
+        groups:
+          type: array
+          description: Dataset categories
+          items:
+            $ref: "#/components/schemas/CkanGroup"
+        organizations:
+          type: array
+          description: Related organizations
+          items:
+            $ref: "#/components/schemas/CkanOrganization"
+        tags:
+          type: array
+          description: Tags
+          items:
+            $ref: "#/components/schemas/CkanTag"
+    CkanResource:
+      type: object
+      description: Resource object
+      properties:
+        package_id:
+          type: string
+          description: Dataset id
+          example: d1778088-f56a-4353-891f-21f803b2dad5
+        id:
+          type: string
+          description: Resource id
+          example: f9dbfc75-a2dc-42af-9f50-425e4107ae84
+        name:
+          type: string
+          description: Resource name
+          example: Singapore Residents by Ethnic Group and Sex, End June, Annual
+        format:
+          type: string
+          description: Resource format
+          enum: [CSV, PDF, KML, SHP, API]
+          example: CSV
+        url:
+          type: string
+          description: Source url
+          example: https://storage.data.gov.sg/resident-population-by-ethnicity-gender-and-age-group/resources/singapore-residents-by-ethnic-group-and-sex-end-june-annual-2017-11-16T23-03-38Z.csv
+        coverage_start:
+          type: string
+          description: Coverage start date
+          example: "1960-01-01"
+        coverage_end:
+          type: string
+          description: Coverage end date
+          example: "2017-12-31"
+        created:
+          type: string
+          description: Date created
+          example: "2015-10-28T13:16:34.917976"
+        last_modified:
+          type: string
+          description: Date last modified
+          example: "2017-11-16T23:03:38.718472"
+        fields:
+          type: array
+          description: Data fields
+          items:
+            $ref: "#/components/schemas/CkanField"
+          example:
+            - name: year
+              title: Year
+              type: datetime
+              sub_type: year
+              format: YYYY
+            - name: value
+              title: Number
+              type: numeric
+              sub_type: general
+              format: ""
+    CkanField:
+      type: object
+      description: Data field
+      properties:
+        name:
+          type: string
+          description: Field name
+        title:
+          type: string
+          description: Displayed field name
+        type:
+          type: string
+          description: Field type
+        sub_type:
+          type: string
+          description: Field sub type
+        format:
+          type: string
+          description: Date format
+        coordinate_system:
+          type: string
+          description: Coordinate system
+    CkanOrganization:
+      type: object
+      description: CKAN Organisation object
+      properties:
+        description:
+          type: string
+          description: Description of organisation
+        created:
+          type: string
+          description: Date created
+          example: "2015-10-28T13:16:34.917976"
+        title:
+          type: string
+          description: Organisation display name
+          example: "Accounting and Corporate Regulatory Authority"
+        name:
+          type: string
+          description: Organisation CKAN alias
+          example: "accounting-and-corporate-regulatory-authority"
+        is_organization:
+          type: boolean
+          description: ""
+        state:
+          type: string
+          description: State of organisation in CKAN
+          example: "active"
+        image_url:
+          type: string
+          description: URL to image of organisation logo
+        revision_id:
+          type: string
+          description: version id
+        type:
+          type: string
+          description: Type of organisation
+        id:
+          type: string
+          description: Organisation CKAN ID
+        approval_status:
+          type: string
+          description: Approval status for organisation
+    CkanGroup:
+      type: object
+      description: CKAN Group object
+      properties:
+        display_name:
+          type: string
+          description: Group Name
+        description:
+          type: string
+          description: Description of group
+        image_display_url:
+          type: string
+          description: URL to image of group's display image
+        title:
+          type: string
+          description: Group display name
+        id:
+          type: string
+          description: Group CKAN ID
+        name:
+          type: string
+          description: Group CKAN alias
+    CkanTag:
+      type: object
+      description: CKAN Tag object
+      properties:
+        vocabulary_id:
+          type: string
+          description: Tag ID
+        state:
+          type: string
+          description: State of tag in CKAN
+        display_name:
+          type: string
+          description: Tag Name
+        id:
+          type: string
+          description: Tag CKAN ID
+        name:
+          type: string
+          description: Tag CKAN alias
+
+  responses:
+    Error:
+      description: Error information
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
