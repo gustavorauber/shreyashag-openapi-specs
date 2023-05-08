@@ -1,0 +1,89 @@
+openapi: 3.0.0
+info:
+  title: Star Wars API
+  version: 1.0.0
+  description: |
+    The swapi (Star Wars API) is a RESTful web service for accessing data from the Star Wars movies and other media.
+    Pagination starts from page 1.
+
+servers:
+  - url: https://www.swapi.tech/api/
+    description: Production server
+paths:
+  /{resource}/:
+    get:
+      summary: Search for resources by name
+      description: |
+        Searches for resources based on the given name. All searches will use case-insensitive partial matches on the set of search fields.
+      parameters:
+        - in: path
+          name: resource
+          required: true
+          schema:
+            type: string
+            enum: [people, films, vehicles, starships, species, planets]
+          description: The resource name (e.g. 'people')
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: Filter by name (case-insensitive partial match)
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /{resource}:
+    get:
+      summary: Get all resources
+      operationId: getAllResourceList
+      description: Returns a list of all the resources in the Star Wars Universe. Use page and limit together for pagination to work correctly.
+      parameters:
+        - in: path
+          name: resource
+          required: true
+          schema:
+            type: string
+            enum: [people, films, vehicles, starships, species, planets]
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+  /{resource}/{id}:
+    get:
+      summary: Get a specific resource
+      operationId: getResourceById
+      description: Returns a specific resource based on the provided ID parameter.
+      parameters:
+        - in: path
+          name: resource
+          required: true
+          schema:
+            type: string
+            enum: [people, films, vehicles, starships, species, planets]
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The ID of the starship resource to retrieve.
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
