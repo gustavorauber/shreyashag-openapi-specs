@@ -1,0 +1,28 @@
+openapi: 3.0.0
+info:
+  title: Stoic Quote API
+  description: API to generate stoicism quotes to help you live a better life using Stoicism wisdom
+  version: 1.0.0
+servers:
+  - url: https://api.themotivate365.com
+paths:
+  /stoic-quote:
+    get:
+      summary: Returns a random stoicism quote
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      author:
+                        type: string
+                        description: The author of the quote
+                      quote:
+                        type: string
+                        description: The stoicism quote
