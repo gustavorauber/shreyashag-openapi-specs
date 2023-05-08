@@ -1,0 +1,47 @@
+openapi: 3.0.0
+info:
+  title: AFL Teams API
+  description: |
+    A. API to fetch information about one or more AFL teams.
+
+    1. q=teams;year=1996 to get teams in 1996
+    2. q=teams to get current teams
+    3. q=teams;team=14 to get information about team id 14
+
+    B. Fetch info about team standings at a point in time, i.e. the ladder.
+
+    1. The current ladder - q=standings
+    2. The ladder after Round 1, 2020 -  q=standings;year=2020;round=1 
+    3. The final home & away ladder for 2020 - q=standings;year=2020;round=final
+
+    C. Fetch info about one or more games.
+
+    1. All games from Round 1, 2017 - q=games;year=2017;round=1
+    2. All incomplete games - q=games;complete=!100
+    3. All games currently in progress - q=games;live=1
+    4. All future or in-progress games featuring Nth Melbourne - q=games;team=12;complete=!100
+    5. All live games featuring Geelong - q=games;team=7;live=1
+
+  version: 1.0.0
+servers:
+  - url: https://api.squiggle.com.au
+paths:
+  /:
+    get:
+      summary: Returns information about one or more AFL teams or games
+      description: Returns information about one or more AFL teams/games or standings
+      parameters:
+        - in: query
+          allowReserved: true
+          name: q
+          required: true
+          description: The type of query to perform
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
