@@ -9,6 +9,8 @@ paths:
   /stoic-quote:
     get:
       summary: Returns a random stoicism quote
+      description: Returns a random stoicism quote
+      operationId: getQuote
       responses:
         '200':
           description: OK
