@@ -1,0 +1,137 @@
+openapi: 3.0.3
+info:
+  title: Nekos.Best API
+  version: 2.0.0
+  description: |
+    nekos.best is a RESTful API serving fully SFW and high quality anime images and GIFs.
+
+    We focus on giving the best experience for our users and their projects, for free.
+
+servers:
+  - url: https://nekos.best/api/v2
+
+paths:
+  /endpoints:
+    get:
+      summary: List all available categories
+      description: List all available categories
+      operationId: listCategories
+      responses:
+        "200":
+          description: A JSON object containing the available categories
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties:
+                    format:
+                      type: string
+                      description: The file format of the assets in the category
+
+  /{category}:
+    get:
+      summary: Get a random image or GIF from a category
+      description: Get a random image or GIF from a category
+      operationId: getImageOrGIF
+      parameters:
+        - name: category
+          in: path
+          description: The category to retrieve the asset from
+          required: true
+          schema:
+            type: string
+        - name: amount
+          in: query
+          description: The number of assets to retrieve (1 to 20)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+      responses:
+        "200":
+          description: A JSON object containing the random asset(s)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        url:
+                          type: string
+                          description: The URL of the asset
+                        artist_name:
+                          type: string
+                          description: The name of the artist who created the asset (if available)
+                        artist_href:
+                          type: string
+                          description: A URL to the artist's profile (if available)
+                        source_url:
+                          type: string
+                          description: A URL to the source of the asset (if available)
+                        anime_name:
+                          type: string
+                          description: The name of the anime associated with the asset (if available)
+
+  /search:
+    get:
+      summary: Search for assets by query, type, category, and amount
+      description: Search for assets by query, type, category, and amount
+      operationId: searchAssets
+      parameters:
+        - name: query
+          in: query
+          description: The query parameter can be used to search for a specific phrase in the image or GIF source.
+          required: true
+          schema:
+            type: string
+        - name: type
+          in: query
+          required: true
+          description: The type of assets to retrieve (1 for images, 2 for GIFs)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2
+        - name: category
+          in: query
+          description: The category to retrieve the assets from
+          schema:
+            type: string
+        - name: amount
+          in: query
+          description: The number of assets to retrieve (1 to 20)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+      responses:
+        "200":
+          description: A JSON object containing the matching asset(s)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        url:
+                          type: string
+                          description: The URL of the asset
+                        artist_name:
+                          type: string
+                          description: The name of the artist who created the asset (if available)
+                        artist_href:
+                          type: string
+                          description: A URL to the artist's profile (if available)
+                        source_url:
+                          type: string
+                          description: A URL to the source of the asset (if available)
