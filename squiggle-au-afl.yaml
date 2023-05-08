@@ -30,6 +30,7 @@ paths:
     get:
       summary: Returns information about one or more AFL teams or games
       description: Returns information about one or more AFL teams/games or standings
+      operationId: getInfo
       parameters:
         - in: query
           allowReserved: true
