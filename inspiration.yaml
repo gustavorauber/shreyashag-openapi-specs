@@ -9,6 +9,8 @@ paths:
   /inspiration:
     get:
       summary: Get an inspirational quote
+      description: Get an inspirational quote
+      operationId: getQuote
       responses:
         '200':
           description: OK
