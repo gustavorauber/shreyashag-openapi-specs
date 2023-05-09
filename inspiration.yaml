@@ -1,7 +1,10 @@
 openapi: 3.0.0
 info:
   title: Inspiration API
-  description: API for generating quotes to motivate or inspire
+  description: |
+    API for generating quotes to motivate or inspire.
+    
+    The API uses a cache, which expires every hour so quotes do not get updated in this period.
   version: 1.0.0
 servers:
   - url: https://api.goprogram.ai
