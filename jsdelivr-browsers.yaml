@@ -3,7 +3,7 @@ info:
   title: jsDelivr API
   summary: The public jsDelivr API.
   description: |
-    Get platform information from jsDelivr.
+    Get browser stats from jsDelivr.
     
     Parameter definitions - 
     
