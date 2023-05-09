@@ -3651,6 +3651,27 @@ paths:
           $ref: '#/components/responses/400'
       tags:
         - 'Stats: GitHub packages'
+  /v1/stats/packages/gh/{user}/{repo}@{version}:
+    parameters:
+      - $ref: '#/components/parameters/ghUser'
+      - $ref: '#/components/parameters/ghRepo'
+      - $ref: '#/components/parameters/version'
+    get:
+      summary: Get repo version stats
+      operationId: getRepoVersionStats
+      description: |
+        Returns daily usage stats for the specified repository version.
+        Stats for the individual version files can be accessed via the provided link.
+      parameters:
+        - $ref: '#/components/parameters/period'
+      responses:
+        '200':
+          $ref: '#/components/responses/ghRepoVersionStats200'
+        '400':
+          $ref: '#/components/responses/400'
+      tags:
+        - 'Stats: GitHub packages'
+  
   /v1/stats/packages/npm/{package}:
     parameters:
       - $ref: '#/components/parameters/package'
@@ -3669,3 +3690,23 @@ paths:
           $ref: '#/components/responses/400'
       tags:
         - 'Stats: npm packages'
+  /v1/stats/packages/npm/{package}@{version}:
+    parameters:
+      - $ref: '#/components/parameters/package'
+      - $ref: '#/components/parameters/version'
+    get:
+      summary: Get package version stats
+      operationId: getPackageVersionStats
+      description: |
+        Returns daily usage stats for the specified package version.
+        Stats for the individual version files can be accessed via the provided link.
+      parameters:
+        - $ref: '#/components/parameters/period'
+      responses:
+        '200':
+          $ref: '#/components/responses/npmPackageVersionStats200'
+        '400':
+          $ref: '#/components/responses/400'
+      tags:
+        - 'Stats: npm packages'
+  
