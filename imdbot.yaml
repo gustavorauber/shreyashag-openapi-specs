@@ -1,0 +1,133 @@
+openapi: 3.0.0
+info:
+  title: IMDbot API
+  version: 1.0.0
+  description: An API for searching IMDb and streaming sources
+servers:
+  - url: https://
+    description: IMDb search endpoint
+paths:
+  search.imdbot.workers.dev/search:
+    get:
+      summary: Search IMDb
+      description: Search IMDb
+      operationId: searchIMDB
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+          description: The search query
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    year:
+                      type: string
+                    imdbID:
+                      type: string
+                    type:
+                      type: string
+      tags:
+        - IMDb search
+  search.imdbot.workers.dev/details:
+    get:
+      summary: Get details of a specific IMDb ID
+      description: Get details of a specific IMDb ID
+      operationId: getDetails
+      parameters:
+        - in: query
+          name: tt
+          schema:
+            type: string
+          description: The IMDb ID to retrieve details for
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  title:
+                    type: string
+                  year:
+                    type: string
+                  imdbID:
+                    type: string
+                  type:
+                    type: string
+                  plot:
+                    type: string
+                  genre:
+                    type: string
+                  director:
+                    type: string
+                  actors:
+                    type: string
+                  language:
+                    type: string
+                  country:
+                    type: string
+                  awards:
+                    type: string
+      tags:
+        - IMDb details
+  justwatch.imdbot.workers.dev/streaming:
+    get:
+      summary: Search streaming sources for a specific movie/show
+      description: Search streaming sources for a specific movie/show
+      operationId: getStreamingSources
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+          description: The search query
+        - in: query
+          name: L
+          schema:
+            type: string
+          description: |
+            The ISO 639-1 language code for the search results (default: en_US)
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    provider_id:
+                      type: string
+                    provider_name:
+                      type: string
+                    logo_path:
+                      type: string
+                    display_priority:
+                      type: integer
+                    url:
+                      type: string
+                    stream_type:
+                      type: string
+                    type:
+                      type: string
+                    currency:
+                      type: string
+                    cost:
+                      type: object
+                      properties:
+                        USD:
+                          type: number
+      tags:
+        - Streaming sources
