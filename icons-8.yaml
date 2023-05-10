@@ -1,0 +1,138 @@
+openapi: 3.0.3
+info:
+  title: Icons8 Search API
+  version: 5.0.0
+  description: An API for searching icons within Icons8.
+servers:
+  - url: https://search.icons8.com/api
+paths:
+  /iconsets/v5/search:
+    get:
+      summary: Search icons within Icons8
+      description: |
+        Search for icons. To get the complete link of the image, replae the logo_id and format in the link as per the icon information.
+
+        https://img.icons8.com/?size={size}&id={icon_id}&format={format}
+        Where -
+          1. format can be png if the image is to be rendered in markdown and can be svg otherwise if specified in the icon information.
+          2. size is the required image size (same used for both height and width)
+          3. icon_id is the id of the icon to be used.
+          
+
+        Example link - https://img.icons8.com/?size=512&id=0FLY5IyWNHpR&format=png
+
+        For a 512x512 image of image with id 0FLY5IyWNHpR and in png format.
+
+      operationId: search
+      parameters:
+        - in: query
+          name: term
+          schema:
+            type: string
+          required: true
+          description: The term to search by
+        - in: query
+          name: suggest
+          schema:
+            type: boolean
+          description: Whether to suggest alternative terms if no results are found
+        - in: query
+          name: amount
+          schema:
+            type: integer
+            minimum: 1
+          description: The maximum number of icons to return
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: The number of icons to skip from the beginning of the result collection
+        - in: query
+          name: language
+          schema:
+            type: string
+          description: The language in which to return the results
+        - in: query
+          name: authors
+          schema:
+            type: string
+          description: The authors of the icons to include in the search
+        - in: query
+          name: isAnimated
+          schema:
+            type: boolean
+          description: Whether to include animated icons in the search
+        - in: query
+          name: isOuch
+          schema:
+            type: boolean
+          description: Whether to include icons migrated from Ouch in the search
+        - in: query
+          name: isColor
+          schema:
+            type: boolean
+          description: Whether to include colored icons in the search
+        - in: query
+          name: allowExplicit
+          schema:
+            type: boolean
+          description: Whether to show explicit icons in the search
+        - in: query
+          name: replaceNameWithSynonyms
+          schema:
+            type: boolean
+          description: Whether to replace the name with synonyms in the case of a full match
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  parameters:
+                    type: object
+                    properties:
+                      amount:
+                        type: integer
+                      countAll:
+                        type: integer
+                      language:
+                        type: string
+                      foundLanguage:
+                        type: string
+                      offset:
+                        type: integer
+                      term:
+                        type: string
+                      searchTranslations:
+                        type: object
+                        additionalProperties:
+                          type: string
+                  suggestion:
+                    type: string
+                  isSuggestionApplied:
+                    type: boolean
+                  icons:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        commonName:
+                          type: string
+                        category:
+                          type: string
+                        platform:
+                          type: string
+                        isAnimated:
+                          type: boolean
+                        isFree:
+                          type: boolean
+                        isExternal:
+                          type: boolean
