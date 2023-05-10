@@ -1,0 +1,156 @@
+openapi: 3.0.3
+info:
+  title: geoplugin.net API
+  version: 1.0.0
+  description: An API for geolocation and reverse geocoding using IP addresses, latitude and longitude coordinates, and postal codes.
+servers:
+  - url: http://www.geoplugin.net
+    description: Base URL for all endpoints
+paths:
+  /json.gp:
+    get:
+      summary: Get geolocation information for an IP address
+      description: Get geolocation information for an IP address
+      operationId: getGeoLocationInformation
+      parameters:
+        - in: query
+          name: ip
+          schema:
+            type: string
+          required: true
+          description: The IP address to look up
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+        - Geolocation
+  /extras/location.gp:
+    get:
+      summary: Reverse geocode a latitude and longitude coordinate to a place
+      description: Reverse geocode a latitude and longitude coordinate to a place
+      operationId: reverseGeocodeToPlace
+      parameters:
+        - in: query
+          name: lat
+          schema:
+            type: number
+            format: float
+          required: true
+          description: The latitude coordinate to reverse geocode
+        - in: query
+          name: lon
+          schema:
+            type: number
+            format: float
+          required: true
+          description: The longitude coordinate to reverse geocode
+        - in: query
+          name: format
+          required: true
+          schema:
+            type: string
+            enum: [json]
+          description: |
+            The format of the output (default: xml)
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+        - Reverse Geocoding
+  /extras/nearby.gp:
+    get:
+      summary: Find places nearby a geographical location
+      description: Find places nearby a geographical location
+      operationId: findNearby
+      parameters:
+        - in: query
+          name: ip
+          schema:
+            type: string
+          description: The IP address to use as the geographical location (if not specified, uses the IP address of the client)
+        - in: query
+          name: lat
+          schema:
+            type: number
+            format: float
+          description: The latitude coordinate to use as the geographical location (if not specified, uses the IP address of the client)
+        - in: query
+          name: lon
+          schema:
+            type: number
+            format: float
+          description: The longitude coordinate to use as the geographical location (if not specified, uses the IP address of the client)
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: |
+            The maximum number of results to return (default: no limit)
+        - in: query
+          name: radius
+          schema:
+            type: integer
+          description: |
+            The radius (in miles) of the search for nearby places (default: no radius)
+        - in: query
+          name: format
+          required: true
+          schema:
+            type: string
+            enum: [json]
+          description: |
+            The format of the output (default: xml)
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+        - Nearby Places
+  /extras/postalcode.gp:
+    get:
+      summary: Reverse geocode a latitude and longitude coordinate to a postal code
+      description: Reverse geocode a latitude and longitude coordinate to a postal code
+      operationId: reverseGeocodeToPostalCode
+      parameters:
+        - in: query
+          name: lat
+          schema:
+            type: number
+            format: float
+          required: true
+          description: The latitude coordinate to reverse geocode
+        - in: query
+          name: lon
+          schema:
+            type: number
+            format: float
+          required: true
+          description: The longitude coordinate to reverse geocode
+        - in: query
+          name: format
+          required: true
+          schema:
+            type: string
+            enum: [json]
+          description: |
+            The format of the output (default: xml)
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+        - Reverse Geocoding
