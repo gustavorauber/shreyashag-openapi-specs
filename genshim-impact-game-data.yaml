@@ -1,0 +1,73 @@
+openapi: 3.0.3
+info:
+  title: api.genshin.dev
+  version: 1.0.0
+  description: An API for Genshin Impact game data.
+servers:
+  - url: https://api.genshin.dev
+    description: Base URL for all endpoints
+paths:
+  /:
+    get:
+      summary: Get all resources
+      description: Get all resources
+      operationId: getResources
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+        - Genshin Impact
+  /{resource}:
+    get:
+      summary: Get all items under a given resource
+      description: Get all items under a given resource
+      operationId: getResourceItems
+      parameters:
+        - in: path
+          name: resource
+          schema:
+            type: string
+          required: true
+          description: The type of resource to get
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+      tags:
+        - Genshin Impact
+  /{resource}/{item}:
+    get:
+      summary: Get details of a resource
+      description: Get details of a resource
+      operationId: getResourceDetails
+      parameters:
+        - in: path
+          name: resource
+          schema:
+            type: string
+          required: true
+          description: The type of the resource
+        - in: path
+          name: item
+          schema:
+            type: string
+          required: true
+          description: The name of the item under the resource
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+        - Genshin Impact
