@@ -1,0 +1,36 @@
+openapi: 3.0.3
+info:
+  title: apis.is API
+  version: 1.0.0
+  description: An API for getting flight information for Iceland.
+servers:
+  - url: https://apis.is/
+    description: Base URL for all endpoints
+paths:
+  /flight:
+    get:
+      summary: Get a list of all international flights departing and arriving at Keflavik Airport today
+      description: Get a list of all international flights departing and arriving at Keflavik Airport today
+      operationId: getFlightList
+      parameters:
+        - in: query
+          name: language
+          schema:
+            type: string
+            enum: [en, is]
+          description: The language of output
+        - in: query
+          name: type
+          schema:
+            type: string
+            enum: [departures, arrivals]
+          description: The type of flight information to get
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+        - Flight
