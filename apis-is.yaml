@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: An API for getting flight information for Iceland.
 servers:
-  - url: https://apis.is/
+  - url: https://apis.is
     description: Base URL for all endpoints
 paths:
   /flight:
