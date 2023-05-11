@@ -10,6 +10,8 @@ paths:
     get:
       summary: Retrieve a random dad joke
       operationId: getRandomJoke
+      parameters:
+        - $ref: "#/components/parameters/AcceptHeader"
       responses:
         '200':
           description: A random dad joke
@@ -32,6 +34,7 @@ paths:
       summary: Search for dad jokes
       operationId: searchJokes
       parameters:
+        - $ref: "#/components/parameters/AcceptHeader"
         - in: query
           name: term
           description: The keyword to search for
@@ -93,3 +96,13 @@ paths:
                 properties:
                   error:
                     type: string
+components:
+  parameters:
+    AcceptHeader:
+      name: Accept
+      in: header
+      description: Type to be consumed
+      schema:
+        type: string
+        enum: [ application/json, text/plain, text/html ]
+      required: true
