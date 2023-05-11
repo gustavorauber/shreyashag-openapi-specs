@@ -1,0 +1,112 @@
+openapi: 3.0.0
+info:
+  title: Genrenator API
+  description: |
+    Much like Binary Jazz itself, the genrenator is the product of a bunch of us chatting and tossing ideas around and something sticks. 
+
+    In this case, it came from a discussion about obscure genres we didn't know existed, veered to the Every Noise At Once database that Spotify uses to inform their genres and playlists, and ended with the question "what if we could create an API that served random genres?"
+
+  version: 1.0.0
+servers:
+  - url: https://binaryjazz.us/wp-json/genrenator/v1
+paths:
+  /genre:
+    get:
+      summary: Retrieve random genres
+      operationId: getGenre
+      description: |
+        Returns a random genre.
+        A genre represents a unique musical or literary style.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              example:
+                - Rock
+                - Jazz
+                - Fantasy
+                - Thriller
+  /genre/{count}:
+    get:
+      summary: Retrieve random genres
+      operationId: getGenreList
+      description: |
+        Returns a list of random genres. Each genre represents a unique musical or literary style.
+      parameters:
+        - name: count
+          in: path
+          required: true
+          description: |
+            Number of genres to return (default: 1)
+          schema:
+            type: integer
+            minimum: 1
+            example: 5
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              example:
+                - Rock
+                - Jazz
+                - Fantasy
+                - Thriller
+  /story/{count}:
+    get:
+      summary: Retrieve random stories
+      description: |
+        Returns a list of random stories. Each story represents a unique narrative or plot.
+      operationId: getStoriesList
+      parameters:
+        - name: count
+          required: true
+          in: path
+          description: |
+            Number of stories to return (default: 1)
+          schema:
+            type: integer
+            minimum: 1
+            example: 10
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              example:
+                - Once upon a time...
+                - In a galaxy far, far away...
+                - It was a dark and stormy night...
+  /story:
+    get:
+      summary: Retrieve random stories
+      description: |
+        Returns a random story. 
+        A story represents a unique narrative or plot.
+      operationId: getStoryList
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              example:
+                - Once upon a time...
+                - In a galaxy far, far away...
+                - It was a dark and stormy night...
