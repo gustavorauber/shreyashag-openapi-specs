@@ -1,0 +1,332 @@
+openapi: 3.0.0
+info:
+  title: Ratings Food API
+  description: API for accessing food hygiene ratings and inspection results in the UK
+  version: 1.0.0
+servers:
+  - url: https://api.ratings.food.gov.uk
+paths:
+  /Regions/basic/{pageNumber}/{pageSize}:
+    get:
+      summary: Retrieve regions
+      description: Returns a basic list of regions, details can be retrieved by calling regions{id}, page parameters allow for page number and size specification.
+      operationId: getRegions
+      parameters:
+        - $ref: "#/components/parameters/pageSize"
+        - $ref: "#/components/parameters/pageNumber"
+        - $ref: "#/components/parameters/versionParameter"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /Regions/{id}:
+    get:
+      description: Returns details of a single region, selected by Id.
+      operationId: getRegionDetails
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: "#/components/parameters/versionParameter"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /Authorities/basic/{pageNumber}/{pageSize}:
+    get:
+      summary: Retrieve authorities
+      operationId: getAuthorities
+      description: Returns a basic list of authorities, details can be retrieved by calling authorities{id}, page parameters allow for page number and size specification.
+      parameters:
+        - $ref: "#/components/parameters/pageSize"
+        - $ref: "#/components/parameters/pageNumber"
+        - $ref: "#/components/parameters/versionParameter"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /Authorities/{id}:
+    get:
+      description: Returns details of a single Authority, selected by Id.
+      operationId: getAuthorityDetails
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: "#/components/parameters/versionParameter"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /BusinessTypes/basic/{pageNumber}/{pageSize}:
+    get:
+      summary: Retrieve BusinessTypes
+      description: Returns a basic list of BusinessTypes, details can be retrieved by calling regions{id}, page parameters allow for page number and size specification.
+      operationId: getBusinessTypes
+      parameters:
+        - $ref: "#/components/parameters/pageSize"
+        - $ref: "#/components/parameters/pageNumber"
+        - $ref: "#/components/parameters/versionParameter"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /BusinessTypes/{id}:
+    get:
+      description: Returns details of a single BusinessType, selected by Id.
+      operationId: getBusinessTypeDetails
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: "#/components/parameters/versionParameter"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /Establishments/basic/{pageNumber}/{pageSize}:
+    get:
+      summary: Retrieve Establishments
+      description: Returns a basic list of Establishments, details can be retrieved by calling regions{id}, page parameters allow for page number and size specification.
+      operationId: getEstablishments
+      parameters:
+        - $ref: "#/components/parameters/pageSize"
+        - $ref: "#/components/parameters/pageNumber"
+        - $ref: "#/components/parameters/versionParameter"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /Establishments/{id}:
+    get:
+      description: Returns details of a single Establishment, selected by Id.
+      operationId: getEstablishmentDetails
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: "#/components/parameters/versionParameter"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /Ratings:
+    get:
+      description: Returns details of all ratings, results are unbound.
+      operationId: getRatings
+      parameters:
+        - $ref: "#/components/parameters/versionParameter"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /SchemeTypes:
+    get:
+      description: Returns details of all SchemeTypes, results are unbound.
+      operationId: getSchemeTypes
+      parameters:
+        - $ref: "#/components/parameters/versionParameter"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /RatingOperators:
+    get:
+      description: Returns details of all RatingOperators, results are unbound
+      operationId: getRatingOperators
+      parameters:
+        - $ref: "#/components/parameters/versionParameter"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /SortOptions:
+    get:
+      description: Returns details of all SortOptions, results are unbound.
+      operationId: getSortOptions
+      parameters:
+        - $ref: "#/components/parameters/versionParameter"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /ScoreDescriptors:
+    get:
+      description: Returns details of all scoreDescriptor, results are unbound.
+      operationId: getEstablishmentScoreDescriptors
+      parameters:
+        - $ref: "#/components/parameters/versionParameter"
+        - name: establishmentId
+          in: query
+          required: true
+          description: The establishment ID for which Score Descriptors are required
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  # 	Description
+  # GET ScoreDescriptors?establishmentId={establishmentId}
+  #
+  /Establishments:
+    get:
+      summary: Search for food establishments
+      description: Retrieves a collection of establishment details based on provided search parameters
+      operationId: searchEstablishments
+      parameters:
+        - $ref: "#/components/parameters/versionParameter"
+        - name: name
+          in: query
+          description: Name of the establishment
+          schema:
+            type: string
+        - name: address
+          in: query
+          description: Address of the establishment
+          schema:
+            type: string
+        - name: longitude
+          in: query
+          description: Longitude coordinate of the establishment's location
+          schema:
+            type: number
+            format: float
+        - name: latitude
+          in: query
+          description: Latitude coordinate of the establishment's location
+          schema:
+            type: number
+            format: float
+        - name: maxDistanceLimit
+          in: query
+          description: Maximum distance limit (in meters) for establishment proximity search
+          schema:
+            type: integer
+        - name: businessTypeId
+          in: query
+          description: ID of the business type associated with the establishment
+          schema:
+            type: integer
+        - name: schemeTypeKey
+          in: query
+          description: Key representing the type of scheme used for rating establishments
+          schema:
+            type: string
+        - name: ratingKey
+          in: query
+          description: Food hygiene rating key (e.g., 5, 4, 3, 2, 1, 0)
+          schema:
+            type: integer
+            format: int32
+        - name: ratingOperatorKey
+          in: query
+          description: Rating operator to apply (e.g., eq, lt, lte, gt, gte)
+          schema:
+            type: string
+        - name: localAuthorityId
+          in: query
+          description: ID of the local authority responsible for the establishment
+          schema:
+            type: integer
+            format: int32
+        - name: countryId
+          in: query
+          description: ID of the country associated with the establishment
+          schema:
+            type: integer
+            format: int32
+        - name: sortOptionKey
+          in: query
+          description: Key representing the sorting option for the search results
+          schema:
+            type: string
+        - name: pageNumber
+          in: query
+          description: Page number for pagination of results
+          schema:
+            type: integer
+            format: int32
+        - name: pageSize
+          in: query
+          description: Number of results to return per page
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+
+components:
+  parameters:
+    pageNumber:
+      name: pageNumber
+      in: path
+      required: true
+      schema:
+        type: integer
+    pageSize:
+      name: pageSize
+      in: path
+      required: true
+      schema:
+        type: integer
+    versionParameter:
+      name: x-api-version
+      in: header
+      description: API version
+      schema:
+        type: string
+      required: true
