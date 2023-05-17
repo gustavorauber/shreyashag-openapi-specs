@@ -5,8 +5,11 @@ info:
   description: |-
     An API for accessing course information at the University of Oslo (UiO).  
 
-    **semester_code** - Format is (YY[h|v])|(current), last two digits of the desired year + semester starting season or use just current. [h -> høst(autumn) OR v -> vår (spring)]. e.g.: 23v
-
+    Description of common parameters:
+    - **course_code** - A valid course code at UiO. e.g.: IN3160
+    - **semester_code** - Format is (YY[h|v])|(current), last two digits of the desired year + semester starting season or use just current. [h -> høst(autumn) OR v -> vår (spring)]. e.g.: 23v
+    - **limit** - Desired maximum number of results (0 means no limit)
+    - **lang** - Code of desired language (default Norwegian)
 servers:
   - url: https://data.uio.no/studies/v1
 paths:
@@ -18,13 +21,11 @@ paths:
       parameters:
         - name: lang
           in: query
-          description: Desired language on notice (default Norwegian)
           schema:
             type: string
             enum: [en]
         - name: limit
           in: query
-          description: Desired maximum number of instances (0 means no limit)
           schema:
             type: integer
       responses:
@@ -50,12 +51,10 @@ paths:
         - name: course_code
           required: true
           in: path
-          description: A valid course code at UiO
           schema:
             type: string
         - name: lang
           in: query
-          description: Desired language on notice (default Norwegian)
           schema:
             type: string
             enum: [en]
@@ -85,7 +84,6 @@ paths:
         - name: course_code
           required: true
           in: path
-          description: A valid course code at UiO
           schema:
             type: string
         - name: semester_code
@@ -95,7 +93,6 @@ paths:
             type: string
         - name: lang
           in: query
-          description: Desired language on notice (default Norwegian)
           schema:
             type: string
             enum: [en]
@@ -119,7 +116,6 @@ paths:
         - name: course_code
           required: true
           in: path
-          description: A valid course code at UiO
           schema:
             type: string
         - name: semester_code
