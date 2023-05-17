@@ -2,7 +2,11 @@ openapi: 3.0.0
 info:
   title: University of Oslo Course Catalog API
   version: 1.0.0
-  description: An API for accessing course information at the University of Oslo (UiO)
+  description: |-
+    An API for accessing course information at the University of Oslo (UiO).  
+
+    **semester_code** - Format is (YY[h|v])|(current), last two digits of the desired year + semester starting season or use just current. [h -> høst(autumn) OR v -> vår (spring)]. e.g.: 23v
+
 servers:
   - url: https://data.uio.no/studies/v1
 paths:
@@ -29,19 +33,24 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Course"
-  /course/{subject_code}:
+                type: object
+                properties:
+                  courses:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Course"
+                  metadata:
+                    $ref: "#/components/schemas/Metadata"
+  /course/{course_code}:
     get:
       summary: Get information about a specific course
       description: Get information about a specific course
       operationId: getCourseInformation
       parameters:
-        - name: subject_code
+        - name: course_code
           required: true
           in: path
-          description: A valid subject code at UiO
+          description: A valid course code at UiO
           schema:
             type: string
         - name: lang
@@ -56,13 +65,112 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CourseInfo"
+                type: object
+                properties:
+                  info:
+                    $ref: "#/components/schemas/CourseInfo"
+                  metadata:
+                    $ref: "#/components/schemas/Metadata"
         "404":
           description: Course not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+  /course/{course_code}/semester/{semester_code}:
+    get:
+      summary: List of course fundamental data for a given semester
+      operationId: getCourseDataBySemester
+      parameters:
+        - name: course_code
+          required: true
+          in: path
+          description: A valid course code at UiO
+          schema:
+            type: string
+        - name: semester_code
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: lang
+          in: query
+          description: Desired language on notice (default Norwegian)
+          schema:
+            type: string
+            enum: [en]
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: "#/components/schemas/CourseData"
+                  metadata:
+                    $ref: "#/components/schemas/Metadata"
+  /course/{course_code}/semester/{semester_code}/schedule/resources:
+    get:
+      summary: List of course fixed resources, lecture videos and similar stored in Vortex.
+      operationId: getCourseResourcesBySemester
+      parameters:
+        - name: course_code
+          required: true
+          in: path
+          description: A valid course code at UiO
+          schema:
+            type: string
+        - name: semester_code
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  eventResources:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/EventResource"
+                  fixedResources:
+                    type: object
+                  metadata:
+                    $ref: "#/components/schemas/Metadata"
+  /semester/{semester_code}/courses:
+    get:
+      summary: List of all courses at UiO in a given semester
+      operationId: getCoursesBySemester
+      parameters:
+        - name: semester_code
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  courses:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Course"
+                  metadata:
+                    $ref: "#/components/schemas/Metadata"
 components:
   schemas:
     Course:
@@ -77,6 +185,38 @@ components:
         course_credit_points:
           type: integer
         course_language:
+          type: string
+    CourseData:
+      type: object
+      properties:
+        code:
+          type: string
+        exam:
+          type: string
+        lang:
+          type: string
+        linkGroups:
+          type: array
+          items:
+            type: object
+            properties:
+              links:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Resource"
+              title:
+                type: string
+        name:
+          type: string
+        schedule:
+          type: string
+        teachers:
+          type: array
+          items:
+            $ref: "#/components/schemas/Teacher"
+        type:
+          type: string
+        url:
           type: string
     CourseInfo:
       type: object
@@ -118,3 +258,47 @@ components:
           type: integer
         error_message:
           type: string
+    EventResource:
+      type: object
+      properties:
+        eventId:
+          type: string
+        resources:
+          type: array
+          items:
+            $ref: "#/components/schemas/Resource"
+    Metadata:
+      type: object
+      properties:
+        count:
+          type: integer
+        limit:
+          type: integer
+        offset:
+          type: integer
+        status:
+          type: string
+        total:
+          type: integer
+    Resource:
+      type:
+        object
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+    Teacher:
+      type: object
+      properties:
+        firstName:
+          type: string
+        id:
+          type: string
+        lastName:
+          type: string
+        name:
+          type: string
+        url:
+          type: string
+
