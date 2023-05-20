@@ -39,6 +39,7 @@ paths:
             format: date
         - name: hourly
           in: query
+          description: "Possible values are: temperature_2m, relativehumidity_2m, dewpoint_2m, apparent_temperature, pressure_msl, cloudcover, cloudcover_low, cloudcover_mid, cloudcover_high, windspeed_10m, windspeed_100m, winddirection_10m, winddirection_100m, windgusts_10m, shortwave_radiation, direct_radiation, direct_normal_irradiance, diffuse_radiation, vapor_pressure_deficit, et0_fao_evapotranspiration, precipitation, rain, weathercode, snowfall, soil_temperature_0_to_7cm, soil_temperature_7_to_28cm, soil_temperature_28_to_100cm, soil_temperature_100_to_255cm, soil_moisture_0_to_7cm, soil_moisture_7_to_28cm, soil_moisture_28_to_100cm, soil_moisture_100_to_255cm"
           explode: false
           schema:
             type: array
@@ -79,6 +80,7 @@ paths:
                 - soil_moisture_100_to_255cm
         - name: daily
           in: query
+          description: "Possible values are: temperature_2m_max, temperature_2m_min, apparent_temperature_max, apparent_temperature_min, precipitation_sum, precipitation_hours, weathercode, sunrise, sunset, windspeed_10m_max, windgusts_10m_max, winddirection_10m_dominant, shortwave_radiation_sum, et0_fao_evapotranspiration."
           schema:
             type: array
             items:
